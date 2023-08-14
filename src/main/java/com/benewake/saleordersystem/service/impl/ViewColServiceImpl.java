@@ -73,6 +73,7 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
 
     @Override
     public List<Map<String,Object>> getCols(Long tableId,Long viewId, boolean isAdmin) {
+        //如果 viewId 小于等于 0，表示查看系统预设视图。
         if(viewId<=0){
             if(tableId.equals(ALL_TABLE)){
                 if(viewId==0) return getColsTansfer(ALL_SALESMAN_MAPS);
@@ -119,6 +120,7 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
                     else return getColsTansfer(INQUIRY_DELIVERY_SALESMAN_00_MAPS);
                 }
             }
+            //如果 viewId 大于 0，表示查看个人方案视图
         }else {
             // 个人方案视图
             return viewColMapper.getColMaps(viewId);

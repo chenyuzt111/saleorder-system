@@ -47,6 +47,9 @@ public class SaleOrderController implements BenewakeConstants {
     @Autowired
     private ViewService viewService;
 
+
+
+
     @GetMapping("/stateList")
     public Result getStateList(){
         List<String> stateList = inquiryService.getStateList();
@@ -74,7 +77,9 @@ public class SaleOrderController implements BenewakeConstants {
      * 已登录用户根据tableId获取对应的新增视图，若无新增视图则为空
      */
     @PostMapping("/views")
+    //一个自定义注解，需要用户登录才能访问这个接口
     @LoginRequired
+    //返回的是一个包含列表的结果，列表的元素类型是view对象
     public Result<List<View>> getViewByTableId(@RequestBody Map<String,Object> param){
         Long tableId = Long.parseLong((String) param.get("tableId"));
         User u = hostHolder.getUser();
@@ -82,6 +87,8 @@ public class SaleOrderController implements BenewakeConstants {
 
         return Result.success(lists);
     }
+
+    /*获取表的全部列信息*/
     @PostMapping("/cols")
     public Result<Map<String,Object>> getAllCols(@RequestBody Map<String,Object> param){
         Long tableId = Long.parseLong((String) param.get("tableId"));
@@ -98,22 +105,28 @@ public class SaleOrderController implements BenewakeConstants {
      * @return
      */
     @PostMapping("/Lists")
+    //自定义注解，登录才能访问该方法
     @LoginRequired
+    //用于追踪方法的执行时间
     @TrackingTime
+    //接收一个请求体包含 FilterVo参数
     public Result selectList(@RequestBody FilterVo filterVo){
 
         Map<String,Object> res = new HashMap<>(16);
+        //检查是否包含过滤条件
         if(filterVo==null || filterVo.getTableId()==null || filterVo.getViewId()==null){
             return Result.fail().message("未选择表或视图！");
         }
         // 当前登录用户
         User loginUser = hostHolder.getUser();
-        // 列信息
+        // 通过viewColService类中getCols方法获取列信息，根据表格 ID、视图 ID 和用户类型
         List<Map<String,Object>> cols = viewColService.getCols(filterVo.getTableId(), filterVo.getViewId(), loginUser.getUserType().equals(1L));
+        //如果试图ID小于等于0，表示查看我的视图
         if(filterVo.getViewId() <= 0){
             // 我的视图
             // 查看我的
             List<Map<String,Object>> lists;
+            //如果用户是管理员或者是查看全部视图的话，查看全部视图
             if(loginUser.getUserType().equals(1L) || (filterVo.getTableId().equals(1L)&&filterVo.getViewId().equals(-1L))){
                 // 管理员 或系统全部
                 lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),null);
@@ -121,24 +134,31 @@ public class SaleOrderController implements BenewakeConstants {
                 // 普通用户
                 lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),loginUser.getUsername());
             }
+            //获取到的订单以map形式放入res
             res.put("lists",lists);
         }else{
             // 个人设定的视图
+            //筛选存储条件，使用三元运算符如果没有的话初始化为空列表或者使用筛选体中的筛选条件
             List<FilterCriteria> filters = filterVo.getFilterCriterias()==null?new ArrayList<>():filterVo.getFilterCriterias();
-            // 添加方案默认筛选信息
+            // 遍历前面获取到的cols对象，添加方案默认筛选信息
             for(Map<String,Object> col : cols){
+                //首先获取该列的筛选值
                 String colValue = (String) col.get("col_value");
+                //如果筛选值不为空
                 if(!StringUtils.isEmpty(colValue)){
+                    //获取键为col_name_ENG的值表示列名，添加到新建的筛选条件中
                     filters.add(new FilterCriteria((String) col.get("col_name_ENG"),
+                            //从当前列获取value_operator键对应的值表示列的操作符
                             StringUtils.isEmpty(col.get("value_operator"))?EQUAL: (String) col.get("value_operator"),colValue));
                 }
             }
-            // 根据筛选条件获取信息
+            // 根据个人的筛选条件获取信息
             List<Map<String,Object>> lists = inquiryService.selectSalesOrderVoList(filters, loginUser.getUsername());
 
             res.put("lists",lists);
         }
         res.put("cols",cols);
+        //返回试图
         return Result.success(res);
     }
 

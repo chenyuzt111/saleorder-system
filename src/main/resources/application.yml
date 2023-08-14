@@ -2,7 +2,7 @@
 server:
   servlet:
     context-path: /benewake
-  port: 9527
+  port: 8080
 # spring
 spring:
   application:

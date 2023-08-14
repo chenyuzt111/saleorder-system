@@ -85,33 +85,42 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         return inquiryMapper.insertInquiries(inquiries);
     }
 
+    //接收到筛选条件和一个用户名称
     @Override
     public List<Map<String,Object>> selectSalesOrderVoList(List<FilterCriteria> filters, String username) {
+        //如果条件为空创建一个新列表，否则保持原有值
         if(filters==null) {
             filters = new ArrayList<>();
         }
-        // 添加筛选条件
+        // 添加筛选条件，创建一个映射表
         Map<String,Integer> map = new HashMap<>(16);
         for(int i=0;i<filters.size();++i){
+            //遍历筛选条件，依次加入到map当中
             map.put(filters.get(i).getColName(),i);
         }
+        //设置一个查询对象
         QueryWrapper<Inquiry> queryWrapper1 = new QueryWrapper<>();
-        // 默认最新和有效
+        // 默认最新和有效，查询对象为非空的bb.inquiry_id
         queryWrapper1.isNotNull("bb.inquiry_id");
+        //初始化一个f1列表，存储特定列的筛选条件
         List<FilterCriteria> f1 = new ArrayList<>();
-        // inquiry_init_type 需要int表示
+        // inquiry_init_type 需要int表示，定义一个字符串数组str1，其中包含了与f1列表中筛选条件有关的列名。
         String[] str1 = {"inquiry_code","sale_num","expected_time","arranged_time",
                 "remark","inquiry_init_type"};
+        //如果map中包含state键，（map中存的接受的筛选条件），存入f1（专门创建为了存储特定列的筛选条件）
         if(map.containsKey("state")){
             f1.add(filters.get(map.get("state")));
         }else{
+            //不包含的话创建新的筛选条件对象，并添加到f1得列表当中
             f1.add(new FilterCriteria("state","ge","0"));
         }
         for(String s : str1){
+            //遍历str1中的字段名，如果map中存在对应的键就加入到f1筛选条件中
             if(map.containsKey(s)){
                 f1.add(filters.get(map.get(s)));
             }
         }
+        //通过调用 CommonUtils.addFilters 方法，将所有筛选条件应用到查询条件包装器中。
         CommonUtils.addFilters(f1,queryWrapper1);
 
         QueryWrapper<Inquiry> queryWrapper2 = new QueryWrapper<>();

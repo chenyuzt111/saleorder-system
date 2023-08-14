@@ -25,6 +25,7 @@ import java.util.List;
 @RequestMapping("/notice")
 public class NoticeController {
     @Autowired
+    //自动注入一个实例
     private NoticeService noticeService;
     @Autowired
     private HostHolder hostHolder;
