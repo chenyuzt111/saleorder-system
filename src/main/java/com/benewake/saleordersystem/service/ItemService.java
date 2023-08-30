@@ -52,4 +52,12 @@ public interface ItemService {
      * @return
      */
     List<String> getItemTypeList(String itemType);
+
+    void insertItem(Item item);
+
+    void deleteItemById(Long itemId);
+
+    void updateItem(Item item);
+
+    void batchDeleteItemsByIds(List<Long> itemIds);
 }

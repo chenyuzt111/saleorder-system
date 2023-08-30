@@ -7,6 +7,7 @@ import com.benewake.saleordersystem.service.ItemService;
 import com.benewake.saleordersystem.utils.BenewakeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -68,5 +69,30 @@ public class ItemServiceImpl implements ItemService , BenewakeConstants {
     @Override
     public List<String> getItemTypeList(String itemType) {
         return itemMapper.getItemTypeList("%"+itemType+"%");
+    }
+
+    @Override
+
+    public void insertItem(Item item) {
+        itemMapper.insertItem(item);
+    }
+
+    @Override
+
+    public void deleteItemById(Long itemId) {
+        itemMapper.deleteItemById(itemId);
+    }
+
+    @Override
+
+    public void updateItem(Item item) {
+        itemMapper.updateItem(item);
+    }
+
+    public void batchDeleteItemsByIds(List<Long> itemIds) {
+        // 迭代物料ID列表，逐个删除物料
+        for (Long itemId : itemIds) {
+            itemMapper.deleteById(itemId);
+        }
     }
 }

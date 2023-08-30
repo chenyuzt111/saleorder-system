@@ -40,6 +40,7 @@ public class DeliveryController {
         return Result.fail("运输状态更新失败，请重试！",null);
     }
 
+    @ApiOperation("模糊匹配顺丰运输单号")
     @PostMapping("/deliveryCodeList")
     @LoginRequired
     public Result getDeliveryCodeList(@RequestBody Map<String,Object> param){
@@ -48,6 +49,7 @@ public class DeliveryController {
         return Result.success(deliveryService.getDeliveryCodeList(deliveryCode));
     }
 
+    @ApiOperation("模糊匹配最新状态情况")
     @PostMapping("/deliveryStateList")
     public Result getDeliveryStateList(@RequestBody Map<String,Object> param){
         String deliveryState = (String) param.get("deliveryState");

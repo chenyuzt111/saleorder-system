@@ -13,6 +13,7 @@ import com.benewake.saleordersystem.utils.HostHolder;
 import com.benewake.saleordersystem.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -68,6 +70,7 @@ public class SaleOrderController implements BenewakeConstants {
         String key = (String) param.get("inquiryCode");
         if(key==null) {
             key = "";
+
         }
         List<Inquiry> res = inquiryService.getInquiryCodeLikeList(key);
         return Result.success(res);
@@ -180,22 +183,28 @@ public class SaleOrderController implements BenewakeConstants {
         }
         // 获取当前用户
         User u = hostHolder.getUser();
+        //判断视图是否存在，id为空且使用isExist判断视图名称是否已存在
         if(filterVo.getViewId()==null && viewService.isExist(filterVo.getTableId(),u.getId(),filterVo.getViewName())){
             return Result.fail("该视图名称为空或已存在!",null);
         }
         // 持久化视图
+        //创建一个新的视图对象
         View view = new View();
+        //设置view属性
         view.setTableId(filterVo.getTableId());
         view.setViewName(filterVo.getViewName());
         view.setUserId(u.getId());
+        //如果视图为空执行保存操作
         if(filterVo.getViewId()==null){
             viewService.saveView(view);
         }else{
+            //否则的话执行更新操作，获取传入得视图ID
             view.setViewId(filterVo.getViewId());
             viewService.updateView(view);
         }
-
+        //从传入的对象中获取视图列信息列表
         List<ViewCol> cols = filterVo.getCols();
+        //遍历视图列，为每个视图列设置视图ID
         for(ViewCol vc : cols){
             vc.setViewId(view.getViewId());
         }
@@ -246,64 +255,99 @@ public class SaleOrderController implements BenewakeConstants {
     @SalesmanRequired
     @Transactional(rollbackFor = Exception.class)
     public Result addInquiries(@RequestBody StartInquiryVo param){
+        //创建一个新的订单列表用于接收传入的订单
         List<Inquiry> newInquiries = param.getInquiryList();
+        //新建一个整数类型用于接收传入的是否开始询单数据
         Integer startInquiry = param.getStartInquiry();
 
+        //创建一个新的map,用于存储询单信息
         Map<String,Object> map = new HashMap<>(16);
+        //订单为空的话
         if(newInquiries == null){
             return Result.fail("请添加至少一条询单信息",null);
         }
-        // 保存 或 单据id不存在
+        // 保存 或 单据id不存在（开始询单数据为保存状态，或者传入的单据id为0）
         if(startInquiry == 0 || newInquiries.get(0).getInquiryId()==null){
+            //获取当前用户信息
             User user = hostHolder.getUser();
             Date nowTime = new Date();
+            //接收到的订单类型为空
             if(newInquiries.get(0).getInquiryType()==null){
                 return Result.fail("请选择订单类型",null);
             }
             // 获取订单编码列表
             List<String> inquiryCodes = new ArrayList<>();
-            // 逐条分析询单是否合法
+            // 逐条分析询单是否合法，遍历传入的单据列表
             for(Inquiry inq : newInquiries){
+                //使用inquiryservice中addvalid方法判断询单是否合法
                 Map<String,Object> res = inquiryService.addValid(inq);
+                //res被创建就是为了存储询单不合法的信息，如果里面有内容说明错误
                 if(res.size()>0){
                     return Result.fail((String) res.get("error"),null);
                 }
-                // 设置创建人信息以及单据编号
+                // 如果单据合法，设置创建人信息以及单据编号
                 inq.setCreatedUser(user.getId());
+                //如果单据编码为空，调用方法获取一个单据编号格式，然后获取一个格式化的编号
                 if(inq.getInquiryCode()==null){
                     inq.setInquiryCode(inquiryService.getDocumentNumberFormat(inq.getInquiryType(),1).get(0));
                 }
+
+
+                //将刚刚获取到的单据编码存入到订单编码列表
                 inquiryCodes.add(inq.getInquiryCode());
+                //并将状态码设置为0，保存状态
                 inq.setState(0);
             }
+            //将之前生成的单据编码以键值名为inquiryCode，以便后续使用
             map.put("inquiryCode",inquiryCodes);
             // 添加运输信息
             deliveryService.insertLists(newInquiries);
             // 全部通过加入数据库
             inquiryService.insertLists(newInquiries);
+            //创建一个ids列表
             List<Long> ids = new ArrayList<>();
+            //遍历接收到订单信息，获取订单id存入ids
             for(Inquiry inq:newInquiries){
                 ids.add(inq.getInquiryId());
+
+
             }
+            //将ids以键名“ids”存入map
             map.put("ids",ids);
         }
-        // 询单
+        // 前面是保存，接下来是询单功能
+        //如果订单状态不空且不是0的话，可以询单
         if(startInquiry!=null && startInquiry != 0){
+            //创建两个空的arraylist用于存储询单处理结果
+            //fail,success分别存储失败和成功的询单
             List<Inquiry> fail = new ArrayList<>();
             List<Inquiry> success = new ArrayList<>();
+            //初始化一个整数变量‘ind’,用于跟踪循环的索引
             int ind = 1;
             try {
+                //for循环遍历newInquiries列表中的每个元素
                 for(int i=0;i<newInquiries.size();++i,++ind){
                     // 根据订单
+                    //通过inquiryService.getInquiryById方法根据InquiryId获取Inquiry对象
                     Inquiry inquiry = inquiryService.getInquiryById(newInquiries.get(i).getInquiryId());
+                    //根据ItemId获取Item对象
                     Item item = itemService.findItemById(inquiry.getItemId());
+                    //如果物料类型
+                    //四个判断条件
+                    //1.物料类型是否为 "新增原材料+软件定制" 的类型
+                    //2.物料类型是否为 "新增原材料定制" 的类型
+                    //3.物料的标准数量是否为 0
+                    //4.当前询单的销售数量是否大于物料的标准数量
+
                     if(item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
                             item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
                             item.getQuantitative()==0 || inquiry.getSaleNum()>item.getQuantitative()){
                         // 询单失败
                         // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
+                        //加入到失败的订单
                         fail.add(inquiry);
                     }else{
+                        //否则的话加入到成功的订单
                         success.add(inquiry);
                     }
                 }
@@ -312,11 +356,13 @@ public class SaleOrderController implements BenewakeConstants {
                 log.error(e.getMessage());
                 throw new RuntimeException("参数有误！");
             }
-            //
+            //创建一个restr列表用于存储最终的处理结果字符串
             List<String> resStr = new ArrayList<>();
+            //首先遍历失败的订单，添加到刚刚创建的restr中
             fail.forEach(f->{
                 resStr.add("单据编号:"+f.getInquiryCode()+"，请飞书联系管理员!");
             });
+            //如果成功的队列中不为0，进入询单功能
             if(success.size() > 0){
                 //map.put("success",success.size()+"个订单开始询单！");
 
@@ -329,6 +375,8 @@ public class SaleOrderController implements BenewakeConstants {
                 //return Result.success("已开始询单！",map);
                 resStr.add("APS暂未上线，今日内计划手动反馈日期！");
             }
+            //返回如果成功的询单数量大于 0，将处理结果添加到 resStr，包含 "APS暂未上线，今日内计划手动反馈日期！"。
+            //使用 String.join 方法将 resStr 中的消息字符串使用换行符连接起来。
             return Result.success(String.join("\r\n",resStr),map);
         }
         return Result.success("保存成功！",map);
@@ -340,15 +388,21 @@ public class SaleOrderController implements BenewakeConstants {
      * @return
      */
     @PostMapping("/delete")
-    @SalesmanRequired
+    @SalesmanRequired//调用此接口的必须是销售员
     public Result deleteOrder(@RequestBody Map<String,Long> param){
+        //从传入的参数param中获取订单的id
         Long orderId = param.get("orderId");
+        //根据订单ID通过inquiryService.getInquiryById获得订单对象
         Inquiry inquiry = inquiryService.getInquiryById(orderId);
+        //获取当前用户信息
         User u = hostHolder.getUser();
+        //如果用户是销售员并且订单的销售员ID与当前用户ID相同，或者订单的创建人ID与当前用户ID相同，
+        //或者用户是管理员或系统用户，那么用户有足够权限进行删除操作。
         if( u.getUserType().equals(USER_TYPE_SALESMAN)&&
                 (inquiry.getSalesmanId().equals(u.getId())||inquiry.getCreatedUser().equals(u.getId())) ||
                 u.getUserType().equals(USER_TYPE_ADMIN) || u.getUserType().equals(USER_TYPE_SYSTEM)
         ){
+            //调用inquiryService.deleteOrder方法传入订单id,进行删除操作res接收返回值
             boolean res = inquiryService.deleteOrder(orderId);
             if(!res){
                 return Result.fail().message("订单不存在！");
@@ -361,21 +415,29 @@ public class SaleOrderController implements BenewakeConstants {
     }
 
     @PostMapping("/importExcel")
-    @SalesmanRequired
+    @SalesmanRequired//销售员才能访问该接口
+    //接收文件作为参数
     public Result addOrdersByExcel(@RequestParam("file")MultipartFile file){
+        //创建一个map，用于存储excel数据处理的结果
         Map<String,Object> map = new HashMap<>(16);
+        //对文件进行判空操作
         if(file.isEmpty()){
             return Result.fail("文件为空！",null);
         }
+        //这一行代码的目的是获取上传文件的原始文件名，并使用点号（.）作为分隔符将文件名拆分成多个部分。
+        // 因为点号在正则表达式中有特殊含义，所以双反斜杠（\\.）用来转义点号，确保按点号进行分割。
         val split = file.getOriginalFilename().split("\\.");
+        //检查split中拆分后的文件名的第二部分，也就是文件格式部分，看是否为excel文件
         if(!"xlsx".equals(split[1]) && !"xls".equals(split[1])){
             return Result.fail().message("请提供.xlsx或.xls为后缀的Excel文件");
         }
+        //进入try块中保存excel的文件，存入map
         try {
             map = inquiryService.saveDataByExcel(file);
         }catch (Exception e) {
             e.printStackTrace();
         }
+        //检查map中是否有error键值，如果有说明处理失败
         if(map.containsKey("error")){
             return Result.fail().message((String) map.get("error"));
         }else{

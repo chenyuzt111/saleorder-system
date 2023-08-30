@@ -2,6 +2,7 @@ package com.benewake.saleordersystem.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.benewake.saleordersystem.entity.LoginTicket;
 import com.benewake.saleordersystem.entity.User;
 import com.benewake.saleordersystem.mapper.LoginTicketMapper;
@@ -22,10 +23,10 @@ import java.util.Map;
 /**
  * @author Lcs
  * @since 2023年06月30 13:42
- * 描 述： TODO
+ * 描 述：TODO
  */
 @Service
-public class UserServiceImpl implements UserService, BenewakeConstants {
+public class UserServiceImpl  implements UserService, BenewakeConstants {
     @Autowired
     private UserMapper userMapper;
     @Autowired

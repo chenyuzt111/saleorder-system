@@ -39,4 +39,6 @@ public class InquiryModel {
     private String delay;
     @ExcelProperty(value = "备注",index = 11)
     private String remark;
+
+
 }

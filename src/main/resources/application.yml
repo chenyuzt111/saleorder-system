@@ -1,8 +1,15 @@
 # server
 server:
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-password: ztztzt11
+#    key-store-type: PKCS12
+#    key-alias: tomcat
   servlet:
     context-path: /benewake
   port: 8080
+
+
 # spring
 spring:
   application:
@@ -47,7 +54,8 @@ mybatis-plus:
 logging:
   config: classpath:logback-spring.xml
   file:
-    path: ./logs
+    path: ./data/bxteam/benewake_log/
+#    path: ./logs
 
 
 

@@ -76,6 +76,7 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
         //如果 viewId 小于等于 0，表示查看系统预设视图。
         if(viewId<=0){
             if(tableId.equals(ALL_TABLE)){
+                //如果viewId==0查看我的视图，否则看其他视图，getColsTansfer方法就是根据索引找到需要的字段名称存为map并返回
                 if(viewId==0) return getColsTansfer(ALL_SALESMAN_MAPS);
                 else return getColsTansfer(ALL_SYSTEM_MAPS);
             }else if(tableId.equals(INQUIRY_TYPE_TABLE)){

@@ -23,18 +23,29 @@ public class ThreadPoolConfig {
     // 队列大小
     private static final int QUEUE_SIZE = 10;
 
+    //定义了一个字符串常量，表示线程池的名称
     public static final String ASYN_EXECUTOR_NAME = "asynExecutor";
     @Bean(ASYN_EXECUTOR_NAME)
     public ThreadPoolTaskExecutor myThreadPoolTask(){
+        //创建异步线程池，并赋予各种参数
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        //核心线程数
         taskExecutor.setCorePoolSize(CORE_POLL_SIZE);
+        //最大线程数
         taskExecutor.setMaxPoolSize(MAXI_NUM_POLL_SIZE);
+        //队列大小
         taskExecutor.setQueueCapacity(QUEUE_SIZE);
+        //设置线程空闲时间
         taskExecutor.setKeepAliveSeconds((int) KEEPALIVE_TIME);
+        //设置线程名称的前缀
         taskExecutor.setThreadNamePrefix("AsyncExecutor-");
+        //设置拒绝策略，当队列和线程池都满了，使用AbortPolicy策略抛出异常
         taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        //关闭线程时，等任务完成后再继续关闭
         taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        //设置等待任务完成时的超时时间
         taskExecutor.setAwaitTerminationSeconds(60);
+        //初始化线程
         taskExecutor.initialize();
         return taskExecutor;
 //        return new ThreadPoolExecutor(

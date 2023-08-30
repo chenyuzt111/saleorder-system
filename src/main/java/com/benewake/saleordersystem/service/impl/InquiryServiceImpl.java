@@ -63,16 +63,20 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
     public Map<String, Object> saveDataByExcel(MultipartFile file) {
         // 获取当前用户所有有效订单
         LambdaQueryWrapper<Inquiry> lqw = new LambdaQueryWrapper<>();
-        lqw.and(a->a.ge(Inquiry::getState,0).and(b->b.eq(Inquiry::getSalesmanId,hostHolder.getUser().getId()).
-                or().eq(Inquiry::getCreatedUser,hostHolder.getUser().getId())));
+        //设置查询条件，获取当前用户的有效订单。查询条件包括订单状态大于等于 0，
+        lqw.and(a->a.ge(Inquiry::getState,0));
+        //执行查询操作，并将得到的数据存入existList中
         List<Inquiry> existList = inquiryMapper.selectList(lqw);
         // 读取Excel
+        //创建一个监听实例
         InquiryExcelListener listener = new InquiryExcelListener(this,deliveryService,existList);
         Map<String,Object> map;
         try{
+            //使用 EasyExcel 库读取上传文件的数据
             EasyExcel.read(file.getInputStream(), InquiryModel.class,listener).sheet().headRowNumber(1).doRead();
             map = listener.getMap();
         }catch (Exception e) {
+            //将监听器中收集的结果赋给 map 变量，以便在异常情况下也能获取处理结果。
             map = listener.getMap();
             e.printStackTrace();
             log.error((String) map.get("error"));
@@ -264,6 +268,7 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
                 inquiryType == ORDER_TYPE_PO || inquiryType == ORDER_TYPE_PR || inquiryType == ORDER_TYPE_YG;
     }
     @Override
+    //主要就是判断订单是否有效
     public Map<String,Object> addValid(Inquiry inquiry) {
         Map<String,Object> map = new HashMap<>();
         if(inquiry.getItemId() == null || null == itemService.findItemById(inquiry.getItemId())) {
@@ -286,8 +291,24 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
             map.put("error","销售员为空或不存在！");
             return map;
         }
-        if(inquiry.getExpectedTime() == null || inquiry.getExpectedTime().before(new Date())){
-            map.put("error","期待发货日期不存在或早于当前时间");
+
+        if (inquiry.getRemark() == null) {
+            inquiry.setRemark("");
+        }
+
+        if (inquiry.getExpectedTime() == null ) {
+            if(inquiry.getInquiryType()== ORDER_TYPE_XD) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(9999, Calendar.DECEMBER, 31); // 设置为9999年12月31日
+                inquiry.setExpectedTime(calendar.getTime());
+
+            }else if(inquiry.getInquiryType()==INQUIRY_INIT_TYPE_YC){
+
+                map.put("error","期待发货日期不存在");
+                return map;
+            }
+        }else if (inquiry.getExpectedTime().before(new Date())){
+            map.put("error","期待发货日期早于当前时间");
             return map;
         }
         return map;
@@ -303,10 +324,17 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
 
     @Override
     public boolean deleteOrder(Long orderId) {
+        //创建一个LambdaUpdateWrapper对象，用于构建更新条件和操作
         LambdaUpdateWrapper<Inquiry> updateWrapper = new LambdaUpdateWrapper<>();
+        // 设置更新条件和更新操作：
+        //     1. 确保订单ID与传入的订单ID相匹配。
+        //     2. 确保订单状态不等于 -1（-1 可能表示已删除的状态）。
+        //     3. 设置订单状态为 -1，以表示订单已删除。
         updateWrapper.eq(Inquiry::getInquiryId,orderId)
                 .ne(Inquiry::getState,-1)
                 .set(Inquiry::getState,-1);
+        //调用update方法，传入设置的查询条件，执行更新
+        //返回更新影响的行数是否等于 1，如果等于 1，表示更新成功，返回 true，否则返回 false。
         return inquiryMapper.update(null,updateWrapper)==1;
     }
 
@@ -376,6 +404,15 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         inquiry.setInquiryCode(getDocumentNumberFormat(type,1).get(0));
         // 设置创建时间
         inquiry.setCreatedTime(new Date());
+
+        // 设置备注
+        String remark = inquiryModel.getRemark();
+        if (remark == null ) {
+            remark = ""; // 赋一个“”代替null
+        }
+        inquiry.setRemark(remark);
+
+
         // 设置相关时间
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -383,15 +420,35 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
             if(inquiryModel.getArrangedTime()!=null){
                 inquiry.setArrangedTime(sdf.parse(inquiryModel.getArrangedTime()));
             }
-            if(inquiryModel.getExceptedTime()!=null){
+
+            if (inquiryModel.getExceptedTime() == null) {
+                // 对订单类型进行判断
+                if (inquiry.getInquiryType() == ORDER_TYPE_XD) {
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(9999, Calendar.DECEMBER, 31); // 设置为9999年12月31日
+                    inquiry.setExpectedTime(calendar.getTime());
+                } else if (inquiry.getInquiryType() == INQUIRY_INIT_TYPE_YC) {
+                    map.put("error", "期待发货日期不存在");
+                    return map;
+                }
+            } else {
+
                 inquiry.setExpectedTime(sdf.parse(inquiryModel.getExceptedTime()));
+                Date parsedExpectedTime = sdf.parse(inquiryModel.getExceptedTime());
+
+                if (parsedExpectedTime.before(new Date())) {
+                    map.put("error", "期待发货日期早于当前时间");
+                    return map;
+                }
             }
+
         }catch (Exception e){
             map.put("error","第"+rowIndex+"行的时间数据有误，请检查！");
             return map;
         }
-        // 设置备注
-        inquiry.setRemark(inquiryModel.getRemark());
+        /*// 设置备注
+        inquiry.setRemark(inquiryModel.getRemark());*/
         // 设置数量
         try {
             inquiry.setSaleNum(Long.parseLong(inquiryModel.getNum()));

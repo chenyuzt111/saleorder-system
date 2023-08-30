@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author Lcs
@@ -48,14 +49,15 @@ public class Inquiry {
     private String remark;
 
     public boolean exist(Inquiry inquiry){
-        if(inquiry.getExpectedTime().equals(expectedTime) && inquiry.getInquiryType().equals(inquiryType) &&
-            inquiry.getSaleNum().equals(saleNum) && inquiry.getState().equals(state) && inquiry.getSalesmanId().equals(salesmanId) &&
-                inquiry.getRemark().equals(remark) && inquiry.getCustomerId().equals(customerId) && inquiry.getItemId().equals(itemId) &&
-                inquiry.getArrangedTime().equals(arrangedTime)
-        ){
-            return true;
-        }
-        return false;
+        return Objects.equals(expectedTime, inquiry.getExpectedTime()) &&
+                Objects.equals(inquiryType, inquiry.getInquiryType()) &&
+                Objects.equals(saleNum, inquiry.getSaleNum()) &&
+                Objects.equals(state, inquiry.getState()) &&
+                Objects.equals(salesmanId, inquiry.getSalesmanId()) &&
+                Objects.equals(remark, inquiry.getRemark()) &&
+                Objects.equals(customerId, inquiry.getCustomerId()) &&
+                Objects.equals(itemId, inquiry.getItemId()) &&
+                Objects.equals(arrangedTime, inquiry.getArrangedTime());
     }
 
 }

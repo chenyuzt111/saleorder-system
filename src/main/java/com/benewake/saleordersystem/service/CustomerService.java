@@ -37,4 +37,13 @@ public interface CustomerService {
      * @return
      */
     List<String> getCustomerTypeLikeList(String type);
+
+    Customer createCustomer(Customer customer);
+
+
+    boolean deleteCustomersByIds(List<Long> ids);
+
+    boolean deleteCustomer(Long customerId);
+
+    boolean updateCustomer(Customer updatedCustomer);
 }

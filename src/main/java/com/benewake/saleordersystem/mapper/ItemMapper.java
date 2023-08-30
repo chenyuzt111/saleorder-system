@@ -2,9 +2,7 @@ package com.benewake.saleordersystem.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.benewake.saleordersystem.entity.Item;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -63,4 +61,24 @@ public interface ItemMapper extends BaseMapper<Item> {
             "where item_type_name like #{type}" +
             "</script>")
     List<String> getItemTypeList(@Param("type") String s);
+
+
+
+
+    @Insert("INSERT INTO fim_item_table (item_code, item_name, item_type, quantitative) " +
+            "VALUES (#{itemCode}, #{itemName}, #{itemType}, #{quantitative})")
+    void insertItem(Item item);
+
+
+    @Delete("DELETE FROM fim_item_table WHERE item_id = #{id}")
+    void deleteItemById(Long id);
+
+    @Update("UPDATE fim_item_table SET " +
+            "item_code = #{itemCode}, item_name = #{itemName}, " +
+            "item_type = #{itemType}, quantitative = #{quantitative} " +
+            "WHERE item_id = #{id}")
+    void updateItem(Item item);
+
+
+
 }

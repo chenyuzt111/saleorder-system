@@ -56,7 +56,7 @@ logging.config=classpath:logging-config.xml
     <property name="maxFileSize" value="50MB"/>
     <property name="totalSizeCap" value="500MB"/>
     <property name="APP_NAME" value="fim"/>
-    <property name="log.path" value="./logs"/>
+    <property name="log.path" value="./data/bxteam/benewake_log/"/>
 
     <!--
         <timestamp>

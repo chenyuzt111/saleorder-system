@@ -15,8 +15,11 @@ import org.springframework.context.annotation.Configuration;
 public class KingdeeConfig implements BenewakeConstants {
 
     @Bean
+    //创建返回一个名为K3CloudApi的Bean对象
     public K3CloudApi k3CloudApi(){
+        //新建一个IdentifyInfo对象
         IdentifyInfo iden = new IdentifyInfo();
+        //为IdentifyInfo对象设置一系列的属性，用于初始化金蝶API连接的配置参数
         iden.setUserName(X_KDAPI_USERNAME);
         iden.setAppId(X_KDAPI_APPID);
         iden.setdCID(X_KDAPI_ACCTID);

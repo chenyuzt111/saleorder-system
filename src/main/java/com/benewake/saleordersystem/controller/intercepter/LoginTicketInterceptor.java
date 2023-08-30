@@ -17,6 +17,7 @@ import java.util.Date;
 
 /**
  * @author Lcs
+ * 这段代码是一个 Spring Boot 拦截器，用于处理用户登录验证和登录状态的维护。它会在请求处理前、请求处理后以及请求完成后执行一些逻辑，来确保用户登录状态的正确性。
  */
 @Component
 public class LoginTicketInterceptor implements HandlerInterceptor {

@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
  * @author Lcs
  * @since 2023年07月06 15:35
  * 描 述： TODO
+ *销售员权限拦截器
  */
 @Component
 public class SalesmanRequiredInterceptor implements HandlerInterceptor, BenewakeConstants {

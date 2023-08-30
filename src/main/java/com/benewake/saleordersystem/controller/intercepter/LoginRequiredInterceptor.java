@@ -16,6 +16,8 @@ import java.lang.reflect.Method;
 
 /**
  * @author Lcs
+ * 登陆权限拦截器
+ * 这是一个 Spring Boot 拦截器，用于拦截需要登录权限的请求并进行处理。它会检查被拦截的方法上是否标注了 @LoginRequired 注解，并根据用户的登录状态判断是否放行请求。
  */
 @Component
 public class LoginRequiredInterceptor implements HandlerInterceptor {

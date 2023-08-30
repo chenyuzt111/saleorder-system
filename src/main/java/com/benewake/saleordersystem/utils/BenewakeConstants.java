@@ -100,6 +100,8 @@ public interface BenewakeConstants {
      */
     int ORDER_TYPE_YG = 3;
 
+
+
     /**
      * 产品类型：已有竞品
      */

@@ -41,7 +41,7 @@ public class InquiryExcelListener extends AnalysisEventListener<InquiryModel> im
 
     private static List<String> head = new ArrayList<>();
     static {
-        head.add("订单类型");
+        head.add("单据类型");
         head.add("物料编码");
         head.add("物料名称");
         head.add("数量");

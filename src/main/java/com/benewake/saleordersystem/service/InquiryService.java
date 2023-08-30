@@ -12,6 +12,9 @@ import java.util.Map;
 /**
  * 订单应用接口
  * @author Lcs
+ * @return
+ *
+ *
  */
 public interface InquiryService extends IService<Inquiry> {
 
