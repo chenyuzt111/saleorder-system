@@ -3,15 +3,18 @@ package com.benewake.saleordersystem.service.impl;
 import com.benewake.saleordersystem.entity.Past.PastOrder;
 import com.benewake.saleordersystem.entity.Past.SaleOut;
 import com.benewake.saleordersystem.entity.Past.Withdraw;
+import com.benewake.saleordersystem.excel.model.Kingdee;
 import com.benewake.saleordersystem.mapper.PastOrderMapper;
 import com.benewake.saleordersystem.mapper.StoredProceduresMapper;
 import com.benewake.saleordersystem.service.KingDeeService;
 import com.benewake.saleordersystem.service.PastOrderService;
+import com.benewake.saleordersystem.utils.CommonUtils;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -127,6 +130,10 @@ public class PastOrderServiceImpl implements PastOrderService {
                     p.setFCustomerID("");
                 }
             });
+/*            File excelFile = new File("F:/155.xlsx");
+            System.out.println(CommonUtils.writeExcel(excelFile, list, Kingdee.class));*/
+
+
 
             //调用pastOrderMapper.insertPastOrders()方法，将刚刚创建的列表插入到数据库中
             res = pastOrderMapper.insertPastOrders(list);
