@@ -81,6 +81,37 @@ public class UserController implements BenewakeConstants {
         return Result.fail().message("无效用户！");
     }
 
+
+    @ApiOperation("管理员修改用户YC、XD、PR值")
+    @PostMapping("/updateUserValues")
+    @LoginRequired
+    public Result updateUserValues(@RequestBody Map<String, Object> param) {
+
+        User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
+
+        if (!currentUser.getUserType().equals(USER_TYPE_ADMIN) && !currentUser.getUserType().equals(USER_TYPE_SYSTEM)) {
+            return Result.fail().message("只有管理员用户才可以修改用户值！");
+        }
+
+        Long id = Long.parseLong((String)param.get("userid"));
+        String ycvalue = ((String)param.get("ycValue"));
+        String xdvalue = ((String)param.get("xdValue"));
+        String prvalue = ((String)param.get("prValue"));
+
+        if ( StringUtils.isEmpty(ycvalue) || StringUtils.isEmpty(xdvalue) || StringUtils.isEmpty(prvalue)) {
+            return Result.fail().message("数据不能为空！");
+        }
+
+        // 执行更新操作
+        int result = userService.updateUserValues(id, ycvalue, xdvalue, prvalue);
+
+        if (result > 0) {
+            return Result.success().message("用户值更新成功！");
+        } else {
+            return Result.fail().message("用户值更新失败！");
+        }
+    }
+
     /**
      * 根据用户姓名模糊匹配
      * @return

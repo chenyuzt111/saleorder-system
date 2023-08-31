@@ -2,7 +2,6 @@ package com.benewake.saleordersystem.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.benewake.saleordersystem.entity.LoginTicket;
 import com.benewake.saleordersystem.entity.User;
 import com.benewake.saleordersystem.mapper.LoginTicketMapper;
@@ -199,4 +198,16 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
                 .eq(User::getUserType,USER_TYPE_SALESMAN);
         return userMapper.selectOne(queryWrapper);
     }
+
+    @Override
+    public int updateUserValues(Long id, String ycvalue, String xdvalue, String prvalue) {
+
+        int rowsAffected = userMapper.updateUserValues(id, ycvalue, xdvalue, prvalue);
+        if (rowsAffected > 0) {
+            return 1; // 更新成功
+        } else {
+            return 0; // 更新失败
+        }
+    }
+
 }

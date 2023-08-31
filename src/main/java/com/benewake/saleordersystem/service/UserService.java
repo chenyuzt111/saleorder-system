@@ -88,4 +88,13 @@ public interface UserService  {
     User findSalesmanByName(String salesmanName);
 
 
+    /**
+     * 更新用户YC,XD,PR值
+     * @param userId
+     * @param ycValue
+     * @param xdValue
+     * @param prValue
+     * @return
+     */
+    int updateUserValues(Long id, String ycvalue, String xdvalue, String prvalue);
 }

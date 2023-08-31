@@ -24,6 +24,15 @@ public class User {
     private Long userType;
     @TableField("FIM_collection_func")
     private Long userConllection;
+
+    @TableField("FIM_user_YC")
+    private Long ycvalue;
+
+    @TableField("FIM_user_XD")
+    private Long xdvalue;
+
+    @TableField("FIM_user_PR")
+    private Long prvalue;
 //    //激活码
 //    @TableField("activation_code")
 //    private String activationCode;
