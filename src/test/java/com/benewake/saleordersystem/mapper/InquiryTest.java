@@ -2,6 +2,7 @@ package com.benewake.saleordersystem.mapper;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.benewake.saleordersystem.SaleOrderSystemApplication;
+import com.benewake.saleordersystem.entity.Inquiry;
 import com.benewake.saleordersystem.entity.VO.FilterCriteria;
 import com.benewake.saleordersystem.mapper.Vo.SalesOrderVoMapper;
 import com.benewake.saleordersystem.service.InquiryService;
@@ -43,16 +44,16 @@ public class InquiryTest implements BenewakeConstants {
         inquiryService.getDocumentNumberFormat(4,10).forEach(System.out::println);
     }
 
-
     @Test
-    public void testFilter(){
-        List<FilterCriteria> filters = new ArrayList<>();
-        //filters.add(new FilterCriteria("delivery_state",LIKE,"到达"));
-        List<Map<String,Object>> lists = inquiryService.selectSalesOrderVoList(filters,"杜兰特");
-//        lists.forEach(map->{
-//            System.out.println(map.size()+"列："+JSON.toJSONString(map));
-//        });
+    public List<Inquiry> test(){
+        Inquiry inquiry=inquiryService.getInquiryById(334L);
+        List<Inquiry> fail = new ArrayList<>();
+        // 将inquiry对象添加到fail列表中
+        fail.add(inquiry);
+        return fail;
     }
+
+
 
 
     @Test

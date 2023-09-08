@@ -90,11 +90,15 @@ public interface UserService  {
 
     /**
      * 更新用户YC,XD,PR值
-     * @param userId
-     * @param ycValue
-     * @param xdValue
-     * @param prValue
+     * @param id
+     * @param ycvalue
+     * @param xdvalue
+     * @param prvalue
      * @return
      */
     int updateUserValues(Long id, String ycvalue, String xdvalue, String prvalue);
+
+
+
+
 }

@@ -1,9 +1,9 @@
 package com.benewake.saleordersystem.service.impl;
 
-import com.benewake.saleordersystem.entity.Inquiry;
-import com.benewake.saleordersystem.entity.User;
-import com.benewake.saleordersystem.entity.UserTypeValues;
+import com.benewake.saleordersystem.entity.*;
 import com.benewake.saleordersystem.mapper.TodoTaskMapper;
+import com.benewake.saleordersystem.service.CustomerService;
+import com.benewake.saleordersystem.service.ItemService;
 import com.benewake.saleordersystem.service.TodoService;
 import com.benewake.saleordersystem.utils.HostHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +22,19 @@ public class TodoServiceImpl implements TodoService {
     @Autowired
     private HostHolder hostHolder;
 
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private ItemService itemService;
+
     /**
      * 获取当前用户的待处理监控消息，根据用户的角色和权限过滤数据
      *
      * @return 包含待办任务信息的列表或提示消息
      */
     @Override
-    public List<Inquiry> getFilteredOrders() {
+    public List<String> getFilteredOrders() {
         // 更新订单信息表中的 daydiff 字段
         updateDayDiffForAllOrders();
 
@@ -45,19 +51,57 @@ public class TodoServiceImpl implements TodoService {
         // 调用Mapper层执行数据库查询，获取所有订单
         List<Inquiry> allOrders = todoTaskMapper.selectFilteredOrders(userId, useryc, userxd, userpr);
 
-        // 调用Mapper层执行数据库查询，获取所有订单
-        List<Inquiry> filteredOrders = new ArrayList<>();
+        // 创建空列表以存储客户和物料信息
+        List<Customer> customers = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
+
+        // 声明列表以存储拼接后的客户和物料信息
+        List<String> customerItemInfoList = new ArrayList<>();
+
+        // 遍历订单列表，提取客户ID和物料ID，然后使用对应的方法获取客户和物料信息
         for (Inquiry order : allOrders) {
-            Inquiry filteredOrder = new Inquiry();
-            filteredOrder.setInquiryCode(order.getInquiryCode());
-            filteredOrder.setItemName(order.getItemName());
-            filteredOrder.setCustomerName(order.getCustomerName());
-            filteredOrder.setInquiryTypeName(order.getInquiryTypeName());
-            filteredOrder.setMessage("请及时更新需求！");
-            filteredOrders.add(filteredOrder);
+            Long customerId = order.getCustomerId(); // 获取客户ID
+            Long itemId = order.getItemId(); // 获取物料ID
+            Integer orderType = order.getInquiryType(); // 获取订单类型
+            String orderCode = order.getInquiryCode(); // 获取订单编号
+
+            // 使用你的findCustomerById方法获取客户信息
+            Customer customer = customerService.findCustomerById(customerId);
+
+            // 使用你的findItemById方法获取物料信息
+            Item item = itemService.findItemById(itemId);
+
+            // 提取客户姓名和物料名称
+            String customerName = customer.getFName();
+            String itemName = item.getItemName();
+
+            // 根据订单类型值拼接相应的文字
+            String orderTypeText = getOrderTypeText(orderType);
+
+            // 拼接订单信息
+            String customerItemInfo = getOrderInfo(orderCode, orderTypeText, itemName, customerName);
+
+            customerItemInfoList.add(customerItemInfo);
         }
 
-        return filteredOrders;
+        return customerItemInfoList;
+    }
+
+    // 辅助方法，根据订单类型返回相应的文字
+    private String getOrderTypeText(Integer orderType) {
+        if (orderType == 4) {
+            return "YC";
+        } else if (orderType == 5) {
+            return "XD";
+        } else if (orderType == 2) {
+            return "PR";
+        }
+        return "";
+    }
+
+    // 辅助方法，拼接订单信息
+    private String getOrderInfo(String orderCode, String orderTypeText, String itemName, String customerName) {
+        return "单据编号:"+orderCode + " 单据类型:" + orderTypeText + " 物料名称:" + itemName + " 客户名称:" + customerName + " 请及时更新需求!";
     }
 
     /**

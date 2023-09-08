@@ -26,18 +26,18 @@ public class TodoController {
      */
     @ApiOperation("待办任务")
     @GetMapping("/filtered-orders")
-    public Result<List<Inquiry>> getFilteredOrders() {
+    public Result<List<String>> getFilteredOrders() {
         // 调用服务方法，获取过滤后的订单列表
-        List<Inquiry> filteredOrders = todoService.getFilteredOrders();
+        List<String> filteredOrders = todoService.getFilteredOrders();
 
 
         // 判断是否有待办事务
         if (filteredOrders.isEmpty()) {
-            // 没有待办事务，返回失败消息
-            return Result.fail("暂无待办事务", filteredOrders);
+            // 没有待办事务，设置消息并返回
+            return Result.fail("暂无待办事务",filteredOrders);
         } else {
-            // 有待办事务，返回成功消息和订单列表
-            return Result.success("success", filteredOrders);
+            // 有待办事务，返回列表信息
+            return Result.success(filteredOrders);
         }
     }
 
@@ -47,7 +47,7 @@ public class TodoController {
     @ApiOperation("待处理监控消息")
     @GetMapping("/PMMessages")
     public Result<String> getPMMessages() {
-        List<Inquiry> filteredOrders = todoService.getFilteredOrders();
+        List<String> filteredOrders = todoService.getFilteredOrders();
 
         int todoTaskCount = filteredOrders.size();
         if (todoTaskCount > 3) {

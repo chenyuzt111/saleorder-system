@@ -39,22 +39,15 @@ public interface TodoTaskMapper {
 
     // 查询满足条件的订单信息
     @Select(
-            "SELECT i.*, " +
-                    "       itm.item_name AS itemName, " +
-                    "       cust.customer_name AS customerName, " +
-                    "       itd.inquiry_type_name AS inquiryTypeName " +
-                    "FROM fim_inquiry_table i " +
-                    "LEFT JOIN fim_item_table itm ON i.item_id = itm.item_id " +
-                    "LEFT JOIN fim_customer_table cust ON i.customer_id = cust.customer_id " +
-                    "LEFT JOIN inquiry_type_dic itd ON i.inquiry_type = itd.inquiry_type " +
+            "SELECT *" +
+                    "FROM fim_inquiry_table  " +
                     "WHERE " +
-                    "   i.created_user = #{userId} " +
+                    "   created_user = #{userId} " +
                     "   AND (" +
-                    "       (i.inquiry_type = 4 AND  i.daydiff < #{useryc}) " +
-                    "       OR (i.inquiry_type = 5 AND  i.daydiff < #{userxd}) " +
-                    "       OR (i.inquiry_type = 2 AND  i.daydiff < #{userpr})" +
+                    "       (inquiry_type = 4 AND  daydiff < #{useryc}) " +
+                    "       OR (inquiry_type = 5 AND  daydiff < #{userxd}) " +
+                    "       OR (inquiry_type = 2 AND  daydiff < #{userpr})" +
                     "   )"
     )
-    @Options(statementType = StatementType.CALLABLE)
     List<Inquiry> selectFilteredOrders(@Param("userId") Long userId, @Param("useryc") Long useryc, @Param("userxd") Long userxd, @Param("userpr") Long userpr);
 }

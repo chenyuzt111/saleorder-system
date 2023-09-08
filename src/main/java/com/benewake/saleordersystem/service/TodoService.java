@@ -19,6 +19,6 @@ import java.util.List;
 
 @Service
 public interface TodoService  {
-    List<Inquiry> getFilteredOrders();
+    List<String> getFilteredOrders();
 
 }

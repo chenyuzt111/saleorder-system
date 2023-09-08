@@ -49,6 +49,11 @@ public class SaleOrderController implements BenewakeConstants {
     @Autowired
     private ViewService viewService;
 
+    @Autowired
+    private FeiShuMessageService feiShuMessageService;
+
+    @Autowired
+    private UserService userService;
 
 
 
@@ -129,11 +134,14 @@ public class SaleOrderController implements BenewakeConstants {
             // 我的视图
             // 查看我的
             List<Map<String,Object>> lists;
-            //如果用户是管理员或者是查看全部视图的话，查看全部视图
-            if(loginUser.getUserType().equals(1L) || (filterVo.getTableId().equals(1L)&&filterVo.getViewId().equals(-1L))){
-                // 管理员 或系统全部
-                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),null);
-            }else{
+            //需要查看全部视图
+            if( filterVo.getTableId().equals(1L)&&filterVo.getViewId().equals(-1L)) {
+                // 系统全部
+                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), null);
+            } else if (loginUser.getUserType().equals(1L) ) {
+                //如果用户是管理员
+                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),loginUser.getUsername());
+            } else{
                 // 普通用户
                 lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),loginUser.getUsername());
             }
@@ -156,7 +164,15 @@ public class SaleOrderController implements BenewakeConstants {
                 }
             }
             // 根据个人的筛选条件获取信息
-            List<Map<String,Object>> lists = inquiryService.selectSalesOrderVoList(filters, loginUser.getUsername());
+            List<Map<String, Object>> lists;
+
+            if (loginUser.getUserType().equals(1L)) {
+                // 如果登录用户是管理员，可以看到所有订单
+                lists = inquiryService.selectSalesOrderVoList(filters, null);
+            } else {
+                // 否则，只能看到自己的订单
+                lists = inquiryService.selectSalesOrderVoList(filters, loginUser.getUsername());
+            }
 
             res.put("lists",lists);
         }
@@ -220,31 +236,46 @@ public class SaleOrderController implements BenewakeConstants {
     }
 
 
+    /**
+     * 修改订单
+     * 将原来订单state设置为-1  再新增一条订单信息
+     * @param inquiry
+     * @return
+     */
     @PostMapping("/update")
     @SalesmanRequired
     @Transactional(rollbackFor = Exception.class)
     public Result updateInquired(@RequestBody Inquiry inquiry){
-        if(inquiry == null){
-            return Result.fail().message("请添加选择要修改的订单！");
+        User u = hostHolder.getUser();
+        if( u.getUserType().equals(USER_TYPE_SALESMAN)&&
+                (inquiry.getSalesmanId().equals(u.getId())||inquiry.getCreatedUser().equals(u.getId())) ||
+                u.getUserType().equals(USER_TYPE_ADMIN) || u.getUserType().equals(USER_TYPE_SYSTEM)
+        ){
+            if(inquiry == null){
+                return Result.fail().message("请添加选择要修改的订单！");
+            }
+            if(inquiry.getInquiryType()==null){
+                return Result.fail().message("请选择订单类型");
+            }
+            if(inquiry.getState()==null || inquiry.getState()==-1){
+                return Result.fail().message("订单无效！");
+            }
+            // 订单参数有效判断
+            Map<String,Object> res = inquiryService.addValid(inquiry);
+            if(res.size()>0){
+                return Result.fail((String) res.get("error"),null);
+            }
+            // 原订单设置无效
+            inquiryService.updateState(inquiry.getInquiryId(),-1);
+            // 新增修改后的订单
+            inquiry.setInquiryId(null);
+            inquiry.setCreatedUser(hostHolder.getUser().getId());
+            inquiryService.save(inquiry);
+            return Result.success("修改成功！",inquiry.getInquiryId());
+        }else{
+            return Result.fail().message("用户权限不足！");
         }
-        if(inquiry.getInquiryType()==null){
-            return Result.fail().message("请选择订单类型");
-        }
-        if(inquiry.getState()==null || inquiry.getState()==-1){
-            return Result.fail().message("订单无效！");
-        }
-        // 订单参数有效判断
-        Map<String,Object> res = inquiryService.addValid(inquiry);
-        if(res.size()>0){
-            return Result.fail((String) res.get("error"),null);
-        }
-        // 原订单设置无效
-        inquiryService.updateState(inquiry.getInquiryId(),-1);
-        // 新增修改后的订单
-        inquiry.setInquiryId(null);
-        inquiry.setCreatedUser(hostHolder.getUser().getId());
-        inquiryService.save(inquiry);
-        return Result.success("修改成功！",inquiry.getInquiryId());
+
     }
     /**
      * 新增询单信息 及 开始询单 （只能新增或询单）
@@ -292,7 +323,6 @@ public class SaleOrderController implements BenewakeConstants {
                     inq.setInquiryCode(inquiryService.getDocumentNumberFormat(inq.getInquiryType(),1).get(0));
                 }
 
-
                 //将刚刚获取到的单据编码存入到订单编码列表
                 inquiryCodes.add(inq.getInquiryCode());
                 //并将状态码设置为0，保存状态
@@ -300,16 +330,17 @@ public class SaleOrderController implements BenewakeConstants {
             }
             //将之前生成的单据编码以键值名为inquiryCode，以便后续使用
             map.put("inquiryCode",inquiryCodes);
+
             // 添加运输信息
             deliveryService.insertLists(newInquiries);
             // 全部通过加入数据库
             inquiryService.insertLists(newInquiries);
+
             //创建一个ids列表
             List<Long> ids = new ArrayList<>();
             //遍历接收到订单信息，获取订单id存入ids
             for(Inquiry inq:newInquiries){
                 ids.add(inq.getInquiryId());
-
 
             }
             //将ids以键名“ids”存入map
@@ -325,30 +356,25 @@ public class SaleOrderController implements BenewakeConstants {
             //初始化一个整数变量‘ind’,用于跟踪循环的索引
             int ind = 1;
             try {
-                //for循环遍历newInquiries列表中的每个元素
                 for(int i=0;i<newInquiries.size();++i,++ind){
                     // 根据订单
-                    //通过inquiryService.getInquiryById方法根据InquiryId获取Inquiry对象
                     Inquiry inquiry = inquiryService.getInquiryById(newInquiries.get(i).getInquiryId());
-                    //根据ItemId获取Item对象
+                    System.out.println("Inquiry Object: " + inquiry);
                     Item item = itemService.findItemById(inquiry.getItemId());
-                    //如果物料类型
-                    //四个判断条件
-                    //1.物料类型是否为 "新增原材料+软件定制" 的类型
-                    //2.物料类型是否为 "新增原材料定制" 的类型
-                    //3.物料的标准数量是否为 0
-                    //4.当前询单的销售数量是否大于物料的标准数量
-
                     if(item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
                             item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
                             item.getQuantitative()==0 || inquiry.getSaleNum()>item.getQuantitative()){
                         // 询单失败
                         // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
-                        //加入到失败的订单
                         fail.add(inquiry);
                     }else{
-                        //否则的话加入到成功的订单
                         success.add(inquiry);
+                        //询单成功飞书发送消息
+                        User saleman = userService.findUserById(inquiry.getSalesmanId());
+                        if (saleman != null) {
+                            String salemanName = saleman.getUsername();
+                            feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode());
+                        }
                     }
                 }
             }catch (Exception e){
@@ -374,6 +400,8 @@ public class SaleOrderController implements BenewakeConstants {
                 inquiryService.updateByInquiry(success);
                 //return Result.success("已开始询单！",map);
                 resStr.add("APS暂未上线，今日内计划手动反馈日期！");
+
+
             }
             //返回如果成功的询单数量大于 0，将处理结果添加到 resStr，包含 "APS暂未上线，今日内计划手动反馈日期！"。
             //使用 String.join 方法将 resStr 中的消息字符串使用换行符连接起来。

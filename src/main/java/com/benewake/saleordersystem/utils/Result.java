@@ -27,6 +27,12 @@ public class Result<T> implements BenewakeConstants{
     private Result() {
     }
 
+    // 构造方法
+    public Result(String message, T data) {
+        this.message = message;
+        this.data = data;
+    }
+
     public static <T> Result<T> success() {
         Result<T> Result = new Result<>();
         Result.setCode(SUCCESS_CODE);
@@ -39,6 +45,8 @@ public class Result<T> implements BenewakeConstants{
         Result.setData(data);
         return Result;
     }
+
+
 
     public static <T> Result<T> success(String message, T data) {
         Result<T> Result = success();
@@ -90,10 +98,10 @@ public class Result<T> implements BenewakeConstants{
         return Result;
     }
 
-    public Result<T> message(String msg){
-        this.setMessage(msg);
-        return this;
+    public static <T> Result<T> message(String message) {
+        return new Result<>(message, null);
     }
+
 
     public Result<T> code(Integer code){
         this.setCode(code);
