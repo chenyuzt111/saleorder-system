@@ -21,6 +21,7 @@ import com.benewake.saleordersystem.service.*;
 import com.benewake.saleordersystem.utils.BenewakeConstants;
 import com.benewake.saleordersystem.utils.CommonUtils;
 import com.benewake.saleordersystem.utils.HostHolder;
+import com.benewake.saleordersystem.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -498,6 +499,20 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         LambdaUpdateWrapper<Inquiry> luw = new LambdaUpdateWrapper<>();
         luw.set(Inquiry::getState,i).eq(Inquiry::getInquiryId,inquiryId);
         return inquiryMapper.update(null,luw);
+    }
+
+    public Result update_InquiryAllowInquiry(Long inquiryId) {
+        // 获取当前登录用户
+        User currentUser = hostHolder.getUser();
+
+        // 检查当前用户是否是管理员
+        if (currentUser.getUserType() == USER_TYPE_ADMIN) {
+            // 如果是管理员，则更新订单的 allow_inquiry 字段为 1
+            inquiryMapper.updateInquiryAllowInquiry(inquiryId);
+            return Result.message("允许该订单询单");
+        } else {
+            return Result.message("仅管理员可进行该操作");
+        }
     }
 
 }

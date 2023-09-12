@@ -51,17 +51,23 @@ public class ViewServiceImpl implements ViewService {
         return viewMapper.update(view,luw);
     }
 
-    @Override
-    public boolean isExist(Long tableId, Long id, String viewName) {
-        if(StringUtils.isBlank(viewName)){
-            return true;
+    public boolean isExist(Long tableId, Long id, String viewName, Long excludeViewId) {
+        if (StringUtils.isBlank(viewName)) {
+            return false; // 视图名称为空，应该返回 false 表示视图不存在
         }
+
         LambdaQueryWrapper<View> lqw = new LambdaQueryWrapper<>();
         lqw.select(View::getViewName)
-                .eq(View::getViewName,viewName)
-                .eq(View::getTableId,tableId)
-                .eq(View::getUserId,id);
-        return viewMapper.selectOne(lqw)!=null;
+                .eq(View::getViewName, viewName)
+                .eq(View::getTableId, tableId)
+                .eq(View::getUserId, id);
+
+        // 如果传入了要排除的视图 ID，则排除它
+        if (excludeViewId != null) {
+            lqw.ne(View::getViewId, excludeViewId);
+        }
+
+        return viewMapper.selectOne(lqw) != null;
     }
 
     @Override

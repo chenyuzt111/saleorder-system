@@ -57,6 +57,9 @@ public class SaleOrderController implements BenewakeConstants {
 
 
 
+
+
+
     @GetMapping("/stateList")
     public Result getStateList(){
         List<String> stateList = inquiryService.getStateList();
@@ -199,8 +202,7 @@ public class SaleOrderController implements BenewakeConstants {
         }
         // 获取当前用户
         User u = hostHolder.getUser();
-        //判断视图是否存在，id为空且使用isExist判断视图名称是否已存在
-        if(filterVo.getViewId()==null && viewService.isExist(filterVo.getTableId(),u.getId(),filterVo.getViewName())){
+        if(StringUtils.isEmpty(filterVo.getViewName()) || viewService.isExist(filterVo.getTableId(),u.getId(),filterVo.getViewName(),filterVo.getViewId())){
             return Result.fail("该视图名称为空或已存在!",null);
         }
         // 持久化视图
@@ -277,6 +279,27 @@ public class SaleOrderController implements BenewakeConstants {
         }
 
     }
+
+    /**
+     * 管理员为询单失败的订单赋值使其可以询单
+     * allowinquiry !=null 表示可以询单
+     * @return
+     */
+    @GetMapping ("/allowinquiry")
+
+    public Result updateInquiryAllowInquiry(Long inquiryId) {
+
+        Result results = inquiryService.update_InquiryAllowInquiry(inquiryId);
+
+        return results;
+    }
+
+
+
+
+
+
+
     /**
      * 新增询单信息 及 开始询单 （只能新增或询单）
      * startInquiry = 1 表示询单
@@ -356,20 +379,32 @@ public class SaleOrderController implements BenewakeConstants {
             //初始化一个整数变量‘ind’,用于跟踪循环的索引
             int ind = 1;
             try {
-                for(int i=0;i<newInquiries.size();++i,++ind){
+                for (int i = 0; i < newInquiries.size(); ++i, ++ind) {
                     // 根据订单
                     Inquiry inquiry = inquiryService.getInquiryById(newInquiries.get(i).getInquiryId());
                     System.out.println("Inquiry Object: " + inquiry);
-                    Item item = itemService.findItemById(inquiry.getItemId());
-                    if(item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
-                            item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
-                            item.getQuantitative()==0 || inquiry.getSaleNum()>item.getQuantitative()){
-                        // 询单失败
-                        // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
-                        fail.add(inquiry);
-                    }else{
+
+                    // 检查 allow_inquiry 字段是否为空
+                    if (inquiry.getAllowinquiry() == null) {
+                        Item item = itemService.findItemById(inquiry.getItemId());
+                        if (item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
+                                item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
+                                item.getQuantitative() == 0 || inquiry.getSaleNum() > item.getQuantitative()) {
+                            // 询单失败
+                            // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
+                            fail.add(inquiry);
+                        } else {
+                            success.add(inquiry);
+                            //询单成功飞书发送消息
+                            User saleman = userService.findUserById(inquiry.getSalesmanId());
+                            if (saleman != null) {
+                                String salemanName = saleman.getUsername();
+                                feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode());
+                            }
+                        }
+                    } else {
+                        // allow_inquiry 不为空，直接添加到成功列表并发送消息
                         success.add(inquiry);
-                        //询单成功飞书发送消息
                         User saleman = userService.findUserById(inquiry.getSalesmanId());
                         if (saleman != null) {
                             String salemanName = saleman.getUsername();

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.benewake.saleordersystem.entity.VO.FilterCriteria;
 import com.benewake.saleordersystem.entity.Inquiry;
 import com.benewake.saleordersystem.excel.model.InquiryModel;
+import com.benewake.saleordersystem.utils.Result;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -132,4 +133,7 @@ public interface InquiryService extends IService<Inquiry> {
      * @return
      */
     int updateState(Long inquiryId, int i);
+
+
+    Result update_InquiryAllowInquiry(Long inquiryId);
 }

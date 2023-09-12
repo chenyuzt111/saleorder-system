@@ -48,13 +48,8 @@ public class Inquiry {
     @TableField("remark")
     private String remark;
 
-//    private String itemName;
-//
-//    private String customerName;
-//
-//    private String inquiryTypeName;
-//
-//    private String message;
+    @TableField("allow_inquiry")
+    private Long allowinquiry;
 
     public boolean exist(Inquiry inquiry){
         return Objects.equals(expectedTime, inquiry.getExpectedTime()) &&

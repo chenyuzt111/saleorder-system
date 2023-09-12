@@ -15,8 +15,8 @@ public interface BenewakeConstants {
      */
     String X_KDAPI_ACCTID = "20210222142620903";
     String X_KDAPI_USERNAME = "王丽";
-    String X_KDAPI_APPID = "256595_x63D3Ytv5ooeRZwOQ25D17yN4u3+1rKP";
-    String X_KDAPI_APPSEC = "a3454798f30b4e6ca72d6402d9ed3821";
+    String X_KDAPI_APPID = "257724_xc5P7wlv0kk84bUp116DQz0qTI5Z6OqI";
+    String X_KDAPI_APPSEC = "b6f22a40a0764f89a5654016e89230e8";
     String X_KDAPI_SERVICEURL = "https://benewake.test.ik3cloud.com/k3cloud/";
     int X_KDAPI_LCID = 2052;
 

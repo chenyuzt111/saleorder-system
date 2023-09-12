@@ -3,6 +3,7 @@ package com.benewake.saleordersystem.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.benewake.saleordersystem.entity.Inquiry;
+import com.benewake.saleordersystem.entity.TodoTask;
 import com.benewake.saleordersystem.entity.UserTypeValues;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,13 @@ import java.util.List;
 
 @Service
 public interface TodoService  {
-    List<String> getFilteredOrders();
+    List<TodoTask> getFilteredOrders();
+
+    List<Inquiry> filteredInquiries();
+
+    List<TodoTask> POdelays();
+
+
+
 
 }

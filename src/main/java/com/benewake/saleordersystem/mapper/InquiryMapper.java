@@ -63,4 +63,7 @@ public interface InquiryMapper extends BaseMapper<Inquiry> {
             "group by state order by state asc " +
             "</script>")
     List<String> getStateList();
+
+    @Update("UPDATE fim_inquiry_table SET allow_inquiry = 1 WHERE inquiry_id = #{inquiryId}")
+    void updateInquiryAllowInquiry(@Param("inquiryId") Long inquiryId);
 }

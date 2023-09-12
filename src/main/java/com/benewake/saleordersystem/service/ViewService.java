@@ -49,7 +49,7 @@ public interface ViewService {
      * @param viewName
      * @return
      */
-    boolean isExist(Long tableId, Long id, String viewName);
+    boolean isExist(Long tableId, Long id, String viewName, Long excludeViewId);
 
     /**
      * 删除视图
