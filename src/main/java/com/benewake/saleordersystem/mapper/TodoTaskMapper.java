@@ -16,7 +16,7 @@ public interface TodoTaskMapper {
 
     // 插入待办任务数据
     @Insert("INSERT INTO fim_todotask_table (inquiry_id, salesman_id, inquiry_code, inquiry_type, item_name, customer_name, message) " +
-            "VALUES (#{inquiryId}, #{salesmanId}, #{inquiryCode}, #{inquiryType}, #{itemName}, #{fName}, #{message})")
+            "VALUES (#{inquiryId}, #{salesmanId}, #{inquiryCode}, #{inquiryType}, #{itemName}, #{customerName}, #{message})")
     void insertTodoTask(TodoTask todoTask);
 
 

@@ -35,7 +35,7 @@ public class TodoTask {
     private String itemName;
 
     @TableField("customer_name")
-    private String fName;
+    private String customerName;
 
     @TableField("message")
     private String message;

@@ -22,8 +22,8 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
 
     @Autowired
     private ViewColMapper viewColMapper;
-    private static final int[] ALL_SALESMAN_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20};
-    private static final int[] ALL_SYSTEM_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20};
+    private static final int[] ALL_SALESMAN_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20,21};
+    private static final int[] ALL_SYSTEM_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20,21};
 
     private static final int[] INQUIRY_TYPE_SALESMAN_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20};
     private static final int[] INQUIRY_TYPE_ADMIN_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20};
@@ -54,10 +54,10 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
     private static final String[] ENGS = {"salesman_name","inquiry_code","inquiry_init_type","state","item_code","item_name",
         "sale_num","customer_name","inquiry_type","item_type","customer_type","expected_time",
         "arranged_time","delay","order_delivery_progress","delivery_code","receive_time","delivery_state",
-                "customize","created_user_name","remark"};
+                "customize","created_user_name","remark","allow_inquiry"};
     private static final String[] CNS = {"销售员","单据编号","单据类型","单据状态","物料编码","物料名称","数量","客户名称","订单状态",
                 "产品类型","客户类型","期望发货日期","计划反馈日期","是否延期","订单交付进度","运输单号","签收时间","最新状态",
-                "是否定制","创建人","备注"};
+                "是否定制","创建人","备注","是否允许询单"};
 
     private List<Map<String,Object>> getColsTansfer(int[] seq){
         List<Map<String,Object>> maps = new ArrayList<>();

@@ -36,7 +36,7 @@ public class TodoServiceImpl implements TodoService {
      * 获取全部待办订单，更新在数据库待办任务表中
      */
     public void selectAllPendingTasks() {
-        // 清空fim_todotask_table表
+//         清空fim_todotask_table表
         todoTaskMapper.truncateTodoTaskTable();
 
         updateDayDiffForAllOrders();
@@ -59,7 +59,7 @@ public class TodoServiceImpl implements TodoService {
             TodoTask todoTask = new TodoTask();
             todoTask.setSalesmanId(salesmanId);
             todoTask.setInquiryId(inquiryId);
-            todoTask.setFName(customerName);
+            todoTask.setCustomerName(customerName);
             todoTask.setItemName(itemName);
             todoTask.setInquiryType(orderTypeText);
             todoTask.setInquiryCode(inquiryCode);
@@ -236,7 +236,7 @@ public class TodoServiceImpl implements TodoService {
         todoTask.setSalenum(saleNum);
         todoTask.setExpectedTime(expectedTime);
         todoTask.setDelayedTime(timeDifferenceDays);
-        todoTask.setFName(customerName);
+        todoTask.setCustomerName(customerName);
         todoTask.setItemName(itemName);
 
         return todoTask;
