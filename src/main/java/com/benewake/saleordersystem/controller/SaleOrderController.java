@@ -399,7 +399,7 @@ public class SaleOrderController implements BenewakeConstants {
                             User saleman = userService.findUserById(inquiry.getSalesmanId());
                             if (saleman != null) {
                                 String salemanName = saleman.getUsername();
-                                feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode());
+                                feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(),inquiry.getItemId(),inquiry.getSaleNum());
                             }
                         }
                     } else {
@@ -408,7 +408,7 @@ public class SaleOrderController implements BenewakeConstants {
                         User saleman = userService.findUserById(inquiry.getSalesmanId());
                         if (saleman != null) {
                             String salemanName = saleman.getUsername();
-                            feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode());
+                            feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(),inquiry.getItemId(),inquiry.getSaleNum());
                         }
                     }
                 }
