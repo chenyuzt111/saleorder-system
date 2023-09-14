@@ -24,7 +24,7 @@ public class Result<T> implements BenewakeConstants{
      */
     private T data;
 
-    private Result() {
+    public Result() {
     }
 
     // 构造方法
