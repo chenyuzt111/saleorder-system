@@ -111,7 +111,7 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         List<FilterCriteria> f1 = new ArrayList<>();
         // inquiry_init_type 需要int表示，定义一个字符串数组str1，其中包含了与f1列表中筛选条件有关的列名。
         String[] str1 = {"inquiry_code","sale_num","expected_time","arranged_time",
-                "remark","inquiry_init_type"};
+                "remark","inquiry_init_type","allow_inquiry"};
         //如果map中包含state键，（map中存的接受的筛选条件），存入f1（专门创建为了存储特定列的筛选条件）
         if(map.containsKey("state")){
             f1.add(filters.get(map.get("state")));
