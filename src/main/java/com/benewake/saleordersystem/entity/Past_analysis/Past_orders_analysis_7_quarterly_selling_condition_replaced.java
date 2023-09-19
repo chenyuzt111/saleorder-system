@@ -7,12 +7,11 @@ import lombok.Data;
 /**
  * @author zt
  * @since 2023年09月13日 11:17
- * * 描 述：销售员销售现况
+ * * 描 述：季度销售现况
  */
 @Data
-@TableName("past_orders_analysis_1_salesman_selling_condition")
-public class Past_orders_analysis_1_salesman_selling_condition {
-
+@TableName("past_orders_analysis_7_quarterly_selling_condition_replaced")
+public class Past_orders_analysis_7_quarterly_selling_condition_replaced {
     @TableField("serial_num")
     private Long serialNum;
 
@@ -22,17 +21,17 @@ public class Past_orders_analysis_1_salesman_selling_condition {
     @TableField("item_name")
     private String itemName;
 
-    @TableField("salesman_name")
-    private String salesmanName;
+    @TableField("sale_year")
+    private Integer saleYear;
 
-    @TableField("salesman_sale_num")
-    private Long salesmanSaleNum;
+    @TableField("sale_quarter")
+    private Integer saleQuarter;
 
-    @TableField("item_sale_num")
-    private Long itemSaleNum;
+    @TableField("quarter_item_sale_num")
+    private Long quarterItemSaleNum;
 
-    @TableField("sales_share")
-    private Float salesShare;
+    @TableField("quarter_avg")
+    private Float quarterAvg;
 
     @TableField("month_avg")
     private Float monthAvg;

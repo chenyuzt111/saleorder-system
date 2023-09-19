@@ -7,12 +7,11 @@ import lombok.Data;
 /**
  * @author zt
  * @since 2023年09月13日 11:17
- * * 描 述：销售员销售现况
+ * * 描 述：散户现况
  */
 @Data
-@TableName("past_orders_analysis_1_salesman_selling_condition")
-public class Past_orders_analysis_1_salesman_selling_condition {
-
+@TableName("past_orders_analysis_10_retail_condition")
+public class Past_orders_analysis_10_retail_condition {
     @TableField("serial_num")
     private Long serialNum;
 

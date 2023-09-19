@@ -48,5 +48,6 @@ public class SaleOut {
     private String FSoorDerno;
 
     @ExcelProperty("fim单据编号")
-    private String FIM;
+    @TableField("fim_code")
+    private String F_ora_FIMNumber;
 }

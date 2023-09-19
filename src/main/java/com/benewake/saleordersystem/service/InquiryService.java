@@ -134,6 +134,18 @@ public interface InquiryService extends IService<Inquiry> {
      */
     int updateState(Long inquiryId, int i);
 
-
+    /**
+     * 允许某订单询单（为allowinquiry赋值）
+     * @param inquiryId
+     * @return
+     */
     Result update_InquiryAllowInquiry(Long inquiryId);
+
+
+    /**
+     * 根据单据编号找到订单
+     * @param inquiryCode
+     * @return
+     */
+    Inquiry getInquiriesByCode(String inquiryCode);
 }

@@ -190,7 +190,7 @@ public class KingDeeServiceImpl implements KingDeeService, BenewakeConstants {
         // 临时获取 运输单号和收件人电话号码  FIM表示fim单据编号用于唯一匹配
 //        fieldKeys.add("FCarriageNO");
 //        fieldKeys.add("F_ora_Text2");
-//        fieldKeys.add("FIM");
+        fieldKeys.add("F_ora_FIMNumber");
         List<SaleOut> lists = searchData(formId,fieldKeys,queryFilters,limit, SaleOut.class);
 
         // 替换信息
@@ -274,9 +274,9 @@ public class KingDeeServiceImpl implements KingDeeService, BenewakeConstants {
         if(deliveries == null || deliveries.size() == 0) return new ArrayList<>();
         String formId = "SAL_OUTSTOCK";
         List<String> fieldKeys = new ArrayList<>();
-        fieldKeys.add("FIM,FCarriageNO,F_ora_Text2");
+        fieldKeys.add("F_ora_FIMNumber,FCarriageNO,F_ora_Text2");
         List<String> queryFields = new ArrayList<>();
-        deliveries.forEach(d->queryFields.add(String.format("FIM = '%s'",d.getInquiryCode())));
+        deliveries.forEach(d->queryFields.add(String.format("F_ora_FIMNumber = '%s'",d.getInquiryCode())));
         List<SaleOut> lists = searchData(formId,fieldKeys,String.join(" or ",queryFields),Integer.MAX_VALUE, SaleOut.class);
         return lists;
     }

@@ -36,6 +36,9 @@ public class PastOrder {
     @TableField("order_code")
     private String FSoorDerno;
 
+    @TableField("fim_code")
+    private String F_ora_FIMNumber;
+
     public PastOrder(String FMaterialID, String FRealQty, String FCustomerID, String FSalesManID, Date FDate, String FSoorDerno) {
         this.FMaterialID = FMaterialID;
         this.FRealQty = FRealQty;

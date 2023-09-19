@@ -13,10 +13,17 @@ public interface BenewakeConstants {
     /**
      * 金蝶授权信息
      */
-    String X_KDAPI_ACCTID = "20210222142620903";
-    String X_KDAPI_USERNAME = "王丽";
-    String X_KDAPI_APPID = "257724_xc5P7wlv0kk84bUp116DQz0qTI5Z6OqI";
-    String X_KDAPI_APPSEC = "b6f22a40a0764f89a5654016e89230e8";
+//    String X_KDAPI_ACCTID = "20210222142620903";
+//    String X_KDAPI_USERNAME = "王丽";
+//    String X_KDAPI_APPID = "257724_xc5P7wlv0kk84bUp116DQz0qTI5Z6OqI";
+//    String X_KDAPI_APPSEC = "b6f22a40a0764f89a5654016e89230e8";
+//    String X_KDAPI_SERVICEURL = "https://benewake.test.ik3cloud.com/k3cloud/";
+//    int X_KDAPI_LCID = 2052;
+
+    String X_KDAPI_ACCTID = "20210222141008331";
+    String X_KDAPI_USERNAME = "FIM+APS系统集成账户";
+    String X_KDAPI_APPID = "258135_06eqT6GoTuq9RfSL726N7dzGzJ2/5Cms";
+    String X_KDAPI_APPSEC = "85cb5f3d3b5e4104b3d3dd6c69c61b4b";
     String X_KDAPI_SERVICEURL = "https://benewake.test.ik3cloud.com/k3cloud/";
     int X_KDAPI_LCID = 2052;
 

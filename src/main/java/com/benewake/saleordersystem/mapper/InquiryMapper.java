@@ -66,4 +66,11 @@ public interface InquiryMapper extends BaseMapper<Inquiry> {
 
     @Update("UPDATE fim_inquiry_table SET allow_inquiry = 1 WHERE inquiry_id = #{inquiryId}")
     void updateInquiryAllowInquiry(@Param("inquiryId") Long inquiryId);
+
+
+    @Select("SELECT * FROM fim_inquiry_table WHERE inquiry_code = #{inquiryCode} AND state>=0")
+    Inquiry getInquiriesByCode(@Param("inquiryCode") String inquiryCode);
+
+
+
 }

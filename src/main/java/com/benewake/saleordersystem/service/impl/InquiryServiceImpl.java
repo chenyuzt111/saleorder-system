@@ -507,12 +507,22 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
 
         // 检查当前用户是否是管理员
         if (currentUser.getUserType() == USER_TYPE_ADMIN) {
-            // 如果是管理员，则更新订单的 allow_inquiry 字段为 1
-            inquiryMapper.updateInquiryAllowInquiry(inquiryId);
-            return Result.message("允许该订单询单");
+            if (inquiryId!=null) {
+                // 如果是管理员，则更新订单的 allow_inquiry 字段为 1
+                inquiryMapper.updateInquiryAllowInquiry(inquiryId);
+                return Result.message("允许该订单询单");
+            }else {
+                return Result.message("没有接收到订单id");
+            }
         } else {
             return Result.message("仅管理员可进行该操作");
         }
     }
+
+    public Inquiry getInquiriesByCode(String inquiryCode) {
+        return inquiryMapper.getInquiriesByCode(inquiryCode);
+    }
+
+
 
 }

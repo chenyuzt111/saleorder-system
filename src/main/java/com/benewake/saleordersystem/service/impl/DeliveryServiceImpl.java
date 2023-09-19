@@ -50,7 +50,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             saleOuts.forEach(s->{
                 //System.out.println(s.toString());
                 Delivery delivery = new Delivery();
-                delivery.setInquiryCode(s.getFIM());
+                delivery.setInquiryCode(s.getF_ora_FIMNumber());
                 delivery.setDeliveryCode(s.getFCarriageNO());
                 delivery.setDeliveryPhone(StringUtils.isBlank(s.getF_ora_Text2())?null:s.getF_ora_Text2()
                         .substring(s.getF_ora_Text2().length()-4));
