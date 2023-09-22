@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -210,6 +211,117 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
         }
     }
 
+    @Override
+    public void addCustomerType(String customerType) {
+        userMapper.insertCustomerType(customerType);
+    }
+    @Override
+    public void deleteCustomerType(String customerType) {
+        userMapper.deleteCustomerType(customerType);
+    }
 
+    @Override
+    public int addInquiryType(String typeName) {
+        return userMapper.insertInquiryType(typeName);
+    }
+    @Override
+    public int deleteInquiryType(String typeName) {
+        return userMapper.deleteInquiryType(typeName);
+    }
+    @Override
+    public int insertItemType(String itemTypeName) {
+        return userMapper.insertItemType(itemTypeName);
+    }
+    @Override
+    public int deleteItemType(String itemTypeName) {
+        return userMapper.deleteItemType(itemTypeName);
+    }
+
+    @Override
+    public int addCustomerName(String  customerName) {
+        return userMapper.insertCustomerName(customerName);
+    }
+
+    @Override
+    public int deleteCustomerName(String customerName) {
+        return userMapper.deleteCustomerName(customerName);
+    }
+
+    @Override
+    public int updateCustomerName(String oldCustomerName, String newCustomerName) {
+        return userMapper.updateCustomerName(oldCustomerName,newCustomerName);
+    }
+
+    @Override
+    public int insertCustomerItem(int customerId, int itemId, String customerType) {
+        return userMapper.insertCustomerItem(customerId, itemId, customerType);
+    }
+
+    @Override
+    public int deleteCustomerItem(int customerId, int itemId, String customerType) {
+        return userMapper.deleteCustomerItem(customerId, itemId, customerType);
+    }
+
+    @Override
+    public int addCustomerRename(String customerNameOld, String customerNameNew) {
+        return userMapper.insertCustomerRename(customerNameOld, customerNameNew);
+    }
+
+
+    @Override
+    public int deleteCustomerRenameByOldName(String customerNameOld) {
+        return userMapper.deleteCustomerRenameByOldName(customerNameOld);
+    }
+
+    public int updateCustomerRename(String customerNameOld, String customerNameNew) {
+        return userMapper.updateCustomerRename(customerNameOld, customerNameNew);
+    }
+
+    @Override
+    public int addItemChange(String itemCodeOld, String itemCodeNew) {
+        return userMapper.insertItemChange(itemCodeOld, itemCodeNew);
+    }
+
+    @Override
+    public int deleteItemChangeByOldCode(String itemCodeOld) {
+        return userMapper.deleteItemChangeByOldCode(itemCodeOld);
+    }
+
+    @Override
+    public int updateItemChange(String itemCodeOld, String itemCodeNew) {
+        return userMapper.updateItemChange(itemCodeOld, itemCodeNew);
+    }
+
+    @Override
+    public int addSalesmanChanging(String salesmanNameOld, String salesmanNameNew) {
+        return userMapper.insertSalesmanChanging(salesmanNameOld, salesmanNameNew);
+    }
+
+    @Override
+    public int deleteSalesmanChangingByOldName(String salesmanNameOld) {
+        return userMapper.deleteSalesmanChangingByOldName(salesmanNameOld);
+    }
+
+    @Override
+    public int updateSalesmanChanging(String salesmanNameOld, String salesmanNameNew) {
+        return userMapper.updateSalesmanChanging(salesmanNameOld, salesmanNameNew);
+    }
+
+
+    public int addCustomizedItemChange(String customerName, String itemCodeOld, String itemCodeNew) {
+        return userMapper.insertCustomizedItemChange(customerName, itemCodeOld, itemCodeNew);
+    }
+
+    public int deleteCustomizedItemChange(String customerName, String itemCodeOld, String itemCodeNew) {
+        return userMapper.deleteCustomizedItemChange(customerName, itemCodeOld, itemCodeNew);
+    }
+
+    public int insertPastChooseItem(String itemCode, String itemName, LocalDateTime startMonth) {
+        return userMapper.insertPastChooseItem(itemCode, itemName, startMonth);
+    }
+
+    public int deletePastChooseItemByItemCode(String itemCode) {
+        return userMapper.deletePastChooseItemByItemCode(itemCode);
+    }
 
 }

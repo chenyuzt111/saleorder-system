@@ -33,6 +33,12 @@ public class User {
 
     @TableField("FIM_user_PR")
     private Long prvalue;
+
+    @TableField("FIM_user_phone")
+    private Long userphone;
+
+    @TableField("FIM_user_mail")
+    private String usermail;
 //    //激活码
 //    @TableField("activation_code")
 //    private String activationCode;

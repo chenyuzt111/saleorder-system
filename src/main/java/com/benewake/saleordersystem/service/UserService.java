@@ -5,6 +5,7 @@ import com.benewake.saleordersystem.entity.LoginTicket;
 import com.benewake.saleordersystem.entity.User;
 import com.benewake.saleordersystem.utils.Result;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -100,5 +101,53 @@ public interface UserService  {
 
 
 
+    void addCustomerType(String customerType);
 
+    void deleteCustomerType(String customerType);
+
+    int addInquiryType(String typeName);
+
+    int deleteInquiryType(String typeName);
+
+    int insertItemType(String itemTypeName);
+
+    int deleteItemType(String itemTypeName);
+
+    int addCustomerName(String  customerName);
+
+    int deleteCustomerName(String itemTypeName);
+
+    int updateCustomerName(String oldCustomerName, String newCustomerName);
+
+    int insertCustomerItem(int customerId, int itemId, String customerType);
+
+    int deleteCustomerItem(int customerId, int itemId, String customerType);
+
+    int addCustomerRename(String customerNameOld, String customerNameNew);
+
+    int deleteCustomerRenameByOldName(String customerNameOld);
+
+    int updateCustomerRename(String customerNameOld, String customerNameNew);
+
+
+    int addItemChange(String itemCodeOld, String itemCodeNew);
+
+    int deleteItemChangeByOldCode(String itemCodeOld);
+
+    int updateItemChange(String itemCodeOld, String itemCodeNew);
+
+    int addSalesmanChanging(String salesmanNameOld, String salesmanNameNew);
+
+    int deleteSalesmanChangingByOldName(String salesmanNameOld);
+
+    int updateSalesmanChanging(String salesmanNameOld, String salesmanNameNew);
+
+    int addCustomizedItemChange(String customerName, String itemCodeOld, String itemCodeNew);
+
+    int deleteCustomizedItemChange(String customerName, String itemCodeOld, String itemCodeNew);
+
+
+    int insertPastChooseItem(String itemCode, String itemName, LocalDateTime startMonth);
+
+    int deletePastChooseItemByItemCode(String itemCode);
 }

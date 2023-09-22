@@ -12,6 +12,80 @@ server:
 
 # spring
 spring:
+
+
+
+
+
+#  profiles:
+#    active: default
+#  mail:
+#    default:
+#      host: smtp.feishu.cn
+#      username: your-username
+#      password: your-password
+#      port: 465
+#      protocol: smtps
+#      properties:
+#        mail:
+#          smtp:
+#            ssl:
+#              enable: true
+#              required: false
+#            debug: true
+#    user1:
+#      host: smtp.feishu.cn
+#      username: zhaotong@benewake.com
+#      password: 3efKhLdhl93LGjCb
+#      port: 465
+#      protocol: smtps
+#      properties:
+#        mail:
+#          smtp:
+#            ssl:
+#              enable: true
+#              required: false
+#            debug: true
+#    user2:
+#      host: smtp.feishu.cn
+#      username: wangxiaoxi@benewake.com
+#      password: oqEPOBnLJhHA1qXO
+#      port: 465
+#      protocol: smtps
+#      properties:
+#        mail:
+#          smtp:
+#            ssl:
+#              enable: true
+#              required: false
+#            debug: true
+
+
+
+
+
+
+
+
+
+
+
+  mail:
+    host: smtp.feishu.cn
+    # 邮箱账号
+    username: zhaotong@benewake.com
+    # 授权码
+    password: 3efKhLdhl93LGjCb
+    port: 465
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+            required: false
+          debug: true
+
   application:
     name: SaleOrderSystem
 #  rabbitmq:
@@ -37,6 +111,8 @@ spring:
       maximum-pool-size: 15
       minimum-idle: 5
       idle-timeout: 30000
+
+
 
 # mybatis-plus
 mybatis-plus:

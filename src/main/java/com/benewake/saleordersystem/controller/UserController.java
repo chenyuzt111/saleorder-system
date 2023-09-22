@@ -1,19 +1,22 @@
 package com.benewake.saleordersystem.controller;
 
 import com.benewake.saleordersystem.annotation.LoginRequired;
+import com.benewake.saleordersystem.entity.Customer;
+import com.benewake.saleordersystem.entity.Item;
 import com.benewake.saleordersystem.entity.User;
+import com.benewake.saleordersystem.service.CustomerService;
+import com.benewake.saleordersystem.service.ItemService;
 import com.benewake.saleordersystem.service.UserService;
 import com.benewake.saleordersystem.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +34,8 @@ public class UserController implements BenewakeConstants {
 
     @Autowired
     private HostHolder hostHolder;
+
+
 
     @ApiOperation("更新用户密码")
     @PostMapping("/updatePwd")
@@ -82,35 +87,7 @@ public class UserController implements BenewakeConstants {
     }
 
 
-    @ApiOperation("管理员修改用户YC、XD、PR值")
-    @PostMapping("/updateUserValues")
-    @LoginRequired
-    public Result updateUserValues(@RequestBody Map<String, Object> param) {
 
-        User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
-
-        if (!currentUser.getUserType().equals(USER_TYPE_ADMIN) && !currentUser.getUserType().equals(USER_TYPE_SYSTEM)) {
-            return Result.fail().message("只有管理员用户才可以修改用户值！");
-        }
-
-        Long id = Long.parseLong((String)param.get("userid"));
-        String ycvalue = ((String)param.get("ycValue"));
-        String xdvalue = ((String)param.get("xdValue"));
-        String prvalue = ((String)param.get("prValue"));
-
-        if ( StringUtils.isEmpty(ycvalue) || StringUtils.isEmpty(xdvalue) || StringUtils.isEmpty(prvalue)) {
-            return Result.fail().message("数据不能为空！");
-        }
-
-        // 执行更新操作
-        int result = userService.updateUserValues(id, ycvalue, xdvalue, prvalue);
-
-        if (result > 0) {
-            return Result.success().message("用户值更新成功！");
-        } else {
-            return Result.fail().message("用户值更新失败！");
-        }
-    }
 
     /**
      * 根据用户姓名模糊匹配
@@ -123,5 +100,6 @@ public class UserController implements BenewakeConstants {
         Long userType = param.get("userType")==null?null:Long.parseLong((String) param.get("userType"));
         return Result.success(userService.getUsernameLikeList(username,userType));
     }
+
 
 }

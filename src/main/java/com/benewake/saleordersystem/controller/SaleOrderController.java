@@ -11,6 +11,7 @@ import com.benewake.saleordersystem.service.*;
 import com.benewake.saleordersystem.utils.BenewakeConstants;
 import com.benewake.saleordersystem.utils.HostHolder;
 import com.benewake.saleordersystem.utils.Result;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -284,12 +285,17 @@ public class SaleOrderController implements BenewakeConstants {
      * 管理员为询单失败的订单赋值使其可以询单
      * allowinquiry !=null 表示可以询单
      * @return
-     */
-    @GetMapping ("/allowinquiry")
+     */@ApiOperation("允许询单")
+    @PostMapping ("/allowinquiry")
+    public List<Result> updateInquiryAllowInquiry(@RequestBody List<Long> inquiryIds) {
+        List<Result> results = new ArrayList<>();
 
-    public Result updateInquiryAllowInquiry(Long inquiryId) {
-
-        Result results = inquiryService.update_InquiryAllowInquiry(inquiryId);
+        for (Long inquiryId : inquiryIds) {
+            Result result = inquiryService.update_InquiryAllowInquiry(inquiryId);
+            // 可以根据需要处理每个查询的结果
+            // 这里只是简单地将结果添加到总结果中
+            results.add(result);
+        }
 
         return results;
     }
@@ -379,7 +385,7 @@ public class SaleOrderController implements BenewakeConstants {
 
                     //将ids以键名“ids”存入map
                     map.put("ids", ids);
-                    message.add("保存成功!");
+                    message.add("保存成功!\n");
                     map.put("message",message);
                 }
                 // 前面是保存，接下来是询单功能
@@ -391,31 +397,33 @@ public class SaleOrderController implements BenewakeConstants {
                     List<Inquiry> success = new ArrayList<>();
                     //初始化一个整数变量‘ind’,用于跟踪循环的索引
                     try {
+
+                        Inquiry inquiry = inquiryService.getInquiryById(inq1.getInquiryId());
                             // 检查 allow_inquiry 字段是否为空
-                            if (inq1.getAllowinquiry() == null) {
-                                Item item = itemService.findItemById(inq1.getItemId());
+                            if (inquiry.getAllowinquiry() == null) {
+                                Item item = itemService.findItemById(inquiry.getItemId());
                                 if (item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
                                         item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
-                                        item.getQuantitative() == 0 || inq1.getSaleNum() > item.getQuantitative()) {
+                                        item.getQuantitative() == 0 || inquiry.getSaleNum() > item.getQuantitative()) {
                                     // 询单失败
                                     // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
-                                    fail.add(inq1);
+                                    fail.add(inquiry);
                                 } else {
-                                    success.add(inq1);
+                                    success.add(inquiry);
                                     //询单成功飞书发送消息
-                                    User saleman = userService.findUserById(inq1.getSalesmanId());
+                                    User saleman = userService.findUserById(inquiry.getSalesmanId());
                                     if (saleman != null) {
                                         String salemanName = saleman.getUsername();
-                                        feiShuMessageService.sendMessage(salemanName, inq1.getInquiryCode(), inq1.getItemId(), inq1.getSaleNum());
+                                        feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
                                     }
                                 }
                             } else {
                                 // allow_inquiry 不为空，直接添加到成功列表并发送消息
-                                success.add(inq1);
-                                User saleman = userService.findUserById(inq1.getSalesmanId());
+                                success.add(inquiry);
+                                User saleman = userService.findUserById(inquiry.getSalesmanId());
                                 if (saleman != null) {
                                     String salemanName = saleman.getUsername();
-                                    feiShuMessageService.sendMessage(salemanName, inq1.getInquiryCode(), inq1.getItemId(), inq1.getSaleNum());
+                                    feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
                                 }
                             }
 
@@ -431,7 +439,7 @@ public class SaleOrderController implements BenewakeConstants {
                         if (!message.isEmpty()) {
                             message.remove(message.size() - 1); // Remove the last element (index: size - 1).
                         }
-                        message.add("单据编号:" + f.getInquiryCode() + "询单失败，请飞书联系管理员!");
+                        message.add("单据编号:" + f.getInquiryCode() + "询单失败，请飞书联系管理员!\n");
                         map.put("message",message);
                     });
                     //如果成功的队列中不为0，进入询单功能
@@ -449,7 +457,7 @@ public class SaleOrderController implements BenewakeConstants {
                         if (!message.isEmpty()) {
                             message.remove(message.size() - 1); // Remove the last element (index: size - 1).
                         }
-                        message.add("APS暂未上线，今日内计划手动反馈日期！");
+                        message.add("APS暂未上线，今日内计划手动反馈日期！\n");
                         map.put("message",message);
 
                     }
@@ -484,7 +492,7 @@ public class SaleOrderController implements BenewakeConstants {
                     //将之前生成的单据编码以键值名为inquiryCode，以便后续使用
                     map.put("inquiryCode", inquiryCodes);
                     updateInquired(inquiriesByCode);
-                    message.add("保存成功！");
+                    message.add("保存成功！\n");
 
                     map.put("message",message);
                 if (startInquiry == 1) {
@@ -492,31 +500,32 @@ public class SaleOrderController implements BenewakeConstants {
                     List<Inquiry> success = new ArrayList<>();
                     //初始化一个整数变量‘ind’,用于跟踪循环的索引
                     try {
+                        Inquiry inquiry = inquiryService.getInquiryById(inq1.getInquiryId());
                         // 检查 allow_inquiry 字段是否为空
                         if (inquiriesByCode.getAllowinquiry() == null) {
-                            Item item = itemService.findItemById(inq1.getItemId());
+                            Item item = itemService.findItemById(inquiry.getItemId());
                             if (item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
                                     item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
-                                    item.getQuantitative() == 0 || inq1.getSaleNum() > item.getQuantitative()) {
+                                    item.getQuantitative() == 0 || inquiry.getSaleNum() > item.getQuantitative()) {
                                 // 询单失败
                                 // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
-                                fail.add(inq1);
+                                fail.add(inquiry);
                             } else {
-                                success.add(inq1);
+                                success.add(inquiry);
                                 //询单成功飞书发送消息
-                                User saleman = userService.findUserById(inq1.getSalesmanId());
+                                User saleman = userService.findUserById(inquiry.getSalesmanId());
                                 if (saleman != null) {
                                     String salemanName = saleman.getUsername();
-                                    feiShuMessageService.sendMessage(salemanName, inq1.getInquiryCode(), inq1.getItemId(), inq1.getSaleNum());
+                                    feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
                                 }
                             }
                         } else {
                             // allow_inquiry 不为空，直接添加到成功列表并发送消息
-                            success.add(inq1);
-                            User saleman = userService.findUserById(inq1.getSalesmanId());
+                            success.add(inquiry);
+                            User saleman = userService.findUserById(inquiry.getSalesmanId());
                             if (saleman != null) {
                                 String salemanName = saleman.getUsername();
-                                feiShuMessageService.sendMessage(salemanName, inq1.getInquiryCode(), inq1.getItemId(), inq1.getSaleNum());
+                                feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
                             }
                         }
 
@@ -530,7 +539,7 @@ public class SaleOrderController implements BenewakeConstants {
                         if (!message.isEmpty()) {
                             message.remove(message.size() - 1); // Remove the last element (index: size - 1).
                         }
-                        message.add("单据编号:" + f.getInquiryCode() + "询单失败，请飞书联系管理员!");
+                        message.add("单据编号:" + f.getInquiryCode() + "询单失败，请飞书联系管理员!\n");
                         map.put("message",message);
                     });
                     //如果成功的队列中不为0，进入询单功能
@@ -547,7 +556,7 @@ public class SaleOrderController implements BenewakeConstants {
                         if (!message.isEmpty()) {
                             message.remove(message.size() - 1); // Remove the last element (index: size - 1).
                         }
-                        message.add("APS暂未上线，今日内计划手动反馈日期！");
+                        message.add("APS暂未上线，今日内计划手动反馈日期！\n");
                         map.put("message",message);
 
                     }
@@ -560,7 +569,9 @@ public class SaleOrderController implements BenewakeConstants {
             }
 
         }
-        return Result.success("操作成功", map);
+        String result= message.toString();
+        result = result.replace("[", "").replace("]", "");
+        return Result.success(result, map);
     }
 
     /**
