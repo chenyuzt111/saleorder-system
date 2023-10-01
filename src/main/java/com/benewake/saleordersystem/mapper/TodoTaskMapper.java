@@ -20,6 +20,7 @@ public interface TodoTaskMapper {
     void insertTodoTask(TodoTask todoTask);
 
 
+    //
     // 查询所有待办任务
     @Select("SELECT * FROM fim_todotask_table")
     List<TodoTask> selectTodoTask();
@@ -34,9 +35,11 @@ public interface TodoTaskMapper {
 
     // 查询所有待办任务的订单
     @Select("SELECT * FROM fim_inquiry_table WHERE " +
+            "state >= 0 AND " +
             "((inquiry_type = 4 AND daydiff < (SELECT FIM_user_YC FROM fim_users_table WHERE FIM_user_id = salesman_id)) " +
             "OR (inquiry_type = 5 AND daydiff < (SELECT FIM_user_XD FROM fim_users_table WHERE FIM_user_id = salesman_id)) " +
             "OR (inquiry_type = 2 AND daydiff < (SELECT FIM_user_PR FROM fim_users_table WHERE FIM_user_id = salesman_id)))")
+
     List<Inquiry> selectAllPendingTasks();
 
     // 获取订单信息表中所有的订单信息

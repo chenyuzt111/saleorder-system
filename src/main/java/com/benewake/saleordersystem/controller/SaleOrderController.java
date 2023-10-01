@@ -301,11 +301,6 @@ public class SaleOrderController implements BenewakeConstants {
     }
 
 
-
-
-
-
-
     /**
      * 新增询单信息 及 开始询单 （只能新增或询单）
      * startInquiry = 1 表示询单
@@ -479,11 +474,7 @@ public class SaleOrderController implements BenewakeConstants {
                     inquiriesByCode.setSalesmanId(inq1.getSalesmanId());
                     //遍历接收到订单信息，获取订单id存入ids
 
-                    ids.add(inquiriesByCode.getInquiryId());
 
-
-                    //将ids以键名“ids”存入map
-                    map.put("ids", ids);
                     //将刚刚获取到的单据编码存入到订单编码列表
                     inquiryCodes.add(inq1.getInquiryCode());
                     //并将状态码设置为0，保存状态
@@ -492,7 +483,13 @@ public class SaleOrderController implements BenewakeConstants {
                     //将之前生成的单据编码以键值名为inquiryCode，以便后续使用
                     map.put("inquiryCode", inquiryCodes);
                     updateInquired(inquiriesByCode);
-                    message.add("保存成功！\n");
+
+
+
+                //将ids以键名“ids”存入map
+                    ids.add(inquiriesByCode.getInquiryId());
+                    map.put("ids", ids);
+                    message.add("保存成功!\n");
 
                     map.put("message",message);
                 if (startInquiry == 1) {
@@ -500,7 +497,7 @@ public class SaleOrderController implements BenewakeConstants {
                     List<Inquiry> success = new ArrayList<>();
                     //初始化一个整数变量‘ind’,用于跟踪循环的索引
                     try {
-                        Inquiry inquiry = inquiryService.getInquiryById(inq1.getInquiryId());
+                        Inquiry inquiry = inquiryService.getInquiriesByCode(inq1.getInquiryCode());
                         // 检查 allow_inquiry 字段是否为空
                         if (inquiriesByCode.getAllowinquiry() == null) {
                             Item item = itemService.findItemById(inquiry.getItemId());
@@ -570,7 +567,7 @@ public class SaleOrderController implements BenewakeConstants {
 
         }
         String result= message.toString();
-        result = result.replace("[", "").replace("]", "");
+        result = result.replace("[", "").replace("]", "").replace(",", "");
         return Result.success(result, map);
     }
 

@@ -2,6 +2,7 @@ package com.benewake.saleordersystem.controller;
 
 import com.benewake.saleordersystem.entity.Inquiry;
 import com.benewake.saleordersystem.entity.TodoTask;
+import com.benewake.saleordersystem.mapper.TodoTaskMapper;
 import com.benewake.saleordersystem.service.TodoService;
 import com.benewake.saleordersystem.utils.Result;
 import io.swagger.annotations.Api;
@@ -21,6 +22,9 @@ public class TodoController {
 
     @Autowired
     private TodoService todoService;
+
+    @Autowired
+    private TodoTaskMapper todoTaskMapper;
 
 
 
@@ -58,7 +62,7 @@ public class TodoController {
     @ApiOperation("待处理监控消息待办任务提示")
     @GetMapping("/PMMessages")
     public Result<String> getPMMessages() {
-        List<TodoTask> filteredOrders = todoService.getFilteredOrders();
+        List<TodoTask> filteredOrders = todoTaskMapper.selectTodoTask();
 
         int todoTaskCount = filteredOrders.size();
         if (todoTaskCount > 3) {

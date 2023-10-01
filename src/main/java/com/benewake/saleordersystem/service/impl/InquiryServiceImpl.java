@@ -119,12 +119,14 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
             //不包含的话创建新的筛选条件对象，并添加到f1得列表当中
             f1.add(new FilterCriteria("state","ge","0"));
         }
+
         for(String s : str1){
             //遍历str1中的字段名，如果map中存在对应的键就加入到f1筛选条件中
             if(map.containsKey(s)){
                 f1.add(filters.get(map.get(s)));
             }
         }
+
         //通过调用 CommonUtils.addFilters 方法，将所有筛选条件应用到查询条件包装器中。
         CommonUtils.addFilters(f1,queryWrapper1);
 

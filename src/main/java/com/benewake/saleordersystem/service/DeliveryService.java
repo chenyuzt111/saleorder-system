@@ -31,4 +31,11 @@ public interface DeliveryService {
      * @return
      */
     List<String> getDeliveryStateList(String deliveryState);
+
+
+    /**
+     * 将有运输的单号订单状态变为PO
+     * @return
+     */
+    void updateStatus();
 }

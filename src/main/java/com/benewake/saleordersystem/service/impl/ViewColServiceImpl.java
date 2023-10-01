@@ -22,8 +22,11 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
 
     @Autowired
     private ViewColMapper viewColMapper;
-    private static final int[] ALL_SALESMAN_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20,21};
-    private static final int[] ALL_SYSTEM_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20,21};
+    private static final int[] ALL_SALESMAN_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20};
+    private static final int[] ALL_SYSTEM_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20};
+
+    private static final int[] ALL_SALESMAN_T_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20,21};
+    private static final int[] ALL_SYSTEM_T_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20,21};
 
     private static final int[] INQUIRY_TYPE_SALESMAN_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20};
     private static final int[] INQUIRY_TYPE_ADMIN_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20};
@@ -77,8 +80,12 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
         if(viewId<=0){
             if(tableId.equals(ALL_TABLE)){
                 //如果viewId==0查看我的视图，否则看其他视图，getColsTansfer方法就是根据索引找到需要的字段名称存为map并返回
-                if(viewId==0) return getColsTansfer(ALL_SALESMAN_MAPS);
-                else return getColsTansfer(ALL_SYSTEM_MAPS);
+                if(viewId==0) {
+                    if (isAdmin)return getColsTansfer(ALL_SALESMAN_T_MAPS);
+                    else return getColsTansfer(ALL_SALESMAN_MAPS);}
+                else {
+                    if (isAdmin)return getColsTansfer(ALL_SYSTEM_T_MAPS);
+                    else return getColsTansfer(ALL_SYSTEM_MAPS);}
             }else if(tableId.equals(INQUIRY_TYPE_TABLE)){
                 if(viewId==0){
                     if(isAdmin) return getColsTansfer(INQUIRY_TYPE_ADMIN_MAPS);

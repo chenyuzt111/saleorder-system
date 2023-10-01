@@ -3,6 +3,7 @@ package com.benewake.saleordersystem.service;
 
 import com.benewake.saleordersystem.entity.LoginTicket;
 import com.benewake.saleordersystem.entity.User;
+import com.benewake.saleordersystem.entity.basedata.*;
 import com.benewake.saleordersystem.utils.Result;
 
 import java.time.LocalDateTime;
@@ -105,13 +106,19 @@ public interface UserService  {
 
     void deleteCustomerType(String customerType);
 
+    List<CustomerTypeDic> getCustomerTypes();
+
     int addInquiryType(String typeName);
 
     int deleteInquiryType(String typeName);
 
+    List<InquiryTypeDic> selectInquiryTypeDic();
+
     int insertItemType(String itemTypeName);
 
     int deleteItemType(String itemTypeName);
+
+    List<ItemTypeDic> selectItemTypeDic();
 
     int addCustomerName(String  customerName);
 
@@ -119,9 +126,12 @@ public interface UserService  {
 
     int updateCustomerName(String oldCustomerName, String newCustomerName);
 
+    List<FimCustomerTable> selectFimCustomerTable();
     int insertCustomerItem(int customerId, int itemId, String customerType);
 
     int deleteCustomerItem(int customerId, int itemId, String customerType);
+
+    List<FimCustomerTypeTable> selectFimCustomerTypeTable();
 
     int addCustomerRename(String customerNameOld, String customerNameNew);
 
@@ -129,6 +139,7 @@ public interface UserService  {
 
     int updateCustomerRename(String customerNameOld, String customerNameNew);
 
+    List<FimPastCustomerRenameTable> selectFimPastCustomerRenameTable();
 
     int addItemChange(String itemCodeOld, String itemCodeNew);
 
@@ -136,18 +147,25 @@ public interface UserService  {
 
     int updateItemChange(String itemCodeOld, String itemCodeNew);
 
+    List<FimPastItemChangeTable> selectFimPastItemChangeTable();
+
     int addSalesmanChanging(String salesmanNameOld, String salesmanNameNew);
 
     int deleteSalesmanChangingByOldName(String salesmanNameOld);
 
     int updateSalesmanChanging(String salesmanNameOld, String salesmanNameNew);
 
+    List<FimPastSalesmanChangingTable> selectFimPastSalesmanChangingTable();
+
     int addCustomizedItemChange(String customerName, String itemCodeOld, String itemCodeNew);
 
     int deleteCustomizedItemChange(String customerName, String itemCodeOld, String itemCodeNew);
 
+    List<FimPastCustomizedItemChangingTable> selectFimPastCustomizedItemChangingTable();
 
     int insertPastChooseItem(String itemCode, String itemName, LocalDateTime startMonth);
 
     int deletePastChooseItemByItemCode(String itemCode);
+
+    List<FimPastChooseItemTable> selectFimPastChooseItemTable();
 }

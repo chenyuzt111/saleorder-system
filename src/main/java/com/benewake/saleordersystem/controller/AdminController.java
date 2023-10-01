@@ -1,11 +1,11 @@
 package com.benewake.saleordersystem.controller;
 
-import com.alibaba.excel.util.DateUtils;
 import com.benewake.saleordersystem.annotation.AdminRequired;
 import com.benewake.saleordersystem.annotation.LoginRequired;
 import com.benewake.saleordersystem.entity.Customer;
 import com.benewake.saleordersystem.entity.Item;
 import com.benewake.saleordersystem.entity.User;
+import com.benewake.saleordersystem.entity.basedata.*;
 import com.benewake.saleordersystem.service.CustomerService;
 import com.benewake.saleordersystem.service.ItemService;
 import com.benewake.saleordersystem.service.UserService;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import static com.benewake.saleordersystem.utils.BenewakeConstants.USER_TYPE_ADMIN;
@@ -146,6 +147,11 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/getCustomerTypes")
+    public List<CustomerTypeDic> getCustomerTypes() {
+        return userService.getCustomerTypes(); // 调用Service层方法获取客户类型列表
+    }
+
 
     /**
      * 管理员增加订单类型字典
@@ -205,6 +211,11 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/selectInquiryTypeDic")
+    public List<InquiryTypeDic> selectInquiryTypeDic() {
+        return userService.selectInquiryTypeDic(); // 调用Service层方法获取客户类型列表
+    }
+
     /**
      * 管理员增加产品类型字典
      *
@@ -260,6 +271,11 @@ public class AdminController {
         } else {
             return Result.message("删除失败！");
         }
+    }
+
+    @GetMapping("/selectItemTypeDic")
+    public List<ItemTypeDic> selectItemTypeDic() {
+        return userService.selectItemTypeDic(); // 调用Service层方法获取客户类型列表
     }
 
     /**
@@ -349,6 +365,10 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/selectFimCustomerTable")
+    public List<FimCustomerTable> selectFimCustomerTable() {
+        return userService.selectFimCustomerTable(); // 调用Service层方法获取客户类型列表
+    }
 
     /**
      * 管理员添加客户类型管理
@@ -412,6 +432,11 @@ public class AdminController {
         } else {
             return Result.message("删除失败！");
         }
+    }
+
+    @GetMapping("/selectFimCustomerTypeTable")
+    public List<FimCustomerTypeTable> selectFimCustomerTypeTable() {
+        return userService.selectFimCustomerTypeTable(); // 调用Service层方法获取客户类型列表
     }
 
     /**
@@ -498,6 +523,10 @@ public class AdminController {
         } else {
             return Result.message("修改失败！");
         }
+    }
+    @GetMapping("/selectFimPastCustomerRenameTable")
+    public List<FimPastCustomerRenameTable> selectFimPastCustomerRenameTable() {
+        return userService.selectFimPastCustomerRenameTable(); // 调用Service层方法获取客户类型列表
     }
 
     /**
@@ -586,6 +615,11 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/selectFimPastItemChangeTable")
+    public List<FimPastItemChangeTable> selectFimPastItemChangeTable() {
+        return userService.selectFimPastItemChangeTable(); // 调用Service层方法获取客户类型列表
+    }
+
     /**
      * 管理员添加销售员替换
      *
@@ -672,6 +706,11 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/selectFimPastSalesmanChangingTable")
+    public List<FimPastSalesmanChangingTable> selectFimPastSalesmanChangingTable() {
+        return userService.selectFimPastSalesmanChangingTable(); // 调用Service层方法获取客户类型列表
+    }
+
     /**
      * 管理员添加定制物料替换表
      *
@@ -739,6 +778,10 @@ public class AdminController {
     }
 
 
+    @GetMapping("/selectFimPastCustomizedItemChangingTable")
+    public List<FimPastCustomizedItemChangingTable> selectFimPastCustomizedItemChangingTable() {
+        return userService.selectFimPastCustomizedItemChangingTable(); // 调用Service层方法获取客户类型列表
+    }
 
     /**
      * 添加筛选物料表
@@ -800,5 +843,10 @@ public class AdminController {
         }
     }
 
+
+    @GetMapping("/selectFimPastChooseItemTable")
+    public List<FimPastChooseItemTable> selectFimPastChooseItemTable() {
+        return userService.selectFimPastChooseItemTable(); // 调用Service层方法获取客户类型列表
+    }
 
 }

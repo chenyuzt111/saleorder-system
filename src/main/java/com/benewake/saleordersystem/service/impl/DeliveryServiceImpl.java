@@ -1,12 +1,14 @@
 package com.benewake.saleordersystem.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.benewake.saleordersystem.controller.SaleOrderController;
 import com.benewake.saleordersystem.entity.Delivery;
 import com.benewake.saleordersystem.entity.Inquiry;
 import com.benewake.saleordersystem.entity.Past.SaleOut;
 import com.benewake.saleordersystem.entity.sfexpress.Route;
 import com.benewake.saleordersystem.mapper.DeliveryMapper;
 import com.benewake.saleordersystem.service.DeliveryService;
+import com.benewake.saleordersystem.service.InquiryService;
 import com.benewake.saleordersystem.service.KingDeeService;
 import com.benewake.saleordersystem.service.SFExpressService;
 import com.benewake.saleordersystem.utils.HostHolder;
@@ -32,6 +34,11 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Autowired
     private KingDeeService kingDeeService;
     @Autowired
+    private InquiryService inquiryService;
+
+    @Autowired
+    private SaleOrderController saleOrderController;
+    @Autowired
     private SFExpressService sFExpressService;
     @Autowired
     private HostHolder hostHolder;
@@ -44,6 +51,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             List<Delivery> lists = deliveryMapper.selectUnFindDeliveriesByUser(hostHolder.getUser().getId());
             // 获取订单对应的运输单号和手机号
             List<SaleOut> saleOuts = kingDeeService.selectFCarriageNO(lists);
+
 //            System.out.println(saleOuts.size());
             // 在数据库中更新运输单号和手机号
             List<Delivery> nDeliveries = new ArrayList<>();
@@ -85,6 +93,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 deliveryMapper.updateDeliveriesState(deliveries);
                 log.info("运输信息更新完成！");
             }
+            updateStatus();
         }catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -107,5 +116,23 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public List<String> getDeliveryStateList(String deliveryState) {
         return deliveryMapper.getDeliveryStateList("%"+deliveryState+"%");
+    }
+    @Override
+    public void updateStatus() {
+        // 在这里编写您的Service方法的逻辑
+        // 可以调用yourMapper中的方法来访问数据库或执行其他操作
+        List<String> results = deliveryMapper.getNonZeroDeliveryCodes(); // 替换yourMapperMethod为实际的Mapper方法
+        for (String inquirycode : results) {
+            // 使用每个SaleOut的code调用getInquiriesByCode方法
+            Inquiry saleOutInquiries = inquiryService.getInquiriesByCode(inquirycode);
+
+            // 检查 saleOutInquiries 是否为空，如果为空则跳过当前迭代
+            if (saleOutInquiries == null) {
+                continue;
+            }
+
+            saleOutInquiries.setInquiryType(1);
+            saleOrderController.updateInquired(saleOutInquiries);
+        }
     }
 }

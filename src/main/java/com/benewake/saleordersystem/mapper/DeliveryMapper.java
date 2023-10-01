@@ -105,4 +105,8 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
             "where delivery_latest_state like #{deliveryState} " +
             "</script>")
     List<String> getDeliveryStateList(@Param("deliveryState") String deliveryState);
+
+//    遍历运输订单表将有序单号的单据编号返回
+    @Select("SELECT inquiry_code FROM delivery_table WHERE delivery_code is not null")
+    List<String> getNonZeroDeliveryCodes();
 }

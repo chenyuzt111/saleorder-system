@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.benewake.saleordersystem.entity.LoginTicket;
 import com.benewake.saleordersystem.entity.User;
+import com.benewake.saleordersystem.entity.basedata.*;
 import com.benewake.saleordersystem.mapper.LoginTicketMapper;
 import com.benewake.saleordersystem.mapper.UserMapper;
 import com.benewake.saleordersystem.service.UserService;
@@ -219,7 +220,10 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
     public void deleteCustomerType(String customerType) {
         userMapper.deleteCustomerType(customerType);
     }
-
+    @Override
+    public List<CustomerTypeDic> getCustomerTypes() {
+        return userMapper.selectCustomerType();
+    }
     @Override
     public int addInquiryType(String typeName) {
         return userMapper.insertInquiryType(typeName);
@@ -228,6 +232,12 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
     public int deleteInquiryType(String typeName) {
         return userMapper.deleteInquiryType(typeName);
     }
+
+    @Override
+    public List<InquiryTypeDic> selectInquiryTypeDic() {
+        return userMapper.selectInquiryTypeDic();
+    }
+
     @Override
     public int insertItemType(String itemTypeName) {
         return userMapper.insertItemType(itemTypeName);
@@ -235,6 +245,11 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
     @Override
     public int deleteItemType(String itemTypeName) {
         return userMapper.deleteItemType(itemTypeName);
+    }
+
+    @Override
+    public List<ItemTypeDic> selectItemTypeDic() {
+        return userMapper.selectItemTypeDic();
     }
 
     @Override
@@ -253,6 +268,10 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
     }
 
     @Override
+    public List<FimCustomerTable> selectFimCustomerTable() {
+        return userMapper.selectFimCustomerTable();
+    }
+    @Override
     public int insertCustomerItem(int customerId, int itemId, String customerType) {
         return userMapper.insertCustomerItem(customerId, itemId, customerType);
     }
@@ -262,6 +281,10 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
         return userMapper.deleteCustomerItem(customerId, itemId, customerType);
     }
 
+    @Override
+    public List<FimCustomerTypeTable> selectFimCustomerTypeTable() {
+        return userMapper.selectFimCustomerTypeTable();
+    }
     @Override
     public int addCustomerRename(String customerNameOld, String customerNameNew) {
         return userMapper.insertCustomerRename(customerNameOld, customerNameNew);
@@ -278,6 +301,10 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
     }
 
     @Override
+    public List<FimPastCustomerRenameTable> selectFimPastCustomerRenameTable() {
+        return userMapper.selectFimPastCustomerRenameTable();
+    }
+    @Override
     public int addItemChange(String itemCodeOld, String itemCodeNew) {
         return userMapper.insertItemChange(itemCodeOld, itemCodeNew);
     }
@@ -290,6 +317,10 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
     @Override
     public int updateItemChange(String itemCodeOld, String itemCodeNew) {
         return userMapper.updateItemChange(itemCodeOld, itemCodeNew);
+    }
+    @Override
+    public List<FimPastItemChangeTable> selectFimPastItemChangeTable() {
+        return userMapper.selectFimPastItemChangeTable();
     }
 
     @Override
@@ -306,6 +337,10 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
     public int updateSalesmanChanging(String salesmanNameOld, String salesmanNameNew) {
         return userMapper.updateSalesmanChanging(salesmanNameOld, salesmanNameNew);
     }
+    @Override
+    public List<FimPastSalesmanChangingTable> selectFimPastSalesmanChangingTable() {
+        return userMapper.selectFimPastSalesmanChangingTable();
+    }
 
 
     public int addCustomizedItemChange(String customerName, String itemCodeOld, String itemCodeNew) {
@@ -316,12 +351,22 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
         return userMapper.deleteCustomizedItemChange(customerName, itemCodeOld, itemCodeNew);
     }
 
+    @Override
+    public List<FimPastCustomizedItemChangingTable> selectFimPastCustomizedItemChangingTable() {
+        return userMapper.selectFimPastCustomizedItemChangingTable();
+    }
+
     public int insertPastChooseItem(String itemCode, String itemName, LocalDateTime startMonth) {
         return userMapper.insertPastChooseItem(itemCode, itemName, startMonth);
     }
 
     public int deletePastChooseItemByItemCode(String itemCode) {
         return userMapper.deletePastChooseItemByItemCode(itemCode);
+    }
+
+    @Override
+    public List<FimPastChooseItemTable> selectFimPastChooseItemTable() {
+        return userMapper.selectFimPastChooseItemTable();
     }
 
 }
