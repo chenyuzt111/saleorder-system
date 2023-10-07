@@ -41,8 +41,14 @@ public class TodoController {
             // 没有待办事务，设置消息并返回
             return Result.fail("暂无待办事务", filteredOrders);
         } else {
-            // 有待办事务，返回列表信息
-            return Result.success(filteredOrders);
+            int todoTaskCount = filteredOrders.size();
+            if (todoTaskCount > 3) {
+                // 待办任务数量大于3，返回提示信息
+                return Result.success("已有多条待办任务，请及时更新询单表单！",filteredOrders);
+            } else {
+                // 待办任务数量不大于3，返回空
+                return Result.success("待办事务不足三条",filteredOrders);
+            }
         }
     }
 
@@ -55,10 +61,10 @@ public class TodoController {
         List<Inquiry> filteredOrders = todoService.filteredInquiries();
         return Result.success(filteredOrders);
     }
-
-    /**
+/*
+    *//**
      * 待处理监控消息待办任务提示
-     */
+     *//*
     @ApiOperation("待处理监控消息待办任务提示")
     @GetMapping("/PMMessages")
     public Result<String> getPMMessages() {
@@ -72,7 +78,7 @@ public class TodoController {
             // 待办任务数量不大于3，返回空
             return null;
         }
-    }
+    }*/
 
     /**
      * 待处理监控消息PO询单是否延期
