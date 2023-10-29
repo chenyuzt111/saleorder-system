@@ -3,6 +3,7 @@ package com.benewake.saleordersystem.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.benewake.saleordersystem.entity.Delivery;
 import com.benewake.saleordersystem.entity.Inquiry;
+import com.benewake.saleordersystem.entity.Past.SaleOut;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -28,6 +29,12 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
             "</if> " +
             "<if test='item.deliveryLastestState!=null'> " +
             ",delivery_latest_state = #{item.deliveryLastestState} " +
+            "</if> " +
+            "<if test='item.FCountry!=null'> " +
+            ",country = #{item.FCountry} " +
+            "</if> " +
+            "<if test='item.FDeliveryIntegrity!=null'> " +
+            ",delivery_code_integrity = #{item.FDeliveryIntegrity} " +
             "</if> " +
             "</set> " +
             "where inquiry_code = #{item.inquiryCode} " +
@@ -75,13 +82,26 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
             "from delivery_table " +
             "where inquiry_code in(" +
             "select inquiry_code from fim_inquiry_table " +
+            "where state >= 0)" +
+            " and (" +
+            "delivery_code is null or delivery_code = '' or delivery_phone is null " +
+            "or delivery_phone = ''" +
+            ")" +
+            "</script>")
+    List<Delivery> selectUnFindDeliveriesByUser1();
+
+    @Select("<script>" +
+            "select inquiry_code " +
+            "from delivery_table " +
+            "where inquiry_code in(" +
+            "select inquiry_code from fim_inquiry_table " +
             "where (created_user = #{userId} or salesman_id = #{userId}) and state >= 0" +
             ") and (" +
             "delivery_code is null or delivery_code = '' or delivery_phone is null " +
             "or delivery_phone = ''" +
             ")" +
             "</script>")
-    List<Delivery> selectUnFindDeliveriesByUser(@Param("userId") Long userId);
+    List<Delivery> selectUnFindDeliveriesByUser2(@Param("userId") Long userId);
 
     /**
      * 获取用户所有未签收的运输单号和电话号码
@@ -95,10 +115,20 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
             "select inquiry_code from fim_inquiry_table " +
             "where (created_user = #{userId} or salesman_id = #{userId}) and state >= 0 " +
             ") and " +
-            "delivery_code is not null and delivery_phone is not null " +
+            "(delivery_code is not null or delivery_phone is not null) " +
             "and receive_time is null " +
             "</script>")
-    List<Delivery> selectUnFinisheDeliveriesByUser(@Param("userId")Long userId);
+    List<Delivery> selectUnFinisheDeliveriesByUser1(@Param("userId")Long userId);
+
+    @Select("<script>" +
+            "select inquiry_code,delivery_code,delivery_phone " +
+            "from delivery_table " +
+            "where inquiry_code in(" +
+            "select inquiry_code from fim_inquiry_table " +
+            "where state >= 0) and (delivery_code is not null or delivery_phone is not null) " +
+            "and receive_time is null " +
+            "</script>")
+    List<Delivery> selectUnFinisheDeliveriesByUser2();
 
     @Select("<script>" +
             "select delivery_latest_state from delivery_table " +
@@ -109,4 +139,13 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
 //    遍历运输订单表将有序单号的单据编号返回
     @Select("SELECT inquiry_code FROM delivery_table WHERE delivery_code is not null")
     List<String> getNonZeroDeliveryCodes();
+
+
+    @Update({
+            "UPDATE delivery_table",
+            "SET `match` = '是'",  // 使用反引号括起来
+            "WHERE inquiry_code = #{inquiryCode}"
+    })
+    void updateDeliveryTableMatchField(@Param("inquiryCode") String inquiryCode);
+
 }

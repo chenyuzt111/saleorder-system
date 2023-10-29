@@ -49,11 +49,14 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
     private static final int[] INQUIRY_DELIVERY_SALESMAN_MAPS = {1,4,5,6,7,14,11,12,13,15,16,17,20};
     private static final int[] INQUIRY_DELIVERY_SALESMAN_80_MAPS = {1,4,5,6,7,11,12,15,16,17,20};
     private static final int[] INQUIRY_DELIVERY_SALESMAN_10_MAPS = {1,4,5,6,7,11,12,15,17,20};
+    private static final int[] INQUIRY_DELIVERY_SALESMAN_40_MAPS = {1,4,5,6,7,11,12,15,17,20};
     private static final int[] INQUIRY_DELIVERY_SALESMAN_00_MAPS = {1,4,5,6,7,14,11,12,13,15,16,17,20};
     private static final int[] INQUIRY_DELIVERY_ADMIN_MAPS = {0,1,4,5,6,7,14,11,12,13,15,16,17,20};
     private static final int[] INQUIRY_DELIVERY_ADMIN_80_MAPS = {0,1,4,5,6,7,11,12,15,16,17,20};
     private static final int[] INQUIRY_DELIVERY_ADMIN_10_MAPS = {0,1,4,5,6,7,11,12,15,17,20};
+    private static final int[] INQUIRY_DELIVERY_ADMIN_40_MAPS = {0,1,4,5,6,7,11,12,15,17,20};
     private static final int[] INQUIRY_DELIVERY_ADMIN_00_MAPS = {0,1,4,5,6,7,14,11,12,13,15,16,17,20};
+    private static final int[] PASTORDER_MAPS = {0,4,5,6,7};
     private static final String[] ENGS = {"salesman_name","inquiry_code","inquiry_init_type","state","item_code","item_name",
         "sale_num","customer_name","inquiry_type","item_type","customer_type","expected_time",
         "arranged_time","delay","order_delivery_progress","delivery_code","receive_time","delivery_state",
@@ -126,6 +129,9 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
                 }else if(viewId==-3){
                     if(isAdmin) return getColsTansfer(INQUIRY_DELIVERY_ADMIN_00_MAPS);
                     else return getColsTansfer(INQUIRY_DELIVERY_SALESMAN_00_MAPS);
+                }else if(viewId==-4){
+                    if(isAdmin) return getColsTansfer(INQUIRY_DELIVERY_ADMIN_40_MAPS);
+                    else return getColsTansfer(INQUIRY_DELIVERY_SALESMAN_40_MAPS);
                 }
             }
             //如果 viewId 大于 0，表示查看个人方案视图

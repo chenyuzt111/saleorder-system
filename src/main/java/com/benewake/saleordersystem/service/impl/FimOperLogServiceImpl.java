@@ -7,8 +7,14 @@ import com.benewake.saleordersystem.entity.FimOperLog;
 import com.benewake.saleordersystem.entity.VO.FimOperLogQueryVo;
 import com.benewake.saleordersystem.mapper.FimOperLogMapper;
 import com.benewake.saleordersystem.service.FimOperLogService;
+import com.benewake.saleordersystem.utils.HostHolder;
+import com.benewake.saleordersystem.utils.IpUtil;
+import com.benewake.saleordersystem.utils.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -18,6 +24,9 @@ import java.util.List;
  */
 @Service
 public class FimOperLogServiceImpl extends ServiceImpl<FimOperLogMapper, FimOperLog> implements FimOperLogService {
+
+
+
     @Override
     public List<FimOperLog> selectOperLogs(FimOperLogQueryVo fimOperLogQueryVo) {
         LambdaQueryWrapper<FimOperLog> lqw = new LambdaQueryWrapper<>();
@@ -30,5 +39,11 @@ public class FimOperLogServiceImpl extends ServiceImpl<FimOperLogMapper, FimOper
                 .le(StringUtils.isNotEmpty(fimOperLogQueryVo.getCreateTimeEnd()),
                         FimOperLog::getCreateTime,fimOperLogQueryVo.getCreateTimeEnd());
         return baseMapper.selectList(lqw);
+
     }
+
+
+
+
+
 }

@@ -7,6 +7,7 @@ import com.benewake.saleordersystem.entity.Inquiry;
 import com.benewake.saleordersystem.entity.Past.SaleOut;
 import com.benewake.saleordersystem.entity.sfexpress.Route;
 import com.benewake.saleordersystem.mapper.DeliveryMapper;
+import com.benewake.saleordersystem.mapper.InquiryMapper;
 import com.benewake.saleordersystem.service.DeliveryService;
 import com.benewake.saleordersystem.service.InquiryService;
 import com.benewake.saleordersystem.service.KingDeeService;
@@ -17,20 +18,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-/**
- * @author Lcs
- * @since 2023年07月15 09:37
- * 描 述： TODO
- */
+import static com.benewake.saleordersystem.utils.BenewakeConstants.USER_TYPE_ADMIN;
+import static com.benewake.saleordersystem.utils.BenewakeConstants.USER_TYPE_SALESMAN;
+
 @Service
 @Slf4j
 public class DeliveryServiceImpl implements DeliveryService {
 
     @Autowired
     private DeliveryMapper deliveryMapper;
+    @Autowired
+    private InquiryMapper inquiryMapper;
+
     @Autowired
     private KingDeeService kingDeeService;
     @Autowired
@@ -43,58 +47,154 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Autowired
     private HostHolder hostHolder;
 
-
     @Override
     public boolean updateDelivery() {
-        try{
+        try {
             // 尝试获取没有运输单号或手机号的订单号
-            List<Delivery> lists = deliveryMapper.selectUnFindDeliveriesByUser(hostHolder.getUser().getId());
+            List<Delivery> lists = new ArrayList();
+            if (hostHolder.getUser().getUserType() == USER_TYPE_ADMIN) {
+                lists = deliveryMapper.selectUnFindDeliveriesByUser1();
+            } else if (hostHolder.getUser().getUserType() == USER_TYPE_SALESMAN) {
+                lists = deliveryMapper.selectUnFindDeliveriesByUser2(hostHolder.getUser().getId());
+            }
             // 获取订单对应的运输单号和手机号
             List<SaleOut> saleOuts = kingDeeService.selectFCarriageNO(lists);
+            for (SaleOut s : saleOuts) {
 
-//            System.out.println(saleOuts.size());
+                inquiryMapper.updateInquiryTypeByCode(s.getF_ora_FIMNumber());
+            }
+
             // 在数据库中更新运输单号和手机号
             List<Delivery> nDeliveries = new ArrayList<>();
-            saleOuts.forEach(s->{
-                //System.out.println(s.toString());
+            saleOuts.forEach(s -> {
                 Delivery delivery = new Delivery();
                 delivery.setInquiryCode(s.getF_ora_FIMNumber());
                 delivery.setDeliveryCode(s.getFCarriageNO());
-                delivery.setDeliveryPhone(StringUtils.isBlank(s.getF_ora_Text2())?null:s.getF_ora_Text2()
-                        .substring(s.getF_ora_Text2().length()-4));
+                delivery.setDeliveryPhone(StringUtils.isBlank(s.getF_ora_Text2()) ? null : s.getF_ora_Text2()
+                        .substring(s.getF_ora_Text2().length() - 4));
                 nDeliveries.add(delivery);
             });
+
             // 待添加列表不为空则更新运输单号
-            if(!nDeliveries.isEmpty()) {
+            if (!nDeliveries.isEmpty()) {
                 deliveryMapper.updateDeliveriesCode(nDeliveries);
             }
 
             // 获取所有状态未签收的订单信息
-            List<Delivery> deliveries = deliveryMapper.selectUnFinisheDeliveriesByUser(hostHolder.getUser().getId());
-            deliveries.forEach(System.out::println);
-            // 获取最新运输状态 并更新
-            deliveries.forEach(c->{
+            List<Delivery> deliveries = new ArrayList();
+
+            // 如果是管理员获取所有状态未签收的订单信息，销售员只更新自己未签收的订单信息
+            if (hostHolder.getUser().getUserType() == USER_TYPE_ADMIN) {
+                deliveries = deliveryMapper.selectUnFinisheDeliveriesByUser2();
+            } else if (hostHolder.getUser().getUserType() == USER_TYPE_SALESMAN) {
+                deliveries = deliveryMapper.selectUnFinisheDeliveriesByUser1(hostHolder.getUser().getId());
+            }
+
+            for (Delivery c : deliveries) {
                 try {
-                    Route r = sFExpressService.getLastestRouteByFCarriageNO(c);
-                    System.out.println(r.toString());
-                    if(r!=null){
-                        if("80".equals(r.getOpCode())){
-                            c.setReceiveTime(r.getAcceptTime());
+                    if (!c.getDeliveryCode().equals(" ")) {
+                        List<Route> routes = sFExpressService.getLastestRoutesByDelivery(c);
+
+                        if (routes.size() == 1) {
+                            Route r = routes.get(0);
+
+                            if (r.getRemark().contains("数字有遗漏，请用户及时修改！")) {
+                                c.setDeliveryState(32);
+                                c.setFDeliveryIntegrity("不完整");
+                            } else {
+                                if (r != null) {
+                                    if ("80".equals(r.getOpCode())) {
+                                        c.setReceiveTime(r.getAcceptTime());
+                                        c.setDeliveryState(80);
+                                    } else {
+                                        c.setDeliveryState(32);
+                                    }
+                                    c.setFDeliveryIntegrity("完整");
+                                }
+                            }
+                            c.setDeliveryLastestState(r.getRemark());
+                            c.setFCountry("国内");
+                        } else if (routes.size() > 1) {
+                            boolean allOpCode80 = true;
+                            boolean allOpCodeNull = true;
+                            boolean codeintegrity = true;
+                            Date latestAcceptTime = null;
+                            String firstRemark = null;
+
+                            for (Route r : routes) {
+                                if (r != null) {
+                                    if (r.getRemark().contains("数字有遗漏，请用户及时修改！")) {
+                                        firstRemark = r.getRemark();
+                                        allOpCode80 = false;
+                                        allOpCodeNull = false;
+                                        codeintegrity = false;
+                                        break;
+                                    } else {
+                                        if (!"80".equals(r.getOpCode())) {
+                                            allOpCode80 = false;
+                                        }
+                                        if (r.getOpCode() != null) {
+                                            allOpCodeNull = false;
+                                        }
+                                        Date acceptTime = r.getAcceptTime();
+                                        if (acceptTime != null && (latestAcceptTime == null || acceptTime.compareTo(latestAcceptTime) > 0)) {
+                                            latestAcceptTime = acceptTime;
+                                        }
+                                        if (firstRemark == null && r.getRemark() != null) {
+                                            firstRemark = r.getRemark();
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (latestAcceptTime != null) {
+                                c.setReceiveTime(latestAcceptTime);
+                            }
+
+                            if (firstRemark != null) {
+                                c.setDeliveryLastestState(firstRemark);
+                            }
+
+                            if (allOpCode80) {
+                                c.setDeliveryState(80);
+                            } else if (allOpCodeNull) {
+                                c.setDeliveryState(null);
+                            } else {
+                                c.setDeliveryState(32);
+                            }
+
+                            if (codeintegrity) {
+                                c.setFDeliveryIntegrity("完整");
+                            } else {
+                                c.setFDeliveryIntegrity("不完整");
+                            }
+
+                            c.setFCountry("国内");
                         }
-                        c.setDeliveryState(r.getOpCode()==null?null:Integer.parseInt(r.getOpCode()));
-                        c.setDeliveryLastestState(r.getRemark());
+                    } else {
+                        if (c.getDeliveryPhone() != null) {
+                            c.setDeliveryState(32);
+                            c.setFDeliveryIntegrity("不完整");
+                            c.setDeliveryLastestState("无运输单号，请用户及时修改");
+                            c.setFCountry("国内");
+                        } else {
+                            c.setDeliveryState(40);
+                            c.setFDeliveryIntegrity("不完整");
+                            c.setDeliveryLastestState("海外订单暂无跟踪");
+                            c.setFCountry("海外");
+                        }
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            });
-            if(!deliveries.isEmpty()){
+            }
+
+            if (!deliveries.isEmpty()) {
                 // 存入数据库
                 deliveryMapper.updateDeliveriesState(deliveries);
                 log.info("运输信息更新完成！");
             }
-            updateStatus();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -109,30 +209,29 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public List<Delivery> getDeliveryCodeList(String deliveryCode) {
         LambdaQueryWrapper<Delivery> lqw = new LambdaQueryWrapper<>();
-        lqw.select(Delivery::getDeliveryCode).like(Delivery::getDeliveryCode,deliveryCode);
+        lqw.select(Delivery::getDeliveryCode).like(Delivery::getDeliveryCode, deliveryCode);
         return deliveryMapper.selectList(lqw);
     }
 
     @Override
     public List<String> getDeliveryStateList(String deliveryState) {
-        return deliveryMapper.getDeliveryStateList("%"+deliveryState+"%");
+        return deliveryMapper.getDeliveryStateList("%" + deliveryState + "%");
     }
+
     @Override
     public void updateStatus() {
-        // 在这里编写您的Service方法的逻辑
-        // 可以调用yourMapper中的方法来访问数据库或执行其他操作
-        List<String> results = deliveryMapper.getNonZeroDeliveryCodes(); // 替换yourMapperMethod为实际的Mapper方法
+        List<String> results = deliveryMapper.getNonZeroDeliveryCodes();
         for (String inquirycode : results) {
-            // 使用每个SaleOut的code调用getInquiriesByCode方法
             Inquiry saleOutInquiries = inquiryService.getInquiriesByCode(inquirycode);
-
-            // 检查 saleOutInquiries 是否为空，如果为空则跳过当前迭代
             if (saleOutInquiries == null) {
-                continue;
+                if (saleOutInquiries.getInquiryType() != 1) {
+                    if (saleOutInquiries == null) {
+                        continue;
+                    }
+                    saleOutInquiries.setInquiryType(1);
+                    saleOrderController.updateInquired(saleOutInquiries);
+                }
             }
-
-            saleOutInquiries.setInquiryType(1);
-            saleOrderController.updateInquired(saleOutInquiries);
         }
     }
 }

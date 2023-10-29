@@ -1,0 +1,36 @@
+2023-10-26 14:45:10.829 [restartedMain] ERROR [,] o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field fimOperLogService in com.benewake.saleordersystem.controller.FimOperLogController required a bean of type 'com.benewake.saleordersystem.service.FimOperLogService' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.benewake.saleordersystem.service.FimOperLogService' in your configuration.
+
+2023-10-26 15:01:50.797 [restartedMain] ERROR [,] o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field fimOperLogService in com.benewake.saleordersystem.controller.FimOperLogController required a bean of type 'com.benewake.saleordersystem.service.FimOperLogService' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.benewake.saleordersystem.service.FimOperLogService' in your configuration.
+

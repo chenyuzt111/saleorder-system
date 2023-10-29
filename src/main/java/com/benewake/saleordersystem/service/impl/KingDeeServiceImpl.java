@@ -4,6 +4,7 @@ import com.benewake.saleordersystem.entity.Delivery;
 import com.benewake.saleordersystem.entity.Transfer.*;
 import com.benewake.saleordersystem.entity.Past.SaleOut;
 import com.benewake.saleordersystem.entity.Past.Withdraw;
+import com.benewake.saleordersystem.mapper.DeliveryMapper;
 import com.benewake.saleordersystem.service.KingDeeService;
 import com.benewake.saleordersystem.utils.BenewakeConstants;
 import com.benewake.saleordersystem.utils.CommonUtils;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Lcs
@@ -28,6 +30,8 @@ public class KingDeeServiceImpl implements KingDeeService, BenewakeConstants {
 
     @Autowired
     private K3CloudApi api;
+    @Autowired
+    private DeliveryMapper deliveryMapper;
     @Override
     public <T> List<T> searchData(String formId, List<String> fieldKeys, String queryFilters,int limit,Class type) throws Exception {
         List<T> res = new ArrayList<>();
@@ -278,6 +282,17 @@ public class KingDeeServiceImpl implements KingDeeService, BenewakeConstants {
         List<String> queryFields = new ArrayList<>();
         deliveries.forEach(d->queryFields.add(String.format("F_ora_FIMNumber = '%s'",d.getInquiryCode())));
         List<SaleOut> lists = searchData(formId,fieldKeys,String.join(" or ",queryFields),Integer.MAX_VALUE, SaleOut.class);
+
+// 获取所有 SaleOut 对象的 F_ora_FIMNumber 列表
+        List<String> fimNumbers = lists.stream()
+                .map(SaleOut::getF_ora_FIMNumber)
+                .collect(Collectors.toList());
+
+// 使用数据流更新 delivery_table
+        fimNumbers.forEach(inquiryCode -> deliveryMapper.updateDeliveryTableMatchField(inquiryCode));
+
+
+//        deliveryMapper.updateDeliveryTableMatchField(lists);
         return lists;
     }
 }

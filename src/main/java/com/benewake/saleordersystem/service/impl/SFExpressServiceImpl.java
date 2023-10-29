@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Lcs
@@ -116,7 +114,7 @@ public class SFExpressServiceImpl implements SFExpressService {
 
     //用于获取指定提货单号的最新订单信息
     //接受的是物流单的信息，返回的是route类型
-    @Override
+    /*@Override
     public Route getLastestRouteByFCarriageNO(Delivery delivery){
         //SaleOut saleOut = kingDeeService.selectFCarriageNO(fCarriageNO);
         if(delivery != null){
@@ -124,12 +122,55 @@ public class SFExpressServiceImpl implements SFExpressService {
             if(StringUtils.isBlank(delivery.getDeliveryPhone())) {
                 return null;
             } else{
-                /*不为空的话，如果电话号码不为空，会执行这个分支，调用 SFUtils.getLastestRemark 方法，
-                传递了查询订单路由信息的调用，并返回其结果。这个方法的作用是从查询结果中获取最新的路由备注信息。*/
+                *//*不为空的话，如果电话号码不为空，会执行这个分支，调用 SFUtils.getLastestRemark 方法，
+                传递了查询订单路由信息的调用，并返回其结果。这个方法的作用是从查询结果中获取最新的路由备注信息。*//*
                 return SFUtils.getLastestRemark(findRoutesByCode(delivery.getDeliveryCode(),delivery.getDeliveryPhone()));
             }
         }else{
             return null;
+        }
+    }*/
+
+    public List<Route> getLastestRoutesByDelivery(Delivery delivery) {
+        List<Route> latestRoutes = new ArrayList<>();
+
+        if (delivery != null) {
+            String deliveryCodes = delivery.getDeliveryCode(); // 获取包含多个顺丰单号的字符串
+
+            if (!StringUtils.isBlank(deliveryCodes)) {
+                String[] deliveryCodeArray = deliveryCodes.split("\\s+"); // 使用正则表达式来根据空格拆分单号
+                for (String deliveryCode : deliveryCodeArray) {
+                    Route latestRoute = new Route();
+                    boolean integrity = checkStringLength(deliveryCode);
+                    if(integrity) {
+                        // 对每个单号调用 getLastestRouteByFCarriageNO 方法，获取最新路由信息
+                        latestRoute = SFUtils.getLastestRemark(findRoutesByCode(deliveryCode, delivery.getDeliveryPhone()));
+                        if (latestRoute.getOpCode()==null){
+                            latestRoute.setRemark("顺丰号正确，手机号异常请检查");
+                            latestRoute.setOpCode("32");
+                        }
+
+                    }else {
+                        String errorMessage = "顺丰号 " + delivery.getDeliveryCode() + " 数字有遗漏，请用户及时修改！";
+                        latestRoute.setRemark(errorMessage);
+                        latestRoute.setOpCode("32");
+                    }
+                    if(latestRoute!=null){
+                        latestRoutes.add(latestRoute);
+                    }
+                }
+            }
+        }
+
+        return latestRoutes;
+    }
+
+
+    public boolean checkStringLength(String input) {
+        if (input != null && input.length() == 15) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

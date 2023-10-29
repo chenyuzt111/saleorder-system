@@ -497,9 +497,9 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
     }
 
     @Override
-    public int updateState(Long inquiryId, int i) {
+    public int updateState(String inquiryCode, int i) {
         LambdaUpdateWrapper<Inquiry> luw = new LambdaUpdateWrapper<>();
-        luw.set(Inquiry::getState,i).eq(Inquiry::getInquiryId,inquiryId);
+        luw.set(Inquiry::getState,i).eq(Inquiry::getInquiryCode,inquiryCode);
         return inquiryMapper.update(null,luw);
     }
 

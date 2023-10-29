@@ -44,6 +44,7 @@ public interface SalesOrderVoMapper extends BaseMapper<Map<String,Object>> {
             "a.customer_id as customer_id,remark as remark,(case " +
             "when order_delivery_progress is null then '未发货' " +
             "when order_delivery_progress = 80 then '已签收' " +
+            "when order_delivery_progress = 40 then '海外订单'"+
             "else '已发货客户未签收' end) as order_delivery_progress,delivery_code,receive_time,delivery_state,delay as delay," +
             "(case when item_type = 1 then '已有标品' when item_type = 2 then '已有定制' " +
             "when item_type = 3 then '新增软件定制' when item_type = 4 then '新增原材料定制' " +
@@ -105,4 +106,17 @@ public interface SalesOrderVoMapper extends BaseMapper<Map<String,Object>> {
                                                 @Param("qw3")Wrapper wrapper3,@Param("qw4")Wrapper wrapper4,
                                                 @Param("qw5")Wrapper wrapper5,@Param("qw6")Wrapper wrapper6,
                                                 @Param("ew")Wrapper wrapper7);
+
+    @Select("SELECT " +
+            "opt.order_id AS inquiry_id, " +
+            "opt.order_code AS inquiry_code, " +
+            "opt.item_code AS item_code, " +
+            "fi.item_name AS item_name, " +
+            "opt.salesman_name AS salesman_name, " +
+            "opt.sale_num AS sale_num, " +
+            "opt.sale_time AS sale_time " +
+            "FROM " +
+            "fim_past_orders_clean_temp_table opt " +
+            "LEFT JOIN fim_item_table fi ON opt.item_code = fi.item_code")
+    List<Map<String, Object>> selectInquiryDataFromOrdersTable();
 }

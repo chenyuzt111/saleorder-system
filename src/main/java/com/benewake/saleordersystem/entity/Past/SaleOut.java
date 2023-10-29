@@ -50,4 +50,6 @@ public class SaleOut {
     @ExcelProperty("fim单据编号")
     @TableField("fim_code")
     private String F_ora_FIMNumber;
+
+
 }

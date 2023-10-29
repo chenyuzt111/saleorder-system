@@ -24,6 +24,9 @@ public class PastOrder {
     private Long orderId;
     @TableField("item_code")
     private String FMaterialID;
+
+    @TableField("item_name")
+    private String FMaterialName;
     @TableField("sale_num")
     private String FRealQty;
     @TableField("customer_name")
@@ -46,5 +49,6 @@ public class PastOrder {
         this.FSalesManID = FSalesManID;
         this.FDate = FDate;
         this.FSoorDerno = FSoorDerno;
+
     }
 }

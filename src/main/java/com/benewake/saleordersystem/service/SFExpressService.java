@@ -5,6 +5,8 @@ import com.benewake.saleordersystem.entity.Delivery;
 import com.benewake.saleordersystem.entity.sfexpress.Route;
 import com.benewake.saleordersystem.entity.sfexpress.SF_SEARCH_RESULT;
 
+import java.util.List;
+
 
 /**
  * @author Lcs
@@ -29,5 +31,6 @@ public interface SFExpressService {
      * @return
      * @throws Exception
      */
-    Route getLastestRouteByFCarriageNO(Delivery delivery);
+//    Route getLastestRouteByFCarriageNO(Delivery delivery);
+     List<Route> getLastestRoutesByDelivery(Delivery delivery);
 }

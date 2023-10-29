@@ -31,12 +31,12 @@ public interface PastOrderMapper {
      */
     @Insert("<script> " +
             "Insert into fim_past_orders_table(order_code,item_code,customer_name," +
-            "salesman_name,sale_num,sale_time) " +
+            "salesman_name,sale_num,sale_time,item_name) " +
             "values " +
             "<foreach collection='lists' item='list' separator=','> " +
             "(" +
             "#{list.FSoorDerno},#{list.FMaterialID},#{list.FCustomerID},#{list.FSalesManID}," +
-            "#{list.FRealQty},#{list.FDate}" +
+            "#{list.FRealQty},#{list.FDate},#{list.FMaterialName}" +
             ")" +
             "</foreach>" +
             "</script>")

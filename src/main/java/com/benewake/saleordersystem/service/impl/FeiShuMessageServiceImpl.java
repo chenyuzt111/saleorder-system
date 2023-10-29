@@ -15,7 +15,7 @@ public class FeiShuMessageServiceImpl implements FeiShuMessageService {
 
     @Autowired
     private ItemService itemService;
-    private  String feishuWebhookUrl ="https://www.feishu.cn/flow/api/trigger-webhook/2ecf907329207869a30febe4befc833b";
+    private  String feishuWebhookUrl ="https://www.feishu.cn/flow/api/trigger-webhook/480a7229d498b58b9ba4b14afd497ea7";
 
 
     public void sendMessage(String salemanName, String inquiryCode, Long itemId, Long saleNum) {

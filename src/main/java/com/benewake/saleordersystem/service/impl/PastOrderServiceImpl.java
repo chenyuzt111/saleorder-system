@@ -129,6 +129,7 @@ public class PastOrderServiceImpl implements PastOrderService {
                 if(null == p.getFCustomerID()){
                     p.setFCustomerID("");
                 }
+
             });
 /*            File excelFile = new File("F:/155.xlsx");
             System.out.println(CommonUtils.writeExcel(excelFile, list, Kingdee.class));*/

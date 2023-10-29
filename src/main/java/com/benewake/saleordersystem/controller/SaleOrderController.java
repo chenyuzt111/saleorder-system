@@ -139,12 +139,18 @@ public class SaleOrderController implements BenewakeConstants {
             // 查看我的
             List<Map<String,Object>> lists;
             //需要查看全部视图
-            if( filterVo.getTableId().equals(1L)&&filterVo.getViewId().equals(-1L)) {
-                // 系统全部
-                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), null);
+            if( filterVo.getTableId().equals(1L)) {
+                if(filterVo.getViewId().equals(-1L)){
+                    // 系统全部
+                    lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), null);
+                }else{
+                    lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),loginUser.getUsername());
+                }
+
             } else if (loginUser.getUserType().equals(1L) ) {
                 //如果用户是管理员
-                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),loginUser.getUsername());
+                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), loginUser.getUsername());
+
             } else{
                 // 普通用户
                 lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),loginUser.getUsername());
@@ -269,7 +275,7 @@ public class SaleOrderController implements BenewakeConstants {
                 return Result.fail((String) res.get("error"),null);
             }
             // 原订单设置无效
-            inquiryService.updateState(inquiry.getInquiryId(),-1);
+            inquiryService.updateState(inquiry.getInquiryCode(),-1);
             // 新增修改后的订单
             inquiry.setInquiryId(null);
             inquiry.setCreatedUser(hostHolder.getUser().getId());

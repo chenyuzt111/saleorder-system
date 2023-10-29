@@ -170,6 +170,11 @@ public interface BenewakeConstants {
      */
     Long INQUIRY_DELIVERY_TABLE = 6L;
 
+    /**
+     * 表名：历史订单列表
+     */
+    Long PAST_ORDER_TABLE = 6L;
+
 
 
 }

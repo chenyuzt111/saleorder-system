@@ -44,12 +44,12 @@ public class FimOperLogController {
     @ApiOperation("写入操作日志")
     @PostMapping("save")
     @LoginRequired
-    public Result save(@RequestBody FimOperLog fimOperLog, HttpServletRequest request){
+    public void save(@RequestBody FimOperLog fimOperLog, HttpServletRequest request){
         String ip = IpUtil.getIpAddress(request);
         fimOperLog.setOperIp(ip);
         fimOperLog.setOperName(hostHolder.getUser().getUsername());
         fimOperLogService.save(fimOperLog);
-        return Result.success();
+
     }
 
 }

@@ -1,0 +1,55 @@
+2023-10-09 16:26:29.854 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-09 16:26:29.992 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-09 16:26:43.726 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-09 16:27:07.836 [http-nio-8080-exec-3] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'FIM_user_phone' in 'field list'
+### The error may exist in com/benewake/saleordersystem/mapper/UserMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  FIM_user_id AS id,FIM_user_name AS username,FIM_user_password AS password,FIM_coding AS salt,FIM_user_type AS userType,FIM_collection_func AS userConllection,FIM_user_YC AS ycvalue,FIM_user_XD AS xdvalue,FIM_user_PR AS prvalue,FIM_user_phone AS userphone,FIM_user_mail AS usermail  FROM fim_users_table     WHERE (FIM_user_name = ?)
+### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'FIM_user_phone' in 'field list'
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'FIM_user_phone' in 'field list']
+2023-10-09 16:29:34.817 [http-nio-8080-exec-7] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'FIM_user_phone' in 'field list'
+### The error may exist in com/benewake/saleordersystem/mapper/UserMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  FIM_user_id AS id,FIM_user_name AS username,FIM_user_password AS password,FIM_coding AS salt,FIM_user_type AS userType,FIM_collection_func AS userConllection,FIM_user_YC AS ycvalue,FIM_user_XD AS xdvalue,FIM_user_PR AS prvalue,FIM_user_phone AS userphone,FIM_user_mail AS usermail  FROM fim_users_table     WHERE (FIM_user_name = ?)
+### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'FIM_user_phone' in 'field list'
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'FIM_user_phone' in 'field list']
+2023-10-09 16:29:43.764 [http-nio-8080-exec-8] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'FIM_user_phone' in 'field list'
+### The error may exist in com/benewake/saleordersystem/mapper/UserMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  FIM_user_id AS id,FIM_user_name AS username,FIM_user_password AS password,FIM_coding AS salt,FIM_user_type AS userType,FIM_collection_func AS userConllection,FIM_user_YC AS ycvalue,FIM_user_XD AS xdvalue,FIM_user_PR AS prvalue,FIM_user_phone AS userphone,FIM_user_mail AS usermail  FROM fim_users_table     WHERE (FIM_user_name = ?)
+### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'FIM_user_phone' in 'field list'
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'FIM_user_phone' in 'field list']
+2023-10-09 16:32:38.933 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-09 16:32:38.952 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-09 16:32:40.976 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-09 16:34:11.329 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m23s429ms146µs600ns).
+2023-10-09 16:34:42.379 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-09 16:34:42.401 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-09 16:34:44.433 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-09 16:36:12.126 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m10s497ms708µs).
+2023-10-09 16:40:07.756 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m25s218ms383µs900ns).
+2023-10-09 16:41:12.496 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m4s740ms266µs100ns).
+2023-10-09 16:45:21.794 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m30s207ms55µs500ns).
+2023-10-09 16:48:39.019 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m39s856ms879µs).
+2023-10-09 16:51:37.554 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m58s536ms347µs900ns).
+2023-10-09 16:55:04.591 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m27s35ms768µs800ns).
+2023-10-09 17:09:48.099 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m40s612ms530µs600ns).
+2023-10-09 17:12:30.454 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m42s354ms434µs).
+2023-10-09 17:15:05.222 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m55s34ms600µs100ns).
+2023-10-09 17:17:06.689 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=54s488ms21µs800ns).
+2023-10-09 17:18:29.089 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=48s986ms236µs500ns).
+2023-10-09 17:19:25.862 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=56s773ms462µs700ns).
+2023-10-09 17:40:03.752 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=20m37s889ms986µs600ns).
+2023-10-09 17:44:37.962 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m34s209ms936µs100ns).
+2023-10-09 17:48:38.892 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=45s373ms450µs700ns).
+2023-10-09 17:53:30.768 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m21s819ms206µs800ns).
+2023-10-09 18:12:40.962 [http-nio-8080-exec-7] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Illegal unquoted character ((CTRL-CHAR, code 13)): has to be escaped using backslash to be included in string value; nested exception is com.fasterxml.jackson.databind.JsonMappingException: Illegal unquoted character ((CTRL-CHAR, code 13)): has to be escaped using backslash to be included in string value
+ at [Source: (PushbackInputStream); line: 3, column: 38] (through reference chain: com.benewake.saleordersystem.entity.User["password"])]
+2023-10-09 18:12:51.779 [http-nio-8080-exec-1] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Illegal unquoted character ((CTRL-CHAR, code 13)): has to be escaped using backslash to be included in string value; nested exception is com.fasterxml.jackson.databind.JsonMappingException: Illegal unquoted character ((CTRL-CHAR, code 13)): has to be escaped using backslash to be included in string value
+ at [Source: (PushbackInputStream); line: 3, column: 38] (through reference chain: com.benewake.saleordersystem.entity.User["password"])]
