@@ -173,7 +173,7 @@ public interface BenewakeConstants {
     /**
      * 表名：历史订单列表
      */
-    Long PAST_ORDER_TABLE = 6L;
+    Long PAST_ORDER_TABLE = 7L;
 
 
 

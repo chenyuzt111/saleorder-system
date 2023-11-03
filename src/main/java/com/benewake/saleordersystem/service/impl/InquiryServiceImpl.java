@@ -210,6 +210,19 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
                         .or().eq(username!=null,"salesman_name",username));
 
 
+        QueryWrapper<Inquiry> queryWrapper8 = new QueryWrapper<>();
+        f1 = new ArrayList<>();
+        String[] str8 = {"past_order_code","past_item_code","past_customer_name","past_salesman_name","past_sale_num","past_sale_time"};
+        for (String s : str8) {
+            if (map.containsKey(s)) {
+                f1.add(filters.get(map.get(s)));
+            }
+        }
+        CommonUtils.addFilters(f1, queryWrapper8);
+
+        // 将 queryWrapper8 的别名设置为 "qw8"
+        queryWrapper8.setParamAlias("qw8");
+
         // 重命名 (原默认为ew)
         queryWrapper1.setParamAlias("qw1");
         queryWrapper2.setParamAlias("qw2");
@@ -220,6 +233,36 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         //queryWrapper7.setParamAlias("qw7");
         return salesOrderVoMapper.selectListByFilter(queryWrapper1,queryWrapper2,
                 queryWrapper3,queryWrapper4,queryWrapper5,queryWrapper6,queryWrapper7);
+    }
+
+    @Override
+    public List<Map<String,Object>> selectPastOrders(List<FilterCriteria> filters, String username){
+        //如果条件为空创建一个新列表，否则保持原有值
+        if(filters==null) {
+            filters = new ArrayList<>();
+        }
+        // 添加筛选条件，创建一个映射表
+        Map<String,Integer> map = new HashMap<>(16);
+        for(int i=0;i<filters.size();++i){
+            //遍历筛选条件，依次加入到map当中
+            map.put(filters.get(i).getColName(),i);
+        }
+        //初始化一个f1列表，存储特定列的筛选条件
+        List<FilterCriteria> f1 = new ArrayList<>();
+
+        QueryWrapper<Inquiry> queryWrapper8 = new QueryWrapper<>();
+        f1 = new ArrayList<>();
+        String[] str8 = {"past_inquiry_code","past_item_code","past_customer_name","past_salesmam_name","past_sale_num","past_sale_time"};
+        for (String s : str8) {
+            if (map.containsKey(s)) {
+                f1.add(filters.get(map.get(s)));
+            }
+        }
+        CommonUtils.addFilters(f1, queryWrapper8);
+
+        queryWrapper8.setParamAlias("qw8");
+
+        return salesOrderVoMapper.selectPastOrders(queryWrapper8);
     }
 
 
@@ -271,7 +314,7 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
                 inquiryType == ORDER_TYPE_PO || inquiryType == ORDER_TYPE_PR || inquiryType == ORDER_TYPE_YG;
     }
     @Override
-    //主要就是判断订单是否有效
+    //主要就是判断新增订单是否有效
     public Map<String,Object> addValid(Inquiry inquiry) {
         Map<String,Object> map = new HashMap<>();
         if(inquiry.getItemId() == null || null == itemService.findItemById(inquiry.getItemId())) {
@@ -309,10 +352,91 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
 
                 map.put("error","期待发货日期不存在");
                 return map;
+
             }
-        }else if (inquiry.getExpectedTime().before(new Date())){
-            map.put("error","期待发货日期早于当前时间");
+        } else if (inquiry.getExpectedTime() != null) {
+
+            // 获取当前时间
+            Calendar currentCalendar = Calendar.getInstance();
+            currentCalendar.setTime(inquiry.getExpectedTime());
+
+            // 检查是否时间为0时
+            if (currentCalendar.get(Calendar.HOUR_OF_DAY) == 0 && currentCalendar.get(Calendar.MINUTE) == 0) {
+                // 设置时间为当天的23:59分
+                currentCalendar.set(Calendar.HOUR_OF_DAY, 23);
+                currentCalendar.set(Calendar.MINUTE, 59);
+                currentCalendar.set(Calendar.SECOND,59);
+
+                // 更新 inquiry 的期待发货日期
+                inquiry.setExpectedTime(currentCalendar.getTime());
+            }
+
+            if(inquiry.getExpectedTime().before(new Date())){
+                map.put("error","期待发货日期早于当前时间");
+                return map;
+            }
+
+        }
+        return map;
+    }
+
+    @Override
+    //主要就是修改订单是否有效
+    public Map<String,Object> updateValid(Inquiry inquiry) {
+        Map<String,Object> map = new HashMap<>();
+        if(inquiry.getItemId() == null || null == itemService.findItemById(inquiry.getItemId())) {
+            map.put("error","物料不存在！");
             return map;
+        }
+        if(inquiry.getSaleNum() == null || inquiry.getSaleNum() < 1){
+            map.put("error","销售数量为空或不合法！");
+            return map;
+        }
+        if(inquiry.getCustomerId() == null || null == customerService.findCustomerById(inquiry.getCustomerId())){
+            map.put("error","客户为空或不存在！");
+            return map;
+        }
+        if(inquiry.getInquiryType() == null || !isValidType(inquiry.getInquiryType())){
+            map.put("error","订单状态为空或不合法！");
+            return map;
+        }
+        if(inquiry.getSalesmanId() == null || userService.findUserById(inquiry.getSalesmanId())==null){
+            map.put("error","销售员为空或不存在！");
+            return map;
+        }
+
+        if (inquiry.getRemark() == null) {
+            inquiry.setRemark("");
+        }
+
+        if (inquiry.getExpectedTime() == null ) {
+            if(inquiry.getInquiryType()== ORDER_TYPE_XD) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(9999, Calendar.DECEMBER, 31); // 设置为9999年12月31日
+                inquiry.setExpectedTime(calendar.getTime());
+
+            }else if(inquiry.getInquiryType()==INQUIRY_INIT_TYPE_YC){
+
+                map.put("error","期待发货日期不存在");
+                return map;
+
+            }
+        } else if (inquiry.getExpectedTime() != null) {
+            // 获取当前时间
+            Calendar currentCalendar = Calendar.getInstance();
+            currentCalendar.setTime(inquiry.getExpectedTime());
+
+            // 检查是否时间为0时
+            if (currentCalendar.get(Calendar.HOUR_OF_DAY) == 0 && currentCalendar.get(Calendar.MINUTE) == 0) {
+                // 设置时间为当天的23:59分
+                currentCalendar.set(Calendar.HOUR_OF_DAY, 23);
+                currentCalendar.set(Calendar.MINUTE, 59);
+                currentCalendar.set(Calendar.SECOND,59);
+
+                // 更新 inquiry 的期待发货日期
+                inquiry.setExpectedTime(currentCalendar.getTime());
+            }
+
         }
         return map;
     }

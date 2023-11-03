@@ -14,6 +14,7 @@ import com.benewake.saleordersystem.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -189,7 +190,7 @@ public class AdminController {
      * @return 操作结果
      */
     @ApiOperation("4管理员删除订单类型字典")
-    @PostMapping("/deleteInquiryType")
+    @DeleteMapping("/deleteInquiryType")
     public Result deleteInquiryType(@RequestParam String typeName) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
@@ -251,7 +252,7 @@ public class AdminController {
      * @return 操作结果
      */
     @ApiOperation("6管理员删除产品类型字典")
-    @PostMapping("/deleteItemType")
+    @DeleteMapping("/deleteItemType")
     public Result deleteItemType(@RequestParam String itemTypeName) {
 
 
@@ -311,12 +312,12 @@ public class AdminController {
     /**
      * 管理员删除客户名称
      *
-     * @param addCustomerName 客户名称
+     * @param deleteCustomerName 客户名称
      * @return 操作结果
      */
     @ApiOperation("8管理员删除客户名称")
-    @PostMapping("/deleteCustomerName")
-    public Result deleteCustomerName(@RequestParam String addCustomerName) {
+    @DeleteMapping("/deleteCustomerName")
+    public Result deleteCustomerName(@RequestParam String deleteCustomerName) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
 
@@ -324,11 +325,11 @@ public class AdminController {
             return Result.fail().message("没有管理员权限");
         }
 
-        if (StringUtils.isBlank(addCustomerName)) {
+        if (StringUtils.isBlank(deleteCustomerName)) {
             return Result.message("请填写完整信息");
         }
 
-        int rowsAffected = userService.deleteCustomerName(addCustomerName);
+        int rowsAffected = userService.deleteCustomerName(deleteCustomerName);
         if (rowsAffected > 0) {
             return Result.message("删除成功！");
         } else {
@@ -411,7 +412,7 @@ public class AdminController {
      * @return 操作结果
      */
     @ApiOperation("11管理员删除客户类型管理")
-    @PostMapping("/deleteCustomerItem")
+    @DeleteMapping("/deleteCustomerItem")
     public Result deleteCustomerItem(@RequestParam String customerName, String itemCode, String customerType) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
@@ -475,7 +476,7 @@ public class AdminController {
      * @return 操作结果
      */
     @ApiOperation("13管理员根据客户旧名称删除记录")
-    @PostMapping("/deleteCustomerRenameByOldName}")
+    @DeleteMapping("/deleteCustomerRenameByOldName}")
     public Result deleteCustomerRenameByOldName(@RequestParam String customerNameOld) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
@@ -504,7 +505,7 @@ public class AdminController {
      * @return 操作结果
      */
     @ApiOperation("14管理员根据客户旧名称，修改新名称")
-    @PutMapping("/updateCustomerRename")
+    @PostMapping("/updateCustomerRename")
     public Result updateCustomerRename(@RequestParam String customerNameOld, String customerNameNew) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
@@ -565,7 +566,7 @@ public class AdminController {
      * @return 操作结果
      */
     @ApiOperation("16管理员根据旧物料删除记录")
-    @PostMapping("/deleteItemChangeByOldCode")
+    @DeleteMapping("/deleteItemChangeByOldCode")
     public Result deleteItemChangeByOldCode(@RequestParam String itemCodeOld) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
@@ -594,7 +595,7 @@ public class AdminController {
      * @return 操作结果
      */
     @ApiOperation("17管理员根据旧物料找到记录找修改新物料")
-    @PutMapping("/updateItemChange")
+    @PostMapping("/updateItemChange")
     public Result updateItemChange(@RequestParam String itemCodeOld, String itemCodeNew) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
@@ -656,7 +657,7 @@ public class AdminController {
      * @return 操作结果
      */
     @ApiOperation("19管理员根据旧销售员删除记录")
-    @PostMapping("/deleteSalesmanChangeByOldName")
+    @DeleteMapping("/deleteSalesmanChangeByOldName")
     public Result deleteSalesmanChangeByOldName(@RequestParam String salesmanNameOld) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
@@ -685,7 +686,7 @@ public class AdminController {
      * @return 操作结果
      */
     @ApiOperation("20管理员根据旧销售员找到记录找修改新销售员")
-    @PutMapping("/updateSalesmanChange")
+    @PostMapping("/updateSalesmanChange")
     public Result updateSalesmanChange(@RequestParam String salesmanNameOld, String salesmanNameNew) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息

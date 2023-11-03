@@ -22,11 +22,11 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
 
     @Autowired
     private ViewColMapper viewColMapper;
-    private static final int[] ALL_SALESMAN_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20};
-    private static final int[] ALL_SYSTEM_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20};
+    private static final int[] ALL_SALESMAN_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20,28,29};
+    private static final int[] ALL_SYSTEM_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20,28,29};
 
-    private static final int[] ALL_SALESMAN_T_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20,21};
-    private static final int[] ALL_SYSTEM_T_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20,21};
+    private static final int[] ALL_SALESMAN_T_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20,21,28,29};
+    private static final int[] ALL_SYSTEM_T_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20,21,28,29};
 
     private static final int[] INQUIRY_TYPE_SALESMAN_MAPS = {1,2,3,4,5,6,7,8,9,10,11,12,13,20};
     private static final int[] INQUIRY_TYPE_ADMIN_MAPS = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,20};
@@ -56,14 +56,16 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
     private static final int[] INQUIRY_DELIVERY_ADMIN_10_MAPS = {0,1,4,5,6,7,11,12,15,17,20};
     private static final int[] INQUIRY_DELIVERY_ADMIN_40_MAPS = {0,1,4,5,6,7,11,12,15,17,20};
     private static final int[] INQUIRY_DELIVERY_ADMIN_00_MAPS = {0,1,4,5,6,7,14,11,12,13,15,16,17,20};
-    private static final int[] PASTORDER_MAPS = {0,4,5,6,7};
+    private static final int[] PASTORDER_MAPS = {22,23,24,25,26,27};
     private static final String[] ENGS = {"salesman_name","inquiry_code","inquiry_init_type","state","item_code","item_name",
         "sale_num","customer_name","inquiry_type","item_type","customer_type","expected_time",
         "arranged_time","delay","order_delivery_progress","delivery_code","receive_time","delivery_state",
-                "customize","created_user_name","remark","allow_inquiry"};
+                "customize","created_user_name","remark","allow_inquiry","past_inquiry_code"
+            ,"past_item_code","past_customer_name","past_salesmam_name","past_sale_num","past_sale_time","creat_time","update_time"};
     private static final String[] CNS = {"销售员","单据编号","单据类型","单据状态","物料编码","物料名称","数量","客户名称","订单状态",
                 "产品类型","客户类型","期望发货日期","计划反馈日期","是否延期","订单交付进度","运输单号","签收时间","最新状态",
-                "是否定制","创建人","备注","是否允许询单"};
+                "是否定制","创建人","备注","是否允许询单","历史单据编号","历史物料编码","历史客户名称","历史销售员名称","历史销售数量","历史销售时间"
+                ,"创建日期","更新日期"};
 
     private List<Map<String,Object>> getColsTansfer(int[] seq){
         List<Map<String,Object>> maps = new ArrayList<>();
@@ -116,7 +118,7 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
             }else if(tableId.equals(INQUIRY_CHANGE_TABLE)){
                 if(isAdmin) return getColsTansfer(INQUIRY_CHANGE_ADMIN_MAPS);
                 else return getColsTansfer(INQUIRY_CHANGE_SALESMAN_MAPS);
-            }else{
+            }else if(tableId.equals(INQUIRY_DELIVERY_TABLE)){
                 if(viewId==0){
                     if(isAdmin) return getColsTansfer(INQUIRY_DELIVERY_ADMIN_MAPS);
                     else return getColsTansfer(INQUIRY_DELIVERY_SALESMAN_MAPS);
@@ -133,6 +135,8 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
                     if(isAdmin) return getColsTansfer(INQUIRY_DELIVERY_ADMIN_40_MAPS);
                     else return getColsTansfer(INQUIRY_DELIVERY_SALESMAN_40_MAPS);
                 }
+            }else {
+                return getColsTansfer(PASTORDER_MAPS);
             }
             //如果 viewId 大于 0，表示查看个人方案视图
         }else {

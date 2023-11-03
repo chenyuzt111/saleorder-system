@@ -1,0 +1,106 @@
+2023-11-01 10:12:38.924 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 10:12:38.951 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 10:12:41.029 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 10:42:24.219 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=58s537ms113µs500ns).
+2023-11-01 10:45:37.659 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m13s441ms57µs300ns).
+2023-11-01 10:56:21.035 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m20s180ms380µs800ns).
+2023-11-01 10:56:47.710 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 10:56:47.731 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 10:56:49.558 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 14:38:51.725 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 14:38:51.744 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 14:38:54.647 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 14:44:10.987 [http-nio-8080-exec-2] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'customerType' is not present]
+2023-11-01 14:44:59.355 [http-nio-8080-exec-3] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'customerType' is not present]
+2023-11-01 14:45:29.550 [http-nio-8080-exec-4] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'customerType' is not present]
+2023-11-01 14:48:09.873 [http-nio-8080-exec-9] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'customerType' is not present]
+2023-11-01 14:49:48.758 [http-nio-8080-exec-2] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'customerType' is not present]
+2023-11-01 14:52:36.403 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 14:52:36.424 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 14:52:39.138 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 14:59:42.545 [http-nio-8080-exec-5] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'customerType' is not present]
+2023-11-01 15:03:09.658 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m2s466ms530µs300ns).
+2023-11-01 15:04:02.443 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:04:02.467 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:04:05.225 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:06:59.488 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:06:59.510 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:07:02.277 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:11:08.510 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m17s720ms891µs400ns).
+2023-11-01 15:11:47.664 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:11:47.683 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:11:50.441 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:15:25.739 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:15:25.778 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:15:28.915 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:16:04.461 [http-nio-8080-exec-3] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DuplicateKeyException: 
+### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '测试用' for key 'customer_type_dic.PRIMARY'
+### The error may exist in com/benewake/saleordersystem/mapper/UserMapper.java (best guess)
+### The error may involve com.benewake.saleordersystem.mapper.UserMapper.insertCustomerType-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO customer_type_dic (customer_type) VALUES (?)
+### Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '测试用' for key 'customer_type_dic.PRIMARY'
+; Duplicate entry '测试用' for key 'customer_type_dic.PRIMARY'; nested exception is java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '测试用' for key 'customer_type_dic.PRIMARY']
+2023-11-01 15:39:33.384 [http-nio-8080-exec-9] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'typeName' is not present]
+2023-11-01 15:40:46.277 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:40:46.298 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:40:48.990 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:41:07.938 [http-nio-8080-exec-4] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required InquiryTypeDic parameter 'param' is not present]
+2023-11-01 15:42:09.001 [http-nio-8080-exec-5] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required InquiryTypeDic parameter 'param' is not present]
+2023-11-01 15:55:35.059 [http-nio-8080-exec-8] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required InquiryTypeDic parameter 'param' is not present]
+2023-11-01 15:55:56.520 [http-nio-8080-exec-6] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required InquiryTypeDic parameter 'param' is not present]
+2023-11-01 15:56:50.971 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:56:50.990 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:56:52.545 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 15:57:17.971 [http-nio-8080-exec-2] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize instance of `com.benewake.saleordersystem.entity.basedata.InquiryTypeDic` out of START_ARRAY token; nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot deserialize instance of `com.benewake.saleordersystem.entity.basedata.InquiryTypeDic` out of START_ARRAY token
+ at [Source: (PushbackInputStream); line: 1, column: 1]]
+2023-11-01 16:18:48.208 [http-nio-8080-exec-5] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize instance of `com.benewake.saleordersystem.entity.basedata.CustomerTypeDic` out of START_ARRAY token; nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot deserialize instance of `com.benewake.saleordersystem.entity.basedata.CustomerTypeDic` out of START_ARRAY token
+ at [Source: (PushbackInputStream); line: 1, column: 1]]
+2023-11-01 16:19:30.695 [http-nio-8080-exec-8] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize instance of `com.benewake.saleordersystem.entity.basedata.CustomerTypeDic` out of START_ARRAY token; nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot deserialize instance of `com.benewake.saleordersystem.entity.basedata.CustomerTypeDic` out of START_ARRAY token
+ at [Source: (PushbackInputStream); line: 1, column: 1]]
+2023-11-01 16:19:52.120 [http-nio-8080-exec-9] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public com.benewake.saleordersystem.utils.Result com.benewake.saleordersystem.controller.AdminController.addCustomerType(com.benewake.saleordersystem.entity.basedata.CustomerTypeDic)]
+2023-11-01 16:20:57.109 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 16:20:57.131 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 16:20:58.846 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-11-01 16:27:44.927 [http-nio-8080-exec-3] WARN  [,] o.s.w.s.m.support.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported]
+2023-11-01 16:28:08.098 [http-nio-8080-exec-5] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'typeName' is not present]
+2023-11-01 16:28:21.216 [http-nio-8080-exec-6] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataIntegrityViolationException: 
+### Error updating database.  Cause: java.sql.SQLException: Field 'inquiry_type' doesn't have a default value
+### The error may exist in com/benewake/saleordersystem/mapper/UserMapper.java (best guess)
+### The error may involve com.benewake.saleordersystem.mapper.UserMapper.insertInquiryType-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO inquiry_type_dic (inquiry_type_name) VALUES (?)
+### Cause: java.sql.SQLException: Field 'inquiry_type' doesn't have a default value
+; Field 'inquiry_type' doesn't have a default value; nested exception is java.sql.SQLException: Field 'inquiry_type' doesn't have a default value]
+2023-11-01 16:30:28.584 [http-nio-8080-exec-10] WARN  [,] o.s.w.s.m.support.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported]
+2023-11-01 16:31:58.293 [http-nio-8080-exec-3] WARN  [,] o.s.w.s.m.support.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported]
+2023-11-01 16:32:11.286 [http-nio-8080-exec-4] WARN  [,] o.s.w.s.m.support.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported]
+2023-11-01 16:41:21.308 [http-nio-8080-exec-3] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'itemTypeName' is not present]
+2023-11-01 16:48:01.999 [http-nio-8080-exec-3] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.NullPointerException]
+2023-11-01 16:54:09.462 [http-nio-8080-exec-5] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.NullPointerException]
+2023-11-01 16:54:18.959 [http-nio-8080-exec-6] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.NullPointerException]
+2023-11-01 16:55:38.969 [http-nio-8080-exec-9] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DuplicateKeyException: 
+### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '149-1' for key 'fim_customer_type_table.PRIMARY'
+### The error may exist in com/benewake/saleordersystem/mapper/UserMapper.java (best guess)
+### The error may involve com.benewake.saleordersystem.mapper.UserMapper.insertCustomerItem-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO fim_customer_type_table (customer_id, item_id, customer_type) VALUES (?, ?, ?)
+### Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '149-1' for key 'fim_customer_type_table.PRIMARY'
+; Duplicate entry '149-1' for key 'fim_customer_type_table.PRIMARY'; nested exception is java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '149-1' for key 'fim_customer_type_table.PRIMARY']
+2023-11-01 17:03:48.705 [http-nio-8080-exec-6] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'customerName' is not present]
+2023-11-01 17:04:05.983 [http-nio-8080-exec-9] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.NullPointerException]
+2023-11-01 17:04:37.875 [http-nio-8080-exec-8] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.NullPointerException]
+2023-11-01 17:08:52.219 [http-nio-8080-exec-2] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.NullPointerException]
+2023-11-01 17:09:26.493 [http-nio-8080-exec-3] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.NullPointerException]
+2023-11-01 17:09:46.415 [http-nio-8080-exec-4] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DuplicateKeyException: 
+### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '2023-36' for key 'fim_customer_type_table.PRIMARY'
+### The error may exist in com/benewake/saleordersystem/mapper/UserMapper.java (best guess)
+### The error may involve com.benewake.saleordersystem.mapper.UserMapper.insertCustomerItem-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO fim_customer_type_table (customer_id, item_id, customer_type) VALUES (?, ?, ?)
+### Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '2023-36' for key 'fim_customer_type_table.PRIMARY'
+; Duplicate entry '2023-36' for key 'fim_customer_type_table.PRIMARY'; nested exception is java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '2023-36' for key 'fim_customer_type_table.PRIMARY']
+2023-11-01 17:31:31.857 [http-nio-8080-exec-1] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'itemCodeOld' is not present]
+2023-11-01 17:31:59.321 [http-nio-8080-exec-3] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'itemCodeOld' is not present]
+2023-11-01 17:33:46.303 [http-nio-8080-exec-9] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MissingServletRequestParameterException: Required String parameter 'salesmanNameOld' is not present]
+2023-11-01 17:49:31.635 [http-nio-8080-exec-3] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.RequestParam @org.springframework.format.annotation.DateTimeFormat java.time.LocalDateTime] for value '测试'; nested exception is java.lang.IllegalArgumentException: Parse attempt failed for value [测试]]

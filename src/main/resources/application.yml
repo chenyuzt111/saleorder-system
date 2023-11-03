@@ -102,7 +102,8 @@ spring:
 #      template:
 #        mandatory: true
   datasource:
-    url: jdbc:mysql://localhost:3306/fim_aps_system?characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/fim_aps_system?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B0&allowMultiQueries=true
+
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver

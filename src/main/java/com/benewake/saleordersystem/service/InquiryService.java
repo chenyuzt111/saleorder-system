@@ -41,6 +41,13 @@ public interface InquiryService extends IService<Inquiry> {
     List<Map<String,Object>> selectSalesOrderVoList(List<FilterCriteria> filters,String username);
 
     /**
+     * 历史订单  根据条件筛选获得数据 若果filters==null 返回全部数据
+     * @param filters
+     * @return
+     */
+    List<Map<String,Object>> selectPastOrders(List<FilterCriteria> filters,String username);
+
+    /**
      * 根据订单类型生成相应的单据编号
      * @param type
      * @param length
@@ -54,6 +61,13 @@ public interface InquiryService extends IService<Inquiry> {
      * @return
      */
     Map<String,Object> addValid(Inquiry inquiry);
+
+    /**
+     * 修改时判断参数是否合法
+     * @param inquiry
+     * @return
+     */
+    Map<String,Object> updateValid(Inquiry inquiry);
 
     /**
      * 根据询单id获得对应的询单

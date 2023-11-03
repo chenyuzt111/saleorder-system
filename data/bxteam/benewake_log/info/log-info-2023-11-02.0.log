@@ -1,0 +1,209 @@
+2023-11-02 18:12:07.524 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Starting SaleOrderSystemApplication on DESKTOP-7M29D94 with PID 17304 (E:\北醒文件\测试版本\saleorder-system-main\target\classes started by DELL in E:\北醒文件\测试版本\saleorder-system-main)
+2023-11-02 18:12:07.541 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - No active profile set, falling back to default profiles: default
+2023-11-02 18:12:07.690 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-02 18:12:07.690 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-02 18:12:12.327 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-11-02 18:12:12.342 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:12:12.343 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-11-02 18:12:12.343 [restartedMain] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-11-02 18:12:12.357 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.2.23] using APR version [1.7.0].
+2023-11-02 18:12:12.357 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2023-11-02 18:12:12.357 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2023-11-02 18:12:12.362 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 1.1.1c  28 May 2019]
+2023-11-02 18:12:12.507 [restartedMain] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring embedded WebApplicationContext
+2023-11-02 18:12:12.507 [restartedMain] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 4772 ms
+2023-11-02 18:12:16.022 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2023-11-02 18:12:16.036 [restartedMain] INFO  [,] o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-11-02 18:12:55.227 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Starting SaleOrderSystemApplication on DESKTOP-7M29D94 with PID 22244 (E:\北醒文件\测试版本\saleorder-system-main\target\classes started by DELL in E:\北醒文件\测试版本\saleorder-system-main)
+2023-11-02 18:12:55.232 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - No active profile set, falling back to default profiles: default
+2023-11-02 18:12:55.332 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-02 18:12:55.332 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-02 18:12:57.419 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-11-02 18:12:57.434 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:12:57.435 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-11-02 18:12:57.436 [restartedMain] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-11-02 18:12:57.440 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.2.23] using APR version [1.7.0].
+2023-11-02 18:12:57.441 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2023-11-02 18:12:57.442 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2023-11-02 18:12:57.449 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 1.1.1c  28 May 2019]
+2023-11-02 18:12:57.585 [restartedMain] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring embedded WebApplicationContext
+2023-11-02 18:12:57.585 [restartedMain] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2252 ms
+2023-11-02 18:13:01.476 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2023-11-02 18:13:01.497 [restartedMain] INFO  [,] o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-11-02 18:13:21.943 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Starting SaleOrderSystemApplication on DESKTOP-7M29D94 with PID 15400 (E:\北醒文件\测试版本\saleorder-system-main\target\classes started by DELL in E:\北醒文件\测试版本\saleorder-system-main)
+2023-11-02 18:13:21.946 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - No active profile set, falling back to default profiles: default
+2023-11-02 18:13:21.997 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-02 18:13:21.998 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-02 18:13:23.697 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-11-02 18:13:23.704 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:13:23.705 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-11-02 18:13:23.705 [restartedMain] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-11-02 18:13:23.707 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.2.23] using APR version [1.7.0].
+2023-11-02 18:13:23.707 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2023-11-02 18:13:23.707 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2023-11-02 18:13:23.711 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 1.1.1c  28 May 2019]
+2023-11-02 18:13:23.801 [restartedMain] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring embedded WebApplicationContext
+2023-11-02 18:13:23.801 [restartedMain] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1803 ms
+2023-11-02 18:13:27.163 [restartedMain] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService
+2023-11-02 18:13:27.164 [restartedMain] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'asynExecutor'
+2023-11-02 18:13:27.392 [restartedMain] INFO  [,] o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2023-11-02 18:13:28.384 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:13:28.408 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path '/benewake'
+2023-11-02 18:13:29.096 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Started SaleOrderSystemApplication in 7.637 seconds (JVM running for 9.781)
+2023-11-02 18:15:07.250 [http-nio-8080-exec-2] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-02 18:15:07.250 [http-nio-8080-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-11-02 18:15:07.262 [http-nio-8080-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 12 ms
+2023-11-02 18:15:07.430 [http-nio-8080-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-11-02 18:15:08.038 [http-nio-8080-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-11-02 18:15:08.563 [http-nio-8080-exec-2] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 用户[User(id=20, username=贺兴华, password=1484d370657a95dff48de20d24e54ce5, salt=d0556, userType=1, userConllection=0, ycvalue=7, xdvalue=7, prvalue=7, userphone=null, usermail=null)],ip地址[0:0:0:0:0:0:0:1],在[2023-11-02 18:11:08],访问了[com.benewake.saleordersystem.controller.SaleOrderController]的[selectList]方法，参数为[[FilterVo(tableId=1, viewId=0, viewName=null, filterCriterias=[], cols=null)]].
+2023-11-02 18:15:14.900 [http-nio-8080-exec-4] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 用户[User(id=20, username=贺兴华, password=1484d370657a95dff48de20d24e54ce5, salt=d0556, userType=1, userConllection=0, ycvalue=7, xdvalue=7, prvalue=7, userphone=null, usermail=null)],ip地址[0:0:0:0:0:0:0:1],在[2023-11-02 18:11:14],访问了[com.benewake.saleordersystem.controller.HomeController]的[login]方法，参数为[[User(id=null, username=贺兴华, password=14021402hxh, salt=null, userType=null, userConllection=null, ycvalue=null, xdvalue=null, prvalue=null, userphone=null, usermail=null), org.apache.catalina.connector.ResponseFacade@764209b8]].
+2023-11-02 18:15:15.325 [http-nio-8080-exec-4] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 返回结果：{"code":202,"message":"当前已有账号登录，请先退出当前账号！"}
+2023-11-02 18:15:19.050 [http-nio-8080-exec-5] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 用户[User(id=20, username=贺兴华, password=1484d370657a95dff48de20d24e54ce5, salt=d0556, userType=1, userConllection=0, ycvalue=7, xdvalue=7, prvalue=7, userphone=null, usermail=null)],ip地址[0:0:0:0:0:0:0:1],在[2023-11-02 18:11:19],访问了[com.benewake.saleordersystem.controller.HomeController]的[logout]方法，参数为[[2039ce682d4c4f858aa59a58962260dd]].
+2023-11-02 18:15:19.158 [http-nio-8080-exec-5] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 返回结果：{"code":200,"message":"退出成功！"}
+2023-11-02 18:15:22.503 [http-nio-8080-exec-3] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 用户[null],ip地址[0:0:0:0:0:0:0:1],在[2023-11-02 18:11:22],访问了[com.benewake.saleordersystem.controller.HomeController]的[login]方法，参数为[[User(id=null, username=贺兴华, password=14021402hxh, salt=null, userType=null, userConllection=null, ycvalue=null, xdvalue=null, prvalue=null, userphone=null, usermail=null), org.apache.catalina.connector.ResponseFacade@764209b8]].
+2023-11-02 18:15:22.650 [http-nio-8080-exec-3] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 返回结果：{"code":200,"data":{"ticket":"cf7b51596204415a98ac85b8f64d5403","userType":1,"collection":0,"userId":20,"username":"贺兴华"},"message":"success"}
+2023-11-02 18:15:26.714 [http-nio-8080-exec-9] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 用户[User(id=20, username=贺兴华, password=1484d370657a95dff48de20d24e54ce5, salt=d0556, userType=1, userConllection=0, ycvalue=7, xdvalue=7, prvalue=7, userphone=null, usermail=null)],ip地址[0:0:0:0:0:0:0:1],在[2023-11-02 18:11:26],访问了[com.benewake.saleordersystem.controller.SaleOrderController]的[selectList]方法，参数为[[FilterVo(tableId=1, viewId=0, viewName=null, filterCriterias=[], cols=null)]].
+2023-11-02 18:16:53.681 [SpringContextShutdownHook] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Shutting down ExecutorService 'asynExecutor'
+2023-11-02 18:16:53.686 [SpringContextShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-11-02 18:16:53.692 [SpringContextShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-11-02 18:17:06.101 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Starting SaleOrderSystemApplication on DESKTOP-7M29D94 with PID 3248 (E:\北醒文件\测试版本\saleorder-system-main\target\classes started by DELL in E:\北醒文件\测试版本\saleorder-system-main)
+2023-11-02 18:17:06.104 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - No active profile set, falling back to default profiles: default
+2023-11-02 18:17:06.167 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-02 18:17:06.167 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-02 18:17:08.056 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-11-02 18:17:08.064 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:17:08.064 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-11-02 18:17:08.064 [restartedMain] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-11-02 18:17:08.066 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.2.23] using APR version [1.7.0].
+2023-11-02 18:17:08.066 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2023-11-02 18:17:08.067 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2023-11-02 18:17:08.070 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 1.1.1c  28 May 2019]
+2023-11-02 18:17:08.163 [restartedMain] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring embedded WebApplicationContext
+2023-11-02 18:17:08.163 [restartedMain] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1995 ms
+2023-11-02 18:17:11.191 [restartedMain] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService
+2023-11-02 18:17:11.192 [restartedMain] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'asynExecutor'
+2023-11-02 18:17:11.335 [restartedMain] INFO  [,] o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2023-11-02 18:17:12.027 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:17:12.049 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path '/benewake'
+2023-11-02 18:17:12.597 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Started SaleOrderSystemApplication in 7.026 seconds (JVM running for 9.272)
+2023-11-02 18:17:33.784 [http-nio-8080-exec-2] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-02 18:17:33.784 [http-nio-8080-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-11-02 18:17:33.799 [http-nio-8080-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 15 ms
+2023-11-02 18:17:33.900 [http-nio-8080-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-11-02 18:17:34.035 [http-nio-8080-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-11-02 18:17:34.243 [http-nio-8080-exec-2] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 用户[User(id=20, username=贺兴华, password=1484d370657a95dff48de20d24e54ce5, salt=d0556, userType=1, userConllection=0, ycvalue=7, xdvalue=7, prvalue=7, userphone=null, usermail=null)],ip地址[0:0:0:0:0:0:0:1],在[2023-11-02 18:11:34],访问了[com.benewake.saleordersystem.controller.SaleOrderController]的[selectList]方法，参数为[[FilterVo(tableId=1, viewId=0, viewName=null, filterCriterias=[], cols=null)]].
+2023-11-02 18:18:20.452 [SpringContextShutdownHook] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Shutting down ExecutorService 'asynExecutor'
+2023-11-02 18:18:20.464 [SpringContextShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-11-02 18:18:20.475 [SpringContextShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-11-02 18:18:34.234 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Starting SaleOrderSystemApplication on DESKTOP-7M29D94 with PID 25176 (E:\北醒文件\测试版本\saleorder-system-main\target\classes started by DELL in E:\北醒文件\测试版本\saleorder-system-main)
+2023-11-02 18:18:34.237 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - No active profile set, falling back to default profiles: default
+2023-11-02 18:18:34.320 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-02 18:18:34.320 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-02 18:18:36.182 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-11-02 18:18:36.189 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:18:36.189 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-11-02 18:18:36.189 [restartedMain] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-11-02 18:18:36.191 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.2.23] using APR version [1.7.0].
+2023-11-02 18:18:36.191 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2023-11-02 18:18:36.192 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2023-11-02 18:18:36.195 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 1.1.1c  28 May 2019]
+2023-11-02 18:18:36.287 [restartedMain] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring embedded WebApplicationContext
+2023-11-02 18:18:36.287 [restartedMain] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1967 ms
+2023-11-02 18:18:39.334 [restartedMain] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService
+2023-11-02 18:18:39.336 [restartedMain] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'asynExecutor'
+2023-11-02 18:18:39.479 [restartedMain] INFO  [,] o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2023-11-02 18:18:40.168 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:18:40.188 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path '/benewake'
+2023-11-02 18:18:40.709 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Started SaleOrderSystemApplication in 7.099 seconds (JVM running for 9.587)
+2023-11-02 18:18:56.558 [http-nio-8080-exec-1] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-02 18:18:56.559 [http-nio-8080-exec-1] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-11-02 18:18:56.574 [http-nio-8080-exec-1] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 15 ms
+2023-11-02 18:18:56.666 [http-nio-8080-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-11-02 18:18:56.839 [http-nio-8080-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-11-02 18:18:57.012 [http-nio-8080-exec-1] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 用户[User(id=20, username=贺兴华, password=1484d370657a95dff48de20d24e54ce5, salt=d0556, userType=1, userConllection=0, ycvalue=7, xdvalue=7, prvalue=7, userphone=null, usermail=null)],ip地址[0:0:0:0:0:0:0:1],在[2023-11-02 18:11:57],访问了[com.benewake.saleordersystem.controller.SaleOrderController]的[selectList]方法，参数为[[FilterVo(tableId=1, viewId=0, viewName=null, filterCriterias=[], cols=null)]].
+2023-11-02 18:19:04.531 [http-nio-8080-exec-3] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 用户[User(id=20, username=贺兴华, password=1484d370657a95dff48de20d24e54ce5, salt=d0556, userType=1, userConllection=0, ycvalue=7, xdvalue=7, prvalue=7, userphone=null, usermail=null)],ip地址[0:0:0:0:0:0:0:1],在[2023-11-02 18:11:04],访问了[com.benewake.saleordersystem.controller.SaleOrderController]的[selectList]方法，参数为[[FilterVo(tableId=1, viewId=0, viewName=null, filterCriterias=[], cols=null)]].
+2023-11-02 18:26:01.010 [SpringContextShutdownHook] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Shutting down ExecutorService 'asynExecutor'
+2023-11-02 18:26:01.023 [SpringContextShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-11-02 18:26:01.037 [SpringContextShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-11-02 18:26:14.526 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Starting SaleOrderSystemApplication on DESKTOP-7M29D94 with PID 25576 (E:\北醒文件\测试版本\saleorder-system-main\target\classes started by DELL in E:\北醒文件\测试版本\saleorder-system-main)
+2023-11-02 18:26:14.529 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - No active profile set, falling back to default profiles: default
+2023-11-02 18:26:14.623 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-02 18:26:14.624 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-02 18:26:16.567 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-11-02 18:26:16.575 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:26:16.576 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-11-02 18:26:16.576 [restartedMain] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-11-02 18:26:16.578 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.2.23] using APR version [1.7.0].
+2023-11-02 18:26:16.578 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2023-11-02 18:26:16.578 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2023-11-02 18:26:16.583 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 1.1.1c  28 May 2019]
+2023-11-02 18:26:16.680 [restartedMain] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring embedded WebApplicationContext
+2023-11-02 18:26:16.680 [restartedMain] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2055 ms
+2023-11-02 18:26:19.166 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2023-11-02 18:26:19.179 [restartedMain] INFO  [,] o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-11-02 18:26:47.625 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Starting SaleOrderSystemApplication on DESKTOP-7M29D94 with PID 3864 (E:\北醒文件\测试版本\saleorder-system-main\target\classes started by DELL in E:\北醒文件\测试版本\saleorder-system-main)
+2023-11-02 18:26:47.628 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - No active profile set, falling back to default profiles: default
+2023-11-02 18:26:47.685 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-02 18:26:47.685 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-02 18:26:49.473 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-11-02 18:26:49.481 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:26:49.481 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-11-02 18:26:49.482 [restartedMain] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-11-02 18:26:49.483 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.2.23] using APR version [1.7.0].
+2023-11-02 18:26:49.483 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2023-11-02 18:26:49.483 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2023-11-02 18:26:49.487 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 1.1.1c  28 May 2019]
+2023-11-02 18:26:49.577 [restartedMain] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring embedded WebApplicationContext
+2023-11-02 18:26:49.578 [restartedMain] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1892 ms
+2023-11-02 18:26:52.544 [restartedMain] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService
+2023-11-02 18:26:52.546 [restartedMain] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'asynExecutor'
+2023-11-02 18:26:52.694 [restartedMain] INFO  [,] o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2023-11-02 18:26:53.421 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:26:53.440 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path '/benewake'
+2023-11-02 18:26:53.992 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Started SaleOrderSystemApplication in 6.91 seconds (JVM running for 8.96)
+2023-11-02 18:27:04.321 [http-nio-8080-exec-3] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-02 18:27:04.321 [http-nio-8080-exec-3] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-11-02 18:27:04.330 [http-nio-8080-exec-3] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 9 ms
+2023-11-02 18:27:04.397 [http-nio-8080-exec-3] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-11-02 18:27:04.521 [http-nio-8080-exec-3] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-11-02 18:27:04.726 [http-nio-8080-exec-3] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 用户[User(id=20, username=贺兴华, password=1484d370657a95dff48de20d24e54ce5, salt=d0556, userType=1, userConllection=0, ycvalue=7, xdvalue=7, prvalue=7, userphone=null, usermail=null)],ip地址[0:0:0:0:0:0:0:1],在[2023-11-02 18:11:04],访问了[com.benewake.saleordersystem.controller.SaleOrderController]的[selectList]方法，参数为[[FilterVo(tableId=1, viewId=0, viewName=null, filterCriterias=[], cols=null)]].
+2023-11-02 18:28:08.796 [SpringContextShutdownHook] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Shutting down ExecutorService 'asynExecutor'
+2023-11-02 18:28:08.803 [SpringContextShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-11-02 18:28:08.811 [SpringContextShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-11-02 18:28:19.690 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Starting SaleOrderSystemApplication on DESKTOP-7M29D94 with PID 20464 (E:\北醒文件\测试版本\saleorder-system-main\target\classes started by DELL in E:\北醒文件\测试版本\saleorder-system-main)
+2023-11-02 18:28:19.692 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - No active profile set, falling back to default profiles: default
+2023-11-02 18:28:19.746 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-02 18:28:19.746 [restartedMain] INFO  [,] o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-02 18:28:21.471 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-11-02 18:28:21.479 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:28:21.479 [restartedMain] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2023-11-02 18:28:21.479 [restartedMain] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-11-02 18:28:21.481 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [1.2.23] using APR version [1.7.0].
+2023-11-02 18:28:21.481 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2023-11-02 18:28:21.482 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2023-11-02 18:28:21.485 [restartedMain] INFO  [,] org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 1.1.1c  28 May 2019]
+2023-11-02 18:28:21.576 [restartedMain] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring embedded WebApplicationContext
+2023-11-02 18:28:21.577 [restartedMain] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1829 ms
+2023-11-02 18:28:25.155 [restartedMain] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService
+2023-11-02 18:28:25.157 [restartedMain] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'asynExecutor'
+2023-11-02 18:28:25.334 [restartedMain] INFO  [,] o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2023-11-02 18:28:26.158 [restartedMain] INFO  [,] org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2023-11-02 18:28:26.180 [restartedMain] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path '/benewake'
+2023-11-02 18:28:26.786 [restartedMain] INFO  [,] c.b.saleordersystem.SaleOrderSystemApplication - Started SaleOrderSystemApplication in 7.605 seconds (JVM running for 9.811)
+2023-11-02 18:28:34.987 [http-nio-8080-exec-1] INFO  [,] o.a.c.c.C.[Tomcat].[localhost].[/benewake] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-02 18:28:34.987 [http-nio-8080-exec-1] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2023-11-02 18:28:35.000 [http-nio-8080-exec-1] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 13 ms
+2023-11-02 18:28:35.095 [http-nio-8080-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-11-02 18:28:35.350 [http-nio-8080-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-11-02 18:28:35.558 [http-nio-8080-exec-1] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 用户[User(id=20, username=贺兴华, password=1484d370657a95dff48de20d24e54ce5, salt=d0556, userType=1, userConllection=0, ycvalue=7, xdvalue=7, prvalue=7, userphone=null, usermail=null)],ip地址[0:0:0:0:0:0:0:1],在[2023-11-02 18:11:35],访问了[com.benewake.saleordersystem.controller.SaleOrderController]的[selectList]方法，参数为[[FilterVo(tableId=1, viewId=0, viewName=null, filterCriterias=[], cols=null)]].
+2023-11-02 18:28:35.924 [http-nio-8080-exec-1] INFO  [,] c.b.saleordersystem.aspect.TrackingTimeAspectj - Call method (public com.benewake.saleordersystem.utils.Result com.benewake.saleordersystem.controller.SaleOrderController.selectList(com.benewake.saleordersystem.entity.VO.FilterVo)) used time:356ms
+2023-11-02 18:28:36.239 [http-nio-8080-exec-1] INFO  [,] com.benewake.saleordersystem.aspect.LogAspect - 返回结果：{"code":200,"data":{"lists":[{"customer_type":"日常","item_code":"13.01.02.023","salesman_name":"胡兵","inquiry_id":769,"sale_num":12,"item_type":"已有标品","item_name":"TF02-Pro标品(整箱包装)-V1.0","remark":"","created_user_name":"贺兴华","customize":"否","inquiry_type":"YC(销售预测)","delay":"否","inquiry_init_type":"销售预测","order_delivery_progress":"未发货","state":"保存","customer_name":"artu bilgi tek.aras.gel.yaz.mu.el.sn.vetic.","inquiry_code":"XSYC2023110003","expected_time":1702051199000},{"customer_type":"日常","item_code":"13.01.02.023","salesman_name":"胡兵","inquiry_id":774,"sale_num":12,"item_type":"已有标品","item_name":"TF02-Pro标品(整箱包装)-V1.0","remark":"","created_user_name":"贺兴华","customize":"否","inquiry_type":"YC(销售预测)","delay":"否","inquiry_init_type":"销售预测","order_delivery_progress":"未发货","state":"保存","customer_name":"artu bilgi tek.aras.gel.yaz.mu.el.sn.vetic.","inquiry_code":"XSYC2023110002","expected_time":1702051199000},{"customer_type":"日常","item_code":"13.01.02.023","salesman_name":"胡兵","inquiry_id":767,"sale_num":12,"item_type":"已有标品","item_name":"TF02-Pro标品(整箱包装)-V1.0","remark":"","created_user_name":"贺兴华","customize":"否","inquiry_type":"YC(销售预测)","delay":"否","inquiry_init_type":"销售预测","order_delivery_progress":"未发货","state":"保存","customer_name":"artu bilgi tek.aras.gel.yaz.mu.el.sn.vetic.","inquiry_code":"XSYC2023110001","expected_time":1702051199000},{"customer_type":"日常","item_code":"13.01.02.023","salesman_name":"胡兵","inquiry_id":766,"sale_num":15,"item_type":"已有标品","item_name":"TF02-Pro标品(整箱包装)-V1.0","remark":"","created_user_name":"贺兴华","customize":"否","inquiry_type":"PO(客户付款)","delay":"否","inquiry_init_type":"销售预测","order_delivery_progress":"未发货","state":"询单3次","customer_name":"audn2017@naver.com","inquiry_code":"XSYC2023100023","expected_time":1696175940000},{"customer_type":"日常","item_code":"13.01.02.023","salesman_name":"冯志刚","inquiry_id":763,"sale_num":12,"item_type":"已有标品","item_name":"TF02-Pro标品(整箱包装)-V1.0","remark":"","created_user_name":"贺兴华","customize":"否","inquiry_type":"YC(销售预测)","delay":"否","inquiry_init_type":"销售预测","order_delivery_progress":"未发货","state":"保存","customer_name":"audn2017@naver.com","inquiry_code":"XSYC2023100022","expected_time":1698335940000},{"customer_type":"日常","item_code":"13.01.02.023","salesman_name":"冯志刚","inquiry_id":762,"sale_num":12,"item_type":"已有标品","item_name":"TF02-Pro标品(整箱包装)-V1.0","remark":"","created_user_name":"贺兴华","customize":"否","inquiry_type":"YC(销售预测)","delay":"否","inquiry_init_type":"销售预测","order_delivery_progress":"未发货","state":"保存","customer_name":"audn2017@naver.com","inquiry_code":"XSYC2023100021","expected_time":1698335940000},{"customer_type":"日常","item_code":"13.01.02.023","salesman_name":"冯志刚","inquiry_id":761,"sale_num":12,"item_type":"已有标品","item_name":"TF02-Pro标品(整箱包装)-V1.0","remark":"","created_user_name":"贺兴华","customize":"否","inquiry_type":"YC(销售预测)","delay":"否","inquiry_init_type":"销售预测","order_delivery_progress":"未发货","state":"保存","customer_name":"audn2017@naver.com","inquiry_code":"XSYC2023100020","expected_time":1698335940000},{"customer_type":"日常","item_code":"13.01.02.023","salesman_name":"胡兵","inquiry_id":765,"sale_num":15,"item_type":"已有标品","item_name":"TF02-Pro标品(整箱包装)-V1.0","remark":"","created_user_name":"贺兴华","customize":"否","inquiry_type":"PO(客户付款)","delay":"否","inquiry_init_type":"销售询单","order_delivery_progress":"未发货","state":"询单3次","customer_name":"audn2017@naver.com","inquiry_code":"XSXD2023100023","expected_time":1696175940000}],"cols":[{"col_name_CN":"单据编号","col_name_ENG":"inquiry_code"},{"col_name_CN":"单据类型","col_name_ENG":"inquiry_init_type"},{"col_name_CN":"单据状态","col_name_ENG":"state"},{"col_name_CN":"物料编码","col_name_ENG":"item_code"},{"col_name_CN":"物料名称","col_name_ENG":"item_name"},{"col_name_CN":"数量","col_name_ENG":"sale_num"},{"col_name_CN":"客户名称","col_name_ENG":"customer_name"},{"col_name_CN":"订单状态","col_name_ENG":"inquiry_type"},{"col_name_CN":"产品类型","col_name_ENG":"item_type"},{"col_name_CN":"客户类型","col_name_ENG":"customer_type"},{"col_name_CN":"期望发货日期","col_name_ENG":"expected_time"},{"col_name_CN":"计划反馈日期","col_name_ENG":"arranged_time"},{"col_name_CN":"是否延期","col_name_ENG":"delay"},{"col_name_CN":"备注","col_name_ENG":"remark"},{"col_name_CN":"是否允许询单","col_name_ENG":"allow_inquiry"}]},"message":"success"}
+2023-11-02 18:29:03.899 [SpringContextShutdownHook] INFO  [,] o.s.scheduling.concurrent.ThreadPoolTaskExecutor - Shutting down ExecutorService 'asynExecutor'
+2023-11-02 18:29:03.903 [SpringContextShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-11-02 18:29:03.909 [SpringContextShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

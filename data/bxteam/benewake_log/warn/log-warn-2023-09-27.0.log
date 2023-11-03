@@ -1,3 +1,0 @@
-2023-09-27 10:58:38.749 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
-2023-09-27 10:58:38.800 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
-2023-09-27 10:58:41.759 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.

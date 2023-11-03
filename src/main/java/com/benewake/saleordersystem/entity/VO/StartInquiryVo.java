@@ -14,4 +14,6 @@ import java.util.List;
 public class StartInquiryVo {
     private List<Inquiry> inquiryList;
     private Integer startInquiry;
+
+    private Integer isUpdate;
 }

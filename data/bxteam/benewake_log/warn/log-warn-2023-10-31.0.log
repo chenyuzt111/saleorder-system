@@ -1,0 +1,71 @@
+2023-10-31 09:53:15.260 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 09:53:15.287 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 09:53:20.698 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 09:55:33.829 [http-nio-8080-exec-4] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: 参数有误！]
+2023-10-31 10:06:12.019 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 10:06:12.045 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 10:06:16.593 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 10:13:29.666 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=50s279ms487µs200ns).
+2023-10-31 10:40:44.966 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m9s306ms259µs).
+2023-10-31 10:47:32.429 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m20s248ms801µs600ns).
+2023-10-31 10:56:44.026 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 10:56:44.048 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 10:56:49.043 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 11:36:24.458 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m39s924ms940µs800ns).
+2023-10-31 11:39:03.032 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 11:39:03.060 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 11:39:07.578 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 11:46:38.250 [http-nio-8080-exec-8] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.NullPointerException]
+2023-10-31 11:49:35.339 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 11:49:35.362 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 11:49:39.904 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 11:54:01.968 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m49s213ms821µs800ns).
+2023-10-31 11:55:29.776 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 11:55:29.793 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 11:55:34.336 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 12:43:28.416 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 12:43:28.438 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 12:43:33.024 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 12:47:50.435 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m3s473ms713µs400ns).
+2023-10-31 15:17:58.449 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=53s916ms245µs100ns).
+2023-10-31 15:20:31.906 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=46s367ms574µs300ns).
+2023-10-31 15:20:48.957 [http-nio-8080-exec-6] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'past_inquiry_code' in 'field list'
+### The error may exist in com/benewake/saleordersystem/mapper/Vo/SalesOrderVoMapper.java (best guess)
+### The error may involve com.benewake.saleordersystem.mapper.Vo.SalesOrderVoMapper.selectPastOrders-Inline
+### The error occurred while setting parameters
+### SQL: SELECT past_inquiry_code, past_item_code, past_customer_name, past_salesman_name, past_sale_num, past_sale_time FROM fim_past_orders_clean_temp_table as opt  WHERE (past_item_code LIKE ?)
+### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'past_inquiry_code' in 'field list'
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'past_inquiry_code' in 'field list']
+2023-10-31 15:21:18.188 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=46s282ms406µs200ns).
+2023-10-31 15:23:01.482 [http-nio-8080-exec-9] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'past_inquiry_code' in 'field list'
+### The error may exist in com/benewake/saleordersystem/mapper/Vo/SalesOrderVoMapper.java (best guess)
+### The error may involve com.benewake.saleordersystem.mapper.Vo.SalesOrderVoMapper.selectPastOrders-Inline
+### The error occurred while setting parameters
+### SQL: SELECT past_inquiry_code, past_item_code, past_customer_name, past_salesman_name, past_sale_num, past_sale_time FROM fim_past_orders_clean_temp_table as opt  WHERE (past_item_code LIKE ?)
+### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'past_inquiry_code' in 'field list'
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'past_inquiry_code' in 'field list']
+2023-10-31 15:25:36.914 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 15:25:36.941 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 15:25:42.576 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 15:26:43.942 [http-nio-8080-exec-4] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'past_item_code' in 'where clause'
+### The error may exist in com/benewake/saleordersystem/mapper/Vo/SalesOrderVoMapper.java (best guess)
+### The error may involve com.benewake.saleordersystem.mapper.Vo.SalesOrderVoMapper.selectPastOrders-Inline
+### The error occurred while setting parameters
+### SQL: SELECT order_code AS past_inquiry_code,    item_code AS past_item_code,    customer_name AS past_customer_name,    salesman_name AS past_salesman_name,    sale_num AS past_sale_num,   sale_time AS past_sale_time FROM fim_past_orders_clean_temp_table as past_order WHERE (past_item_code LIKE ?)
+### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'past_item_code' in 'where clause'
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'past_item_code' in 'where clause']
+2023-10-31 15:42:09.757 [HikariPool-1 housekeeper] WARN  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m49s871ms554µs700ns).
+2023-10-31 15:42:10.100 [http-nio-8080-exec-5] WARN  [,] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'past_item_code' in 'where clause'
+### The error may exist in com/benewake/saleordersystem/mapper/Vo/SalesOrderVoMapper.java (best guess)
+### The error may involve com.benewake.saleordersystem.mapper.Vo.SalesOrderVoMapper.selectPastOrders-Inline
+### The error occurred while setting parameters
+### SQL: SELECT order_code AS past_inquiry_code,    item_code AS past_item_code,    customer_name AS past_customer_name,    salesman_name AS past_salesman_name,    sale_num AS past_sale_num,   sale_time AS past_sale_time FROM fim_past_orders_clean_temp_table as past_order WHERE (past_item_code LIKE ?)
+### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'past_item_code' in 'where clause'
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'past_item_code' in 'where clause']
+2023-10-31 15:43:22.894 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.InquiryCode ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 15:43:22.915 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - interface java.util.Map ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+2023-10-31 15:43:28.190 [restartedMain] WARN  [,] c.b.mybatisplus.core.injector.DefaultSqlInjector - class com.benewake.saleordersystem.entity.Past.PastPredictionCompany ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
