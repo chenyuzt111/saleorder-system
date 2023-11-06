@@ -40,6 +40,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("<script>"
             + "select *"
             + "from inquiry_type_dic"
+            + " order by inquiry_type "
             + "</script>")
     List<InquiryTypeDic> selectInquiryTypeDic();
 
@@ -52,6 +53,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("<script>"
             + "select *"
             + "from item_type_dic"
+            +" order by item_type"
             + "</script>")
     List<ItemTypeDic> selectItemTypeDic();
 
@@ -67,6 +69,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("<script>"
             + "select *"
             + "from fim_customer_table"
+            +" order by customer_id"
             + "</script>")
     List<FimCustomerTable> selectFimCustomerTable();
 
@@ -83,6 +86,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("<script>"
             + "select *"
             + "from fim_customer_type_table"
+            +" order by customer_id"
             + "</script>")
     List<FimCustomerTypeTable> selectFimCustomerTypeTable();
 

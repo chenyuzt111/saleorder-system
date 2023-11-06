@@ -61,7 +61,7 @@ public class ViewColServiceImpl implements ViewColService , BenewakeConstants {
         "sale_num","customer_name","inquiry_type","item_type","customer_type","expected_time",
         "arranged_time","delay","order_delivery_progress","delivery_code","receive_time","delivery_state",
                 "customize","created_user_name","remark","allow_inquiry","past_inquiry_code"
-            ,"past_item_code","past_customer_name","past_salesmam_name","past_sale_num","past_sale_time","creat_time","update_time"};
+            ,"past_item_code","past_customer_name","past_salesmam_name","past_sale_num","past_sale_time","create_time","update_time"};
     private static final String[] CNS = {"销售员","单据编号","单据类型","单据状态","物料编码","物料名称","数量","客户名称","订单状态",
                 "产品类型","客户类型","期望发货日期","计划反馈日期","是否延期","订单交付进度","运输单号","签收时间","最新状态",
                 "是否定制","创建人","备注","是否允许询单","历史单据编号","历史物料编码","历史客户名称","历史销售员名称","历史销售数量","历史销售时间"

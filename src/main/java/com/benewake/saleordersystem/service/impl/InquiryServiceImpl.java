@@ -459,7 +459,7 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         //     3. 设置订单状态为 -1，以表示订单已删除。
         updateWrapper.eq(Inquiry::getInquiryId,orderId)
                 .ne(Inquiry::getState,-1)
-                .set(Inquiry::getState,-1);
+                .set(Inquiry::getState,-2);
         //调用update方法，传入设置的查询条件，执行更新
         //返回更新影响的行数是否等于 1，如果等于 1，表示更新成功，返回 true，否则返回 false。
         return inquiryMapper.update(null,updateWrapper)==1;
