@@ -6,9 +6,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @TableName customer_type_dic
+ * @TableName fim_customer_type_dic
  */
-@TableName(value ="customer_type_dic")
+@TableName(value ="fim_customer_type_dic")
 @Data
 public class CustomerTypeDic implements Serializable {
     private String customerType;

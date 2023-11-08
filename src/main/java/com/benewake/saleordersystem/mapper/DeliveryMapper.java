@@ -21,7 +21,7 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
      */
     @Update("<script>" +
             "<foreach collection='list' item='item' index='index' separator=';'>" +
-            "update delivery_table " +
+            "update fim_delivery_table " +
             "<set>" +
             "delivery_state = #{item.deliveryState} " +
             "<if test='item.receiveTime!=null'> " +
@@ -44,7 +44,7 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
 
     @Update("<script>" +
             "<foreach collection='list' item='item' index='index' separator=';'>" +
-            "update delivery_table " +
+            "update fim_delivery_table " +
             "<set>" +
             "delivery_code = #{item.deliveryCode}, " +
             "delivery_phone = #{item.deliveryPhone} " +
@@ -61,7 +61,7 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
      * @return
      */
     @Insert("<script>" +
-            "insert into delivery_table(" +
+            "insert into fim_delivery_table(" +
             "inquiry_code" +
             ") values " +
             "<foreach collection='lists' item='list' separator=','> " +
@@ -79,7 +79,7 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
      */
     @Select("<script>" +
             "select inquiry_code " +
-            "from delivery_table " +
+            "from fim_delivery_table " +
             "where inquiry_code in(" +
             "select inquiry_code from fim_inquiry_table " +
             "where state >= 0)" +
@@ -92,7 +92,7 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
 
     @Select("<script>" +
             "select inquiry_code " +
-            "from delivery_table " +
+            "from fim_delivery_table " +
             "where inquiry_code in(" +
             "select inquiry_code from fim_inquiry_table " +
             "where (created_user = #{userId} or salesman_id = #{userId}) and state >= 0" +
@@ -110,7 +110,7 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
      */
     @Select("<script>" +
             "select inquiry_code,delivery_code,delivery_phone " +
-            "from delivery_table " +
+            "from fim_delivery_table " +
             "where inquiry_code in(" +
             "select inquiry_code from fim_inquiry_table " +
             "where (created_user = #{userId} or salesman_id = #{userId}) and state >= 0 " +
@@ -122,7 +122,7 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
 
     @Select("<script>" +
             "select inquiry_code,delivery_code,delivery_phone " +
-            "from delivery_table " +
+            "from fim_delivery_table " +
             "where inquiry_code in(" +
             "select inquiry_code from fim_inquiry_table " +
             "where state >= 0) and (delivery_code is not null or delivery_phone is not null) " +
@@ -131,18 +131,18 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
     List<Delivery> selectUnFinisheDeliveriesByUser2();
 
     @Select("<script>" +
-            "select delivery_latest_state from delivery_table " +
+            "select delivery_latest_state from fim_delivery_table " +
             "where delivery_latest_state like #{deliveryState} " +
             "</script>")
     List<String> getDeliveryStateList(@Param("deliveryState") String deliveryState);
 
 //    遍历运输订单表将有序单号的单据编号返回
-    @Select("SELECT inquiry_code FROM delivery_table WHERE delivery_code is not null")
+    @Select("SELECT inquiry_code FROM fim_delivery_table WHERE delivery_code is not null")
     List<String> getNonZeroDeliveryCodes();
 
 
     @Update({
-            "UPDATE delivery_table",
+            "UPDATE fim_delivery_table",
             "SET `match` = '是'",  // 使用反引号括起来
             "WHERE inquiry_code = #{inquiryCode}"
     })

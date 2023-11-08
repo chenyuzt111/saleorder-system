@@ -31,7 +31,7 @@ public interface ItemMapper extends BaseMapper<Item> {
             "</if> " +
             "group by b.item_id ) as c " +
             "left join ( " +
-            "select item_id,priority from inventory_top_table " +
+            "select item_id,priority from fim_inventory_top_table " +
             "<if test='userId!=null'>" +
             "where user_id = #{userId} " +
             "</if> " +
@@ -51,13 +51,13 @@ public interface ItemMapper extends BaseMapper<Item> {
     @Select("<script>" +
             "select item_id as id,item_code as itemCode,item_name as itemName," +
             "b.item_type_name as itemType from fim_item_table as a " +
-            "left join item_type_dic as b on a.item_type = b.item_type " +
+            "left join fim_item_type_dic as b on a.item_type = b.item_type " +
             "where item_code like #{itemCode}" +
             "</script>")
     List<Map<String,Object>> selectCodeLikeList(String itemCode);
 
     @Select("<script>" +
-            "select item_type_name from item_type_dic " +
+            "select item_type_name from fim_item_type_dic " +
             "where item_type_name like #{type}" +
             "</script>")
     List<String> getItemTypeList(@Param("type") String s);

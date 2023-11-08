@@ -53,7 +53,7 @@ public interface InquiryMapper extends BaseMapper<Inquiry> {
     Integer ipdateByInquiry(@Param("list") List<Inquiry> success);
 
     @Select("<script>" +
-            "select inquiry_type_name from inquiry_type_dic " +
+            "select inquiry_type_name from fim_inquiry_type_dic " +
             "where inquiry_type_name like #{type}" +
             "</script>")
     List<String> getInquiryTypeList(@Param("type") String s);

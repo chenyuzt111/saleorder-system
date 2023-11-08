@@ -6,9 +6,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @TableName item_type_dic
+ * @TableName fim_item_type_dic
  */
-@TableName(value ="item_type_dic")
+@TableName(value ="fim_item_type_dic")
 @Data
 public class ItemTypeDic implements Serializable {
     private Long itemType;

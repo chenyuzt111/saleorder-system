@@ -15,7 +15,7 @@ import java.util.Date;
  * 描 述： TODO
  */
 @Data
-@TableName("delivery_table")
+@TableName("fim_delivery_table")
 public class Delivery {
     @TableId(value = "deliveryId",type = IdType.AUTO)
     private Long deliveryId;

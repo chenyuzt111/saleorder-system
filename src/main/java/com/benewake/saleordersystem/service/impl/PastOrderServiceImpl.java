@@ -131,9 +131,6 @@ public class PastOrderServiceImpl implements PastOrderService {
                 }
 
             });
-/*            File excelFile = new File("F:/155.xlsx");
-            System.out.println(CommonUtils.writeExcel(excelFile, list, Kingdee.class));*/
-
 
 
             //调用pastOrderMapper.insertPastOrders()方法，将刚刚创建的列表插入到数据库中

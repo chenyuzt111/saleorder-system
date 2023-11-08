@@ -18,20 +18,20 @@ public interface UserMapper extends BaseMapper<User> {
     int updateUserValues(@Param("userId") Long id, @Param("ycValue") String ycvalue,
                           @Param("xdValue") String xdvalue, @Param("prValue") String prvalue);
 
-    @Insert("INSERT INTO customer_type_dic (customer_type) VALUES (#{customerType})")
+    @Insert("INSERT INTO fim_customer_type_dic (customer_type) VALUES (#{customerType})")
     void insertCustomerType(@Param("customerType") String customerType);
 
-    @Delete("DELETE FROM customer_type_dic WHERE customer_type = #{customerType}")
+    @Delete("DELETE FROM fim_customer_type_dic WHERE customer_type = #{customerType}")
     void deleteCustomerType(@Param("customerType") String customerType);
 
     @Select("<script>"
             + "select *"
-            + "from customer_type_dic"
+            + "from fim_customer_type_dic"
             + "</script>")
     List<CustomerTypeDic> selectCustomerType();
 
 
-    @Insert("INSERT INTO inquiry_type_dic (inquiry_type_name) VALUES (#{typeName})")
+    @Insert("INSERT INTO fim_inquiry_type_dic (inquiry_type_name) VALUES (#{typeName})")
     int insertInquiryType(@Param("typeName") String typeName);
 
     @Delete("DELETE FROM inquiry_type_dic WHERE inquiry_type_name = #{typeName}")
@@ -39,20 +39,20 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("<script>"
             + "select *"
-            + "from inquiry_type_dic"
+            + "from fim_inquiry_type_dic"
             + " order by inquiry_type "
             + "</script>")
     List<InquiryTypeDic> selectInquiryTypeDic();
 
-    @Insert("INSERT INTO item_type_dic (item_type_name) VALUES (#{itemTypeName})")
+    @Insert("INSERT INTO fim_item_type_dic (item_type_name) VALUES (#{itemTypeName})")
     int insertItemType(@Param("itemTypeName") String itemTypeName);
 
-    @Delete("DELETE FROM item_type_dic WHERE item_type_name = #{itemTypeName}")
+    @Delete("DELETE FROM fim_item_type_dic WHERE item_type_name = #{itemTypeName}")
     int deleteItemType(@Param("itemTypeName") String itemTypeName);
 
     @Select("<script>"
             + "select *"
-            + "from item_type_dic"
+            + "from fim_item_type_dic"
             +" order by item_type"
             + "</script>")
     List<ItemTypeDic> selectItemTypeDic();
