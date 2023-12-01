@@ -4,6 +4,7 @@ import com.benewake.saleordersystem.SaleOrderSystemApplication;
 import com.benewake.saleordersystem.entity.Past.SaleOut;
 import com.benewake.saleordersystem.entity.Past.Withdraw;
 import com.benewake.saleordersystem.entity.Transfer.*;
+import com.benewake.saleordersystem.entity.test;
 import com.benewake.saleordersystem.excel.model.Md;
 import com.benewake.saleordersystem.service.KingDeeService;
 import com.benewake.saleordersystem.utils.CommonUtils;
@@ -195,5 +196,32 @@ public class DemoTest {
 
 
 
+    @Test
+    public void testdata() throws Exception {
+
+        QueryParam queryParam = new QueryParam();
+        queryParam.setFormId("STK_OutStockApply");
+        queryParam.setFieldKeys("FMaterialId,F_ora_BackDate,FBizType");
+        List<String> queryFilters = new ArrayList<>();
+
+        queryFilters.add("FBizType=4");
+        queryParam.setFilterString(String.join(" and ", queryFilters));
+        List<test> result = api.executeBillQuery(queryParam, test.class);
+        // 物料映射表
+        queryParam = new QueryParam();
+        queryParam.setFormId("BD_MATERIAL");
+        queryParam.setFieldKeys("FMaterialId,FNumber");
+        List<MaterialIdToName> midToName = api.executeBillQuery(queryParam, MaterialIdToName.class);
+        Map<String,String> mtn = new HashMap<>();
+        midToName.forEach(c->{
+            mtn.put(c.getFMaterialId(),c.getFNumber());
+        });
+        for (test m : result) {
+            m.setFMaterialId(mtn.get(m.getFMaterialId()));
+            System.out.println(m.toString());
+        }
+//    File excelFile = new File("F:/出库申请单2.xlsx");
+//    System.out.println(CommonUtils.writeExcel(excelFile, result, test.class));
+    }
 
 }

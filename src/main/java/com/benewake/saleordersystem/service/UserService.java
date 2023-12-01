@@ -122,7 +122,7 @@ public interface UserService  {
 
     int addCustomerName(String  customerName);
 
-    int deleteCustomerName(String itemTypeName);
+    int deleteCustomerName(String customerName);
 
     int updateCustomerName(String oldCustomerName, String newCustomerName);
 
@@ -168,4 +168,12 @@ public interface UserService  {
     int deletePastChooseItemByItemCode(String itemCode);
 
     List<FimPastChooseItemTable> selectFimPastChooseItemTable();
+
+    int insertFimItemTable(String itemCode, String itemName, int itemType,int quantitative);
+
+    int deleteFimItemTable(int itemId);
+
+    List<FimItemTable> selectFimItemTable();
+
+    int updateFimItemTable(int itemId,String itemCode, String itemName, int itemType,int quantitative);
 }

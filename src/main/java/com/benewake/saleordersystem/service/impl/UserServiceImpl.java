@@ -369,4 +369,23 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
         return userMapper.selectFimPastChooseItemTable();
     }
 
+    @Override
+    public int insertFimItemTable(String itemCode, String itemName, int itemType,int quantitative) {
+        return userMapper.insertFimItemTable( itemCode,itemName,itemType,quantitative);
+    }
+
+    @Override
+    public int updateFimItemTable(int itemId,String itemCode, String itemName, int itemType,int quantitative) {
+        return userMapper.updateFimItemTable(itemId, itemCode,itemName,itemType,quantitative);
+    }
+
+
+    public int deleteFimItemTable(int itemId) {
+        return userMapper.deleteFimItemTable(itemId);
+    }
+
+    @Override
+    public List<FimItemTable> selectFimItemTable() {
+        return userMapper.selectFimItemTable();
+    }
 }

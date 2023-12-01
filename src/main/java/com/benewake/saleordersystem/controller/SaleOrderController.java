@@ -16,6 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -23,6 +27,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -123,7 +128,7 @@ public class SaleOrderController implements BenewakeConstants {
     @TrackingTime
     //接收一个请求体包含 FilterVo参数
     public Result selectList(@RequestBody FilterVo filterVo){
-
+        deliveryService.updateDelivery();
         Map<String,Object> res = new HashMap<>(16);
         //检查是否包含过滤条件
         if(filterVo==null || filterVo.getTableId()==null || filterVo.getViewId()==null){
@@ -720,4 +725,31 @@ public class SaleOrderController implements BenewakeConstants {
         boolean isSuccess = viewService.deleteView(view.getViewId());
         return isSuccess?Result.success("删除成功!",null) : Result.fail("删除失败或视图不存在！",null);
     }
+
+
+    @GetMapping("/downloadFile")
+    public ResponseEntity<FileSystemResource> downloadFile() throws IOException {
+        // 指定文件路径
+        String filePath = "/fim/benewake/importmodel.xlsx";
+
+
+        // 获取文件资源
+        FileSystemResource fileResource = new FileSystemResource(filePath);
+
+        // 设置响应头
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileResource.getFilename());
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+
+        // 构建响应实体
+        ResponseEntity<FileSystemResource> responseEntity = ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentLength(fileResource.contentLength())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(fileResource);
+
+        return responseEntity;
+    }
+
 }

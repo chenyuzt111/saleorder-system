@@ -34,11 +34,12 @@ public interface TodoTaskMapper {
     Inquiry selectInquiryById(@Param("inquiryId") Long inquiryId);
 
     // 查询所有待办任务的订单
-    @Select("SELECT * FROM fim_inquiry_table WHERE " +
-            "state >= 0 AND " +
-            "((inquiry_type = 4 AND daydiff < (SELECT FIM_user_YC FROM fim_users_table WHERE FIM_user_id = salesman_id)) " +
-            "OR (inquiry_type = 5 AND daydiff < (SELECT FIM_user_XD FROM fim_users_table WHERE FIM_user_id = salesman_id)) " +
-            "OR (inquiry_type = 2 AND daydiff < (SELECT FIM_user_PR FROM fim_users_table WHERE FIM_user_id = salesman_id)))")
+    @Select("SELECT * FROM fim_inquiry_table i join fim_delivery_table d on i.inquiry_code = d.inquiry_code WHERE " +
+            "i.state >= 0 AND " +
+            "((i.inquiry_type = 4 AND i.daydiff < (SELECT FIM_user_YC FROM fim_users_table WHERE FIM_user_id = salesman_id)) " +
+            "OR (i.inquiry_type = 5 AND i.daydiff < (SELECT FIM_user_XD FROM fim_users_table WHERE FIM_user_id = salesman_id)) " +
+            "OR (i.inquiry_type = 1 AND i.daydiff < (SELECT FIM_user_PO FROM fim_users_table WHERE FIM_user_id = salesman_id)  AND d.delivery_state IS NULL) " +
+            "OR (i.inquiry_type = 2 AND i.daydiff < (SELECT FIM_user_PR FROM fim_users_table WHERE FIM_user_id = salesman_id)))")
 
     List<Inquiry> selectAllPendingTasks();
 
@@ -61,12 +62,15 @@ public interface TodoTaskMapper {
 
 
     // 查询PO订单是否延期
-    @Select(
-            "SELECT *" +
-                    "FROM fim_inquiry_table  " +
-                    "WHERE " +
-                    "   inquiry_type = 1 " +
-                    "   AND arranged_time > expected_time"
-    )
+    @Select("SELECT * " +
+            "FROM fim_inquiry_table i " +
+            "JOIN fim_delivery_table d ON i.inquiry_code = d.inquiry_code " +
+            "WHERE " +
+            "i.inquiry_type = 1 " +
+            "AND i.arranged_time > i.expected_time " +
+            "AND d.delivery_state IS NULL " +
+            "AND i.state >= 0")
     List<Inquiry> POOrders();
+
+
 }

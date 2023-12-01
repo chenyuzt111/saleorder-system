@@ -11,9 +11,9 @@ import java.io.Serializable;
 @TableName(value ="fim_customer_type_table")
 @Data
 public class FimCustomerTypeTable implements Serializable {
-    private Long customerId;
+    private String customerName;
 
-    private Long itemId;
+    private String itemCode;
 
     private String customerType;
 

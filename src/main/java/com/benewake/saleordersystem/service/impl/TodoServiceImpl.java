@@ -41,32 +41,34 @@ public class TodoServiceImpl implements TodoService {
 
         updateDayDiffForAllOrders();
         List<Inquiry> inquiries = todoTaskMapper.selectAllPendingTasks();
-        for (Inquiry order : inquiries) {
-            Long customerId = order.getCustomerId();
-            Long itemId = order.getItemId();
-            Long salesmanId = order.getSalesmanId();
-            Integer orderType = order.getInquiryType();
-            String inquiryCode = order.getInquiryCode();
-            Long inquiryId = order.getInquiryId();
+        inquiries.stream()
+                .forEach(order -> {
+                    Long customerId = order.getCustomerId();
+                    Long itemId = order.getItemId();
+                    Long salesmanId = order.getSalesmanId();
+                    Integer orderType = order.getInquiryType();
+                    String inquiryCode = order.getInquiryCode();
+                    Long inquiryId = order.getInquiryId();
 
-            Customer customer = customerService.findCustomerById(customerId);
-            Item item = itemService.findItemById(itemId);
+                    Customer customer = customerService.findCustomerById(customerId);
+                    Item item = itemService.findItemById(itemId);
 
-            String customerName = customer.getFName();
-            String itemName = item.getItemName();
-            String orderTypeText = getOrderTypeText(orderType);
+                    String customerName = customer.getFName();
+                    String itemName = item.getItemName();
+                    String orderTypeText = getOrderTypeText(orderType);
 
-            TodoTask todoTask = new TodoTask();
-            todoTask.setSalesmanId(salesmanId);
-            todoTask.setInquiryId(inquiryId);
-            todoTask.setCustomerName(customerName);
-            todoTask.setItemName(itemName);
-            todoTask.setInquiryType(orderTypeText);
-            todoTask.setInquiryCode(inquiryCode);
-            todoTask.setMessage("请及时更新需求！");
+                    TodoTask todoTask = new TodoTask();
+                    todoTask.setSalesmanId(salesmanId);
+                    todoTask.setInquiryId(inquiryId);
+                    todoTask.setCustomerName(customerName);
+                    todoTask.setItemName(itemName);
+                    todoTask.setInquiryType(orderTypeText);
+                    todoTask.setInquiryCode(inquiryCode);
+                    todoTask.setMessage("请及时更新需求！");
 
-            todoTaskMapper.insertTodoTask(todoTask);
-        }
+                    todoTaskMapper.insertTodoTask(todoTask);
+                });
+
     }
 
 
@@ -102,6 +104,8 @@ public class TodoServiceImpl implements TodoService {
             return "XD"; // XD代表什么？
         } else if (orderType == 2) {
             return "PR"; // PR代表什么？
+        }else if (orderType == 1) {
+            return "PO"; // PR代表什么？
         }
         return "";
     }

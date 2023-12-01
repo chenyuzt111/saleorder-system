@@ -30,7 +30,7 @@ public class SpringBootMailTest {
     public void sendWithImageHtml(){
 
         // 邮件接收者的邮箱地址
-        String to = "wangxiaoxi@benewake.com";
+        String to = "zhaotong@benewake.com";
         // 邮件主题
         String subject = "邮件主题";
 

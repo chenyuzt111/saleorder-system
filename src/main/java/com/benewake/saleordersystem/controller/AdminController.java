@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -437,6 +438,8 @@ public class AdminController {
 
     @GetMapping("/selectFimCustomerTypeTable")
     public List<FimCustomerTypeTable> selectFimCustomerTypeTable() {
+        List<FimCustomerTypeTable> fimCustomerTypeTables =userService.selectFimCustomerTypeTable();
+
         return userService.selectFimCustomerTypeTable(); // 调用Service层方法获取客户类型列表
     }
 
@@ -476,7 +479,7 @@ public class AdminController {
      * @return 操作结果
      */
     @ApiOperation("13管理员根据客户旧名称删除记录")
-    @DeleteMapping("/deleteCustomerRenameByOldName}")
+    @DeleteMapping("/deleteCustomerRenameByOldName")
     public Result deleteCustomerRenameByOldName(@RequestParam String customerNameOld) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
@@ -796,20 +799,21 @@ public class AdminController {
     public Result addPastChooseItem(
             @RequestParam String itemCode,
             @RequestParam String itemName,
-            @RequestParam("startMonth")
-            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startMonth) {
+            @RequestParam("startMonth") String startMonth) {
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
 
         if (!currentUser.getUserType().equals(USER_TYPE_ADMIN) && !currentUser.getUserType().equals(USER_TYPE_SYSTEM)) {
             return Result.fail().message("没有管理员权限");
         }
 
-        if (StringUtils.isAnyBlank(itemCode,itemName)|| startMonth == null) {
+        if (StringUtils.isAnyBlank(itemCode, itemName) || StringUtils.isBlank(startMonth)) {
             return Result.message("请填写完整信息");
         }
 
+        // 将字符串转换为 LocalDateTime 形式
+        LocalDateTime startmonth = LocalDateTime.parse(startMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
 
-        int rowsAffected = userService.insertPastChooseItem(itemCode, itemName, startMonth);
+        int rowsAffected = userService.insertPastChooseItem(itemCode, itemName, startmonth);
         if (rowsAffected > 0) {
             return Result.message("添加成功！");
         } else {
@@ -850,4 +854,77 @@ public class AdminController {
         return userService.selectFimPastChooseItemTable(); // 调用Service层方法获取客户类型列表
     }
 
+
+
+    @ApiOperation("添加物料表")
+    @PostMapping("/addFimItemTable")
+    public Result insertFimItemTable(
+            @RequestParam String itemCode,
+            @RequestParam String itemName,
+            @RequestParam int itemType,
+            @RequestParam int quantitative
+    ) {
+        User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
+
+        if (!currentUser.getUserType().equals(USER_TYPE_ADMIN) && !currentUser.getUserType().equals(USER_TYPE_SYSTEM)) {
+            return Result.fail().message("没有管理员权限");
+        }
+
+        if (StringUtils.isAnyBlank(itemCode,itemName)) {
+            return Result.message("请填写完整信息");
+        }
+
+
+        int rowsAffected = userService.insertFimItemTable(itemCode, itemName,itemType,quantitative);
+        if (rowsAffected > 0) {
+            return Result.message("添加成功！");
+        } else {
+            return Result.message("添加失败！");
+        }
+    }
+
+    @GetMapping("/selectFimItemTable")
+    public List<FimItemTable> selectFimItemTable() {
+        return userService.selectFimItemTable(); // 调用Service层方法获取客户类型列表
+    }
+
+
+    @ApiOperation("删除物料表")
+    @DeleteMapping("/deleteFimItemTable")
+    public Result deleteFimItemTable(@RequestParam int itemId) {
+
+        User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
+
+        if (!currentUser.getUserType().equals(USER_TYPE_ADMIN) && !currentUser.getUserType().equals(USER_TYPE_SYSTEM)) {
+            return Result.fail().message("没有管理员权限");
+        }
+        int rowsAffected = userService.deleteFimItemTable(itemId);
+        if (rowsAffected > 0) {
+            return Result.message("删除成功！");
+        } else {
+            return Result.message("删除失败！");
+        }
+    }
+
+    @ApiOperation("根据id修改物料表")
+    @PostMapping("/updateFimItemTable")
+    public Result updateFimItemTable(@RequestParam int itemId,String itemCode, String itemName, int itemType,int quantitative) {
+
+        User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
+
+        if (!currentUser.getUserType().equals(USER_TYPE_ADMIN) && !currentUser.getUserType().equals(USER_TYPE_SYSTEM)) {
+            return Result.fail().message("没有管理员权限");
+        }
+
+        if (StringUtils.isAnyBlank(itemCode, itemName)) {
+            return Result.message("请填写完整信息");
+        }
+
+        int rowsAffected = userService.updateFimItemTable(itemId, itemCode,itemName,itemType,quantitative);
+        if (rowsAffected > 0) {
+            return Result.message("修改成功！");
+        } else {
+            return Result.message("修改失败！");
+        }
+    }
 }

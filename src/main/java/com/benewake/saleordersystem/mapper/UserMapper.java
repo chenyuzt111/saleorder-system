@@ -84,9 +84,11 @@ public interface UserMapper extends BaseMapper<User> {
     );
 
     @Select("<script>"
-            + "select *"
-            + "from fim_customer_type_table"
-            +" order by customer_id"
+            + "SELECT fc.customer_name, fi.item_code, fct.customer_type "
+            + "FROM fim_customer_type_table fct "
+            + "JOIN fim_customer_table fc ON fct.customer_id = fc.customer_id "
+            + "JOIN fim_item_table fi ON fct.item_id = fi.item_id "
+            + "ORDER BY fct.customer_id"
             + "</script>")
     List<FimCustomerTypeTable> selectFimCustomerTypeTable();
 
@@ -183,6 +185,34 @@ public interface UserMapper extends BaseMapper<User> {
             + "</script>")
     List<FimPastChooseItemTable> selectFimPastChooseItemTable();
 
+
+    @Insert("INSERT INTO fim_item_table (item_code,item_name,item_type, quantitative) " +
+            "VALUES ( #{item_code}, #{item_name}, #{item_type}, #{quantitative})")
+    int insertFimItemTable(  @Param("item_code") String item_code,
+                             @Param("item_name") String item_name,
+                             @Param("item_type") int item_type,
+                             @Param("quantitative") int quantitative);
+
+    @Update("UPDATE fim_item_table SET item_code = #{item_code} ," +
+            "item_name = #{item_name} ," +
+            "item_type = #{item_type} ," +
+            "quantitative = #{quantitative} " +
+            "WHERE item_id = #{item_id}")
+    int updateFimItemTable(@Param("item_id") int item_id,
+                           @Param("item_code") String item_code,
+                               @Param("item_name") String item_name,
+                               @Param("item_type") int item_type,
+                               @Param("quantitative") int quantitative);
+
+    @Delete("DELETE FROM fim_item_table WHERE item_id = #{item_id}")
+    int deleteFimItemTable(@Param("item_id") int item_id);
+
+
+    @Select("<script>"
+            + "select *"
+            + "from fim_item_table"
+            + "</script>")
+    List<FimItemTable> selectFimItemTable();
 
 
 }
