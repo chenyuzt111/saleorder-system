@@ -11,6 +11,7 @@ import com.benewake.saleordersystem.entity.Customer;
 import com.benewake.saleordersystem.entity.Inquiry;
 import com.benewake.saleordersystem.entity.Item;
 import com.benewake.saleordersystem.entity.User;
+import com.benewake.saleordersystem.entity.VO.DevideInquiryVo;
 import com.benewake.saleordersystem.entity.VO.FilterCriteria;
 import com.benewake.saleordersystem.excel.InquiryExcelListener;
 import com.benewake.saleordersystem.excel.model.InquiryModel;
@@ -89,6 +90,7 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
     public int insertLists(List<Inquiry> inquiries) {
         return inquiryMapper.insertInquiries(inquiries);
     }
+
 
     //接收到筛选条件和一个用户名称
     @Override
@@ -651,4 +653,38 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
 
 
 
+
+    @Override
+    public List<Inquiry> splitInquiry(DevideInquiryVo devideInquiryVo) {
+        List<Inquiry> result = new ArrayList<>();
+
+        if (devideInquiryVo != null && devideInquiryVo.getInquiryList() != null) {
+            List<Inquiry> originalList = devideInquiryVo.getInquiryList();
+            Integer devideNum = devideInquiryVo.getDevideNum();
+
+            if (devideNum != null && devideNum > 0) {
+                for (int i = 0; i < devideNum; i++) {
+                    // 创建新的Inquiry对象
+                    Inquiry newInquiry = new Inquiry();
+
+                    // 复制字段值
+                    for (Inquiry originalInquiry : originalList) {
+                        newInquiry.setCustomerId(originalInquiry.getCustomerId());
+                        newInquiry.setInquiryType(originalInquiry.getInquiryType());
+                        newInquiry.setExpectedTime(originalInquiry.getExpectedTime());
+                        newInquiry.setSalesmanId(originalInquiry.getSalesmanId());
+                        newInquiry.setItemId(originalInquiry.getItemId());
+                        newInquiry.setRemark(originalInquiry.getRemark());
+
+                        // 可以添加其他字段的复制逻辑
+                    }
+
+                    // 将新创建的Inquiry对象添加到结果列表中
+                    result.add(newInquiry);
+                }
+            }
+        }
+
+        return result;
+    }
 }

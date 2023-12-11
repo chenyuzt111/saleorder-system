@@ -14,8 +14,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static com.benewake.saleordersystem.utils.BenewakeConstants.USER_TYPE_ADMIN;
-import static com.benewake.saleordersystem.utils.BenewakeConstants.USER_TYPE_SALESMAN;
+import static com.benewake.saleordersystem.utils.BenewakeConstants.*;
 
 @Service
 public class TodoServiceImpl implements TodoService {

@@ -16,8 +16,8 @@ public interface PastAnalysisService {
     List<Past_orders_analysis_9_product_dimension_situation> getAllProductDimensionSituation();
     List<Past_orders_analysis_10_retail_condition> getAllRetailCondition();
     List<Past_orders_analysis_11_retail_quarterly_selling_condition> getAllRetailQuarterlySellingCondition();
-    List<Past_orders_analysis_12_customer_type_orders> getAllCustomerTypeordersReplaced();
-    List<Past_orders_analysis_13_customer_type_orders_back> getAllCustomerTypeOrdersBack();
+    List<Past_orders_analysis_12_customer_type_orders> getAllCustomerTypeordersReplaced(int yearly,int monthly,int agent,int newCustomer,int temporaryCustomer,int daily);
+    List<Past_orders_analysis_13_customer_type_orders_back> getAllCustomerTypeOrdersBack(int yearly,int monthly,int agent,int newCustomer,int temporaryCustomer,int daily);
 
     List<Past_orders_analysis_14_customer_type_monthly> getAllCustomerTypeordersMonthlyReplaced();
     List<Past_orders_analysis_15_customer_type_monthly_back> getAllCustomerTypeordersMonthlyBack();

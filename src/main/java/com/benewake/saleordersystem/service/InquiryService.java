@@ -1,6 +1,7 @@
 package com.benewake.saleordersystem.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.benewake.saleordersystem.entity.VO.DevideInquiryVo;
 import com.benewake.saleordersystem.entity.VO.FilterCriteria;
 import com.benewake.saleordersystem.entity.Inquiry;
 import com.benewake.saleordersystem.excel.model.InquiryModel;
@@ -162,4 +163,11 @@ public interface InquiryService extends IService<Inquiry> {
      * @return
      */
     Inquiry getInquiriesByCode(String inquiryCode);
+
+    /**
+     * 根据单据编号找到订单
+     * @param devideInquiryVo
+     * @return
+     */
+    List<Inquiry> splitInquiry(DevideInquiryVo devideInquiryVo);
 }

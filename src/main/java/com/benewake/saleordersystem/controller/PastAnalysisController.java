@@ -3,12 +3,10 @@ package com.benewake.saleordersystem.controller;
 import com.benewake.saleordersystem.entity.Past_analysis.Past_orders_analysis_1_salesman_selling_condition;
 import com.benewake.saleordersystem.service.PastAnalysisService;
 import com.benewake.saleordersystem.utils.Result;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -61,12 +59,12 @@ public class PastAnalysisController {
             case "getAllRetailQuarterlySellingCondition":
                 result = pastAnalysisService.getAllRetailQuarterlySellingCondition();
                 break;
-            case "getAllCustomerTypeOrdersReplaced":
-                result = pastAnalysisService.getAllCustomerTypeordersReplaced();
-                break;
-            case "getAllCustomerTypeOrdersBack":
-                result = pastAnalysisService.getAllCustomerTypeOrdersBack();
-                break;
+//            case "getAllCustomerTypeOrdersReplaced":
+//                result = pastAnalysisService.getAllCustomerTypeordersReplaced();
+//                break;
+//            case "getAllCustomerTypeOrdersBack":
+//                result = pastAnalysisService.getAllCustomerTypeOrdersBack();
+//                break;
             case "getAllCustomerTypeordersMonthlyReplaced":
                 result = pastAnalysisService.getAllCustomerTypeordersMonthlyReplaced();
                 break;
@@ -77,6 +75,36 @@ public class PastAnalysisController {
                 return Result.fail(400, "Invalid method name");
         }
 
+        if (result != null) {
+            return Result.success(200, "Query successful", result);
+        } else {
+            return Result.fail(500, "Error in query execution");
+        }
+    }
+
+
+    @GetMapping("/getAllCustomerTypeOrdersReplaced")
+    public Result getAllCustomerTypeOrdersReplaced(@RequestParam("yearly")int yearly,
+                                                   @RequestParam("monthly")int monthly,@RequestParam("agent")int agent,
+                                                   @RequestParam("newCustomer")int newCustomer,@RequestParam("temporaryCustomer")int temporaryCustomer,
+                                                   @RequestParam("daily")int daily) {
+        Object result = null;
+        result = pastAnalysisService.getAllCustomerTypeordersReplaced(yearly,monthly,agent,newCustomer,temporaryCustomer,daily);
+        if (result != null) {
+            return Result.success(200, "Query successful", result);
+        } else {
+            return Result.fail(500, "Error in query execution");
+        }
+    }
+
+
+    @GetMapping("/getAllCustomerTypeOrdersBack")
+    public Result getAllCustomerTypeOrdersBack(@RequestParam("yearly")int yearly,
+                                                   @RequestParam("monthly")int monthly,@RequestParam("agent")int agent,
+                                                   @RequestParam("newCustomer")int newCustomer,@RequestParam("temporaryCustomer")int temporaryCustomer,
+                                                   @RequestParam("daily")int daily) {
+        Object result = null;
+        result = pastAnalysisService.getAllCustomerTypeOrdersBack(yearly,monthly,agent,newCustomer,temporaryCustomer,daily);
         if (result != null) {
             return Result.success(200, "Query successful", result);
         } else {

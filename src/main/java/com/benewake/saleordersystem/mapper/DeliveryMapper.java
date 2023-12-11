@@ -49,7 +49,7 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
             "delivery_code = #{item.deliveryCode}, " +
             "delivery_phone = #{item.deliveryPhone} " +
             "</set> " +
-            "where inquiry_code = #{item.inquiryCode} " +
+            "where   #{item.inquiryCode} like inquiry_code " +
             "</foreach> " +
             "</script>")
     int updateDeliveriesCode(List<Delivery> deliveryList);

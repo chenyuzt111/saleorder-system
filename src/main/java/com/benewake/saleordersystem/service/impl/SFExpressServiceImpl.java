@@ -140,24 +140,31 @@ public class SFExpressServiceImpl implements SFExpressService {
             if (!StringUtils.isBlank(deliveryCodes)) {
                 String[] deliveryCodeArray = deliveryCodes.split("\\s+"); // 使用正则表达式来根据空格拆分单号
                 for (String deliveryCode : deliveryCodeArray) {
+
                     Route latestRoute = new Route();
-                    boolean integrity = checkStringLength(deliveryCode);
-                    if(integrity) {
-                        // 对每个单号调用 getLastestRouteByFCarriageNO 方法，获取最新路由信息
-                        latestRoute = SFUtils.getLastestRemark(findRoutesByCode(deliveryCode, delivery.getDeliveryPhone()));
-                        if (latestRoute.getOpCode()==null){
-                            latestRoute.setRemark("顺丰号正确，手机号异常请检查");
+                    if(deliveryCode.contains("400")){
+                        latestRoute.setRemark("该订单金蝶中多次写入！");
+                        latestRoute.setOpCode("32");
+                    } else {
+                        boolean integrity = checkStringLength(deliveryCode);
+                        if (integrity) {
+                            // 对每个单号调用 getLastestRouteByFCarriageNO 方法，获取最新路由信息
+                            latestRoute = SFUtils.getLastestRemark(findRoutesByCode(deliveryCode, delivery.getDeliveryPhone()));
+                            if (latestRoute.getOpCode() == null) {
+                                latestRoute.setRemark("顺丰号正确，手机号异常请检查");
+                                latestRoute.setOpCode("32");
+                            }
+
+                        } else {
+                            String errorMessage = "顺丰号 " + delivery.getDeliveryCode() + " 数字有遗漏，请用户及时修改！";
+                            latestRoute.setRemark(errorMessage);
                             latestRoute.setOpCode("32");
                         }
-
-                    }else {
-                        String errorMessage = "顺丰号 " + delivery.getDeliveryCode() + " 数字有遗漏，请用户及时修改！";
-                        latestRoute.setRemark(errorMessage);
-                        latestRoute.setOpCode("32");
+                        if (latestRoute != null) {
+                            latestRoutes.add(latestRoute);
+                        }
                     }
-                    if(latestRoute!=null){
-                        latestRoutes.add(latestRoute);
-                    }
+                    latestRoutes.add(latestRoute);
                 }
             }
         }

@@ -4,6 +4,7 @@ import com.benewake.saleordersystem.annotation.LoginRequired;
 import com.benewake.saleordersystem.annotation.SalesmanRequired;
 import com.benewake.saleordersystem.annotation.TrackingTime;
 import com.benewake.saleordersystem.entity.*;
+import com.benewake.saleordersystem.entity.VO.DevideInquiryVo;
 import com.benewake.saleordersystem.entity.VO.FilterCriteria;
 import com.benewake.saleordersystem.entity.VO.FilterVo;
 import com.benewake.saleordersystem.entity.VO.StartInquiryVo;
@@ -159,7 +160,9 @@ public class SaleOrderController implements BenewakeConstants {
                 //如果用户是管理员
                 lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), loginUser.getUsername());
 
-            } else{
+            } else if (loginUser.getUserType().equals(3L) ){
+                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), null);
+            }else{
                 // 普通用户
                 lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),loginUser.getUsername());
             }
@@ -208,6 +211,7 @@ public class SaleOrderController implements BenewakeConstants {
     @LoginRequired
     @Transactional(rollbackFor = Exception.class)
     public Result savePlan(@RequestBody FilterVo filterVo){
+
         // 参数合法性判断
         if(filterVo.getTableId() == null){
             return Result.fail("表id不能为空！",null);
@@ -264,35 +268,38 @@ public class SaleOrderController implements BenewakeConstants {
     @Transactional(rollbackFor = Exception.class)
     public Result updateInquired(@RequestBody Inquiry inquiry){
         User u = hostHolder.getUser();
-        if( u.getUserType().equals(USER_TYPE_SALESMAN)&&
-                (inquiry.getSalesmanId().equals(u.getId())||inquiry.getCreatedUser().equals(u.getId())) ||
-                u.getUserType().equals(USER_TYPE_ADMIN) || u.getUserType().equals(USER_TYPE_SYSTEM)
-        ){
-            if(inquiry == null){
-                return Result.fail().message("请添加选择要修改的订单！");
+        if (u.getUserType()==3){
+            return Result.fail().message("访客暂无权限");
+        }else {
+            if (u.getUserType().equals(USER_TYPE_SALESMAN) &&
+                    (inquiry.getSalesmanId().equals(u.getId()) || inquiry.getCreatedUser().equals(u.getId())) ||
+                    u.getUserType().equals(USER_TYPE_ADMIN) || u.getUserType().equals(USER_TYPE_SYSTEM)
+            ) {
+                if (inquiry == null) {
+                    return Result.fail().message("请添加选择要修改的订单！");
+                }
+                if (inquiry.getInquiryType() == null) {
+                    return Result.fail().message("请选择订单类型");
+                }
+                if (inquiry.getState() == null || inquiry.getState() == -1) {
+                    return Result.fail().message("订单无效！");
+                }
+                // 订单参数有效判断
+                Map<String, Object> res = inquiryService.updateValid(inquiry);
+                if (res.size() > 0) {
+                    return Result.fail((String) res.get("error"), null);
+                }
+                // 原订单设置无效
+                inquiryService.updateState(inquiry.getInquiryCode(), -1);
+                // 新增修改后的订单
+                inquiry.setInquiryId(null);
+                inquiry.setCreatedUser(hostHolder.getUser().getId());
+                inquiryService.save(inquiry);
+                return Result.success("修改成功！", inquiry.getInquiryId());
+            } else {
+                return Result.fail().message("用户权限不足！");
             }
-            if(inquiry.getInquiryType()==null){
-                return Result.fail().message("请选择订单类型");
-            }
-            if(inquiry.getState()==null || inquiry.getState()==-1){
-                return Result.fail().message("订单无效！");
-            }
-            // 订单参数有效判断
-            Map<String,Object> res = inquiryService.updateValid(inquiry);
-            if(res.size()>0){
-                return Result.fail((String) res.get("error"),null);
-            }
-            // 原订单设置无效
-            inquiryService.updateState(inquiry.getInquiryCode(),-1);
-            // 新增修改后的订单
-            inquiry.setInquiryId(null);
-            inquiry.setCreatedUser(hostHolder.getUser().getId());
-            inquiryService.save(inquiry);
-            return Result.success("修改成功！",inquiry.getInquiryId());
-        }else{
-            return Result.fail().message("用户权限不足！");
         }
-
     }
 
     /**
@@ -314,6 +321,24 @@ public class SaleOrderController implements BenewakeConstants {
         return results;
     }
 
+    @PostMapping("/divideList")
+    public Result divideInquiry(@RequestBody DevideInquiryVo param){
+        List<Inquiry> divideInquiries = new ArrayList<>();
+        divideInquiries=inquiryService.splitInquiry(param);
+        inquiryService.deleteOrder(param.getInquiryList().get(0).getInquiryId());
+        return Result.success(divideInquiries);
+    }
+
+    @PostMapping("/saveDivideList")
+    public Result saveDivideInquiry(@RequestBody List<Inquiry> inquiries){
+        StartInquiryVo startInquiryVo = new StartInquiryVo();
+        startInquiryVo.setInquiryList(inquiries);
+        startInquiryVo.setIsUpdate(0);
+        startInquiryVo.setStartInquiry(0);
+        addInquiries(startInquiryVo);
+        return Result.message("保存成功！");
+    }
+
 
     /**
      * 新增询单信息 及 开始询单 （只能新增或询单）
@@ -324,334 +349,336 @@ public class SaleOrderController implements BenewakeConstants {
     @SalesmanRequired
     @Transactional(rollbackFor = Exception.class)
     public Result addInquiries(@RequestBody StartInquiryVo param){
-        //创建一个新的订单列表用于接收传入的订单
-        List<Inquiry> newInquiries = param.getInquiryList();
-        //新建一个整数类型用于接收传入的是否开始询单数据
-        Integer startInquiry = param.getStartInquiry();
+        User u = hostHolder.getUser();
+        if (u.getUserType()==3){
+            return Result.fail().message("访客暂无权限");
+        }else {
+            //创建一个新的订单列表用于接收传入的订单
+            List<Inquiry> newInquiries = param.getInquiryList();
+            //新建一个整数类型用于接收传入的是否开始询单数据
+            Integer startInquiry = param.getStartInquiry();
 
-        List<Long> ids = new ArrayList<>();
-        // 获取订单编码列表
-        List<String> inquiryCodes = new ArrayList<>();
-        List<String> message = new ArrayList<>();
+            List<Long> ids = new ArrayList<>();
+            // 获取订单编码列表
+            List<String> inquiryCodes = new ArrayList<>();
+            List<String> message = new ArrayList<>();
 
 
-        //创建一个新的map,用于存储询单信息
-        Map<String,Object> map = new HashMap<>(16);
-        //订单为空的话
-        if(newInquiries == null){
-            return Result.fail("请添加至少一条询单信息",null);
-        }
+            //创建一个新的map,用于存储询单信息
+            Map<String, Object> map = new HashMap<>(16);
+            //订单为空的话
+            if (newInquiries == null) {
+                return Result.fail("请添加至少一条询单信息", null);
+            }
 
-        if (param.getIsUpdate() == null || param.getIsUpdate() != 1){
-        for(Inquiry inq1 : newInquiries) {
-            if (inq1.getInquiryCode() == null) {
-                // 保存 或 单据id不存在（开始询单数据为保存状态，或者传入的单据id为0）
-                if (startInquiry == 0 || inq1.getInquiryId() == null) {
-                    //获取当前用户信息
-                    User user = hostHolder.getUser();
-                    Date nowTime = new Date();
-                    //接收到的订单类型为空
-                    if (inq1.getInquiryType() == null) {
-                        return Result.fail("请选择订单类型", null);
-                    }
+            if (param.getIsUpdate() == null || param.getIsUpdate() != 1) {
+                for (Inquiry inq1 : newInquiries) {
+                    if (inq1.getInquiryCode() == null) {
+                        // 保存 或 单据id不存在（开始询单数据为保存状态，或者传入的单据id为0）
+                        if (startInquiry == 0 || inq1.getInquiryId() == null) {
+                            //获取当前用户信息
+                            User user = hostHolder.getUser();
+                            Date nowTime = new Date();
+                            //接收到的订单类型为空
+                            if (inq1.getInquiryType() == null) {
+                                return Result.fail("请选择订单类型", null);
+                            }
 
-                    // 逐条分析询单是否合法，遍历传入的单据列表
+                            // 逐条分析询单是否合法，遍历传入的单据列表
 
-                        //使用inquiryservice中addvalid方法判断询单是否合法
-                        Map<String, Object> res = inquiryService.addValid(inq1);
-                        //res被创建就是为了存储询单不合法的信息，如果里面有内容说明错误
-                        if (res.size() > 0) {
-                            return Result.fail((String) res.get("error"), null);
+                            //使用inquiryservice中addvalid方法判断询单是否合法
+                            Map<String, Object> res = inquiryService.addValid(inq1);
+                            //res被创建就是为了存储询单不合法的信息，如果里面有内容说明错误
+                            if (res.size() > 0) {
+                                return Result.fail((String) res.get("error"), null);
+                            }
+                            // 如果单据合法，设置创建人信息以及单据编号
+                            inq1.setCreatedUser(user.getId());
+                            //如果单据编码为空，调用方法获取一个单据编号格式，然后获取一个格式化的编号
+                            if (inq1.getInquiryCode() == null) {
+                                inq1.setInquiryCode(inquiryService.getDocumentNumberFormat(inq1.getInquiryType(), 1).get(0));
+                            }
+
+                            //将刚刚获取到的单据编码存入到订单编码列表
+                            inquiryCodes.add(inq1.getInquiryCode());
+                            //并将状态码设置为0，保存状态
+                            inq1.setState(0);
+
+                            //将之前生成的单据编码以键值名为inquiryCode，以便后续使用
+                            map.put("inquiryCode", inquiryCodes);
+
+
+                            List<Inquiry> singleInquiryList = new ArrayList<>();
+                            singleInquiryList.add(inq1);
+
+                            // 添加运输信息
+                            deliveryService.insertLists(singleInquiryList);
+                            // 全部通过加入数据库
+                            inquiryService.insertLists(singleInquiryList);
+
+                            //创建一个ids列表
+
+                            //遍历接收到订单信息，获取订单id存入ids
+
+                            ids.add(inq1.getInquiryId());
+
+
+                            //将ids以键名“ids”存入map
+                            map.put("ids", ids);
+                            message.add("保存成功!\n");
+                            map.put("message", message);
                         }
-                        // 如果单据合法，设置创建人信息以及单据编号
-                    inq1.setCreatedUser(user.getId());
-                        //如果单据编码为空，调用方法获取一个单据编号格式，然后获取一个格式化的编号
-                        if (inq1.getInquiryCode() == null) {
-                            inq1.setInquiryCode(inquiryService.getDocumentNumberFormat(inq1.getInquiryType(), 1).get(0));
-                        }
+                        // 前面是保存，接下来是询单功能
+                        //如果订单状态不空且不是0的话，可以询单
+                        if (startInquiry != null && startInquiry != 0) {
+                            //创建两个空的arraylist用于存储询单处理结果
+                            //fail,success分别存储失败和成功的询单
+                            List<Inquiry> fail = new ArrayList<>();
+                            List<Inquiry> success = new ArrayList<>();
+                            //初始化一个整数变量‘ind’,用于跟踪循环的索引
+                            try {
 
-                        //将刚刚获取到的单据编码存入到订单编码列表
-                        inquiryCodes.add(inq1.getInquiryCode());
-                        //并将状态码设置为0，保存状态
-                    inq1.setState(0);
-
-                    //将之前生成的单据编码以键值名为inquiryCode，以便后续使用
-                    map.put("inquiryCode", inquiryCodes);
-
-
-                    List<Inquiry> singleInquiryList = new ArrayList<>();
-                    singleInquiryList.add(inq1);
-
-                    // 添加运输信息
-                    deliveryService.insertLists(singleInquiryList);
-                    // 全部通过加入数据库
-                    inquiryService.insertLists(singleInquiryList);
-
-                    //创建一个ids列表
-
-                    //遍历接收到订单信息，获取订单id存入ids
-
-                    ids.add(inq1.getInquiryId());
-
-
-                    //将ids以键名“ids”存入map
-                    map.put("ids", ids);
-                    message.add("保存成功!\n");
-                    map.put("message",message);
-                }
-                // 前面是保存，接下来是询单功能
-                //如果订单状态不空且不是0的话，可以询单
-                if (startInquiry != null && startInquiry != 0) {
-                    //创建两个空的arraylist用于存储询单处理结果
-                    //fail,success分别存储失败和成功的询单
-                    List<Inquiry> fail = new ArrayList<>();
-                    List<Inquiry> success = new ArrayList<>();
-                    //初始化一个整数变量‘ind’,用于跟踪循环的索引
-                    try {
-
-                        Inquiry inquiry = inquiryService.getInquiryById(inq1.getInquiryId());
-                            // 检查 allow_inquiry 字段是否为空
-                            if (inquiry.getAllowinquiry() == null) {
-                                Item item = itemService.findItemById(inquiry.getItemId());
-                                if (item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
-                                        item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
-                                        item.getQuantitative() == 0 || inquiry.getSaleNum() > item.getQuantitative()) {
-                                    // 询单失败
-                                    // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
-                                    fail.add(inquiry);
+                                Inquiry inquiry = inquiryService.getInquiryById(inq1.getInquiryId());
+                                // 检查 allow_inquiry 字段是否为空
+                                if (inquiry.getAllowinquiry() == null) {
+                                    Item item = itemService.findItemById(inquiry.getItemId());
+                                    if (item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
+                                            item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
+                                            item.getQuantitative() == 0 || inquiry.getSaleNum() > item.getQuantitative()) {
+                                        // 询单失败
+                                        // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
+                                        fail.add(inquiry);
+                                    } else {
+                                        success.add(inquiry);
+                                        //询单成功飞书发送消息
+                                        User saleman = userService.findUserById(inquiry.getSalesmanId());
+                                        if (saleman != null) {
+                                            String salemanName = saleman.getUsername();
+                                            feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
+                                        }
+                                    }
                                 } else {
+                                    // allow_inquiry 不为空，直接添加到成功列表并发送消息
                                     success.add(inquiry);
-                                    //询单成功飞书发送消息
                                     User saleman = userService.findUserById(inquiry.getSalesmanId());
                                     if (saleman != null) {
                                         String salemanName = saleman.getUsername();
                                         feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
                                     }
                                 }
-                            } else {
-                                // allow_inquiry 不为空，直接添加到成功列表并发送消息
-                                success.add(inquiry);
-                                User saleman = userService.findUserById(inquiry.getSalesmanId());
-                                if (saleman != null) {
-                                    String salemanName = saleman.getUsername();
-                                    feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                log.error(e.getMessage());
+                                throw new RuntimeException("参数有误！");
+                            }
+                            //创建一个restr列表用于存储最终的处理结果字符串
+                            List<String> resStr = new ArrayList<>();
+                            //首先遍历失败的订单，添加到刚刚创建的restr中
+                            fail.forEach(f -> {
+                                if (!message.isEmpty()) {
+                                    message.remove(message.size() - 1); // Remove the last element (index: size - 1).
                                 }
+                                message.add("单据编号:" + f.getInquiryCode() + "询单失败，请飞书联系管理员!\n");
+                                map.put("message", message);
+                            });
+                            //如果成功的队列中不为0，进入询单功能
+                            if (success.size() > 0) {
+                                //map.put("success",success.size()+"个订单开始询单！");
+
+                                // 询单功能（待添加)   异步或消息队列
+
+                                // 设置state+1 （之后可考虑移到异步操作中或使用消息队列）
+                                success.forEach(s -> s.setState(s.getState() + 1));
+                                // 更新数据库  （之后可考虑移到异步操作中或使用消息队列）
+                                inquiryService.updateByInquiry(success);
+                                //return Result.success("已开始询单！",map);
+//                        resStr.add("APS暂未上线，今日内计划手动反馈日期！");
+                                if (!message.isEmpty()) {
+                                    message.remove(message.size() - 1); // Remove the last element (index: size - 1).
+                                }
+                                message.add("APS暂未上线，今日内计划手动反馈日期！\n");
+                                map.put("message", message);
+
+                            }
+                            //返回如果成功的询单数量大于 0，将处理结果添加到 resStr，包含 "APS暂未上线，今日内计划手动反馈日期！"。
+                            //使用 String.join 方法将 resStr 中的消息字符串使用换行符连接起来。
+
+                        }
+                    } else {
+
+
+                        Date currentTime = new Date();
+
+                        Inquiry inquiriesByCode = inquiryService.getInquiriesByCode(inq1.getInquiryCode());
+                        inquiriesByCode.setCustomerId(inq1.getCustomerId());
+                        inquiriesByCode.setExpectedTime(inq1.getExpectedTime());
+                        inquiriesByCode.setInquiryType(inq1.getInquiryType());
+                        inquiriesByCode.setItemId(inq1.getItemId());
+                        inquiriesByCode.setRemark(inq1.getRemark());
+                        inquiriesByCode.setSaleNum(inq1.getSaleNum());
+                        inquiriesByCode.setSalesmanId(inq1.getSalesmanId());
+                        inquiriesByCode.setCreatedTime(currentTime);
+                        //遍历接收到订单信息，获取订单id存入ids
+
+
+                        //将刚刚获取到的单据编码存入到订单编码列表
+                        inquiryCodes.add(inq1.getInquiryCode());
+                        //并将状态码设置为0，保存状态
+                        inq1.setState(0);
+
+                        //将之前生成的单据编码以键值名为inquiryCode，以便后续使用
+                        map.put("inquiryCode", inquiryCodes);
+                        updateInquired(inquiriesByCode);
+
+
+                        //将ids以键名“ids”存入map
+                        ids.add(inquiriesByCode.getInquiryId());
+                        map.put("ids", ids);
+                        message.add("保存成功!\n");
+
+                        map.put("message", message);
+                        if (startInquiry == 1) {
+                            List<Inquiry> fail = new ArrayList<>();
+                            List<Inquiry> success = new ArrayList<>();
+                            //初始化一个整数变量‘ind’,用于跟踪循环的索引
+                            try {
+                                Inquiry inquiry = inquiryService.getInquiriesByCode(inq1.getInquiryCode());
+                                // 检查 allow_inquiry 字段是否为空
+                                if (inquiriesByCode.getAllowinquiry() == null) {
+                                    Item item = itemService.findItemById(inquiry.getItemId());
+                                    if (item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
+                                            item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
+                                            item.getQuantitative() == 0 || inquiry.getSaleNum() > item.getQuantitative()) {
+                                        // 询单失败
+                                        // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
+                                        fail.add(inquiry);
+                                    } else {
+                                        success.add(inquiry);
+                                        //询单成功飞书发送消息
+                                        User saleman = userService.findUserById(inquiry.getSalesmanId());
+                                        if (saleman != null) {
+                                            String salemanName = saleman.getUsername();
+                                            feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
+                                        }
+                                    }
+                                } else {
+                                    // allow_inquiry 不为空，直接添加到成功列表并发送消息
+                                    success.add(inquiry);
+                                    User saleman = userService.findUserById(inquiry.getSalesmanId());
+                                    if (saleman != null) {
+                                        String salemanName = saleman.getUsername();
+                                        feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                log.error(e.getMessage());
+                                throw new RuntimeException("参数有误！");
                             }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        log.error(e.getMessage());
-                        throw new RuntimeException("参数有误！");
-                    }
-                    //创建一个restr列表用于存储最终的处理结果字符串
-                    List<String> resStr = new ArrayList<>();
-                    //首先遍历失败的订单，添加到刚刚创建的restr中
-                    fail.forEach(f -> {
-                        if (!message.isEmpty()) {
-                            message.remove(message.size() - 1); // Remove the last element (index: size - 1).
-                        }
-                        message.add("单据编号:" + f.getInquiryCode() + "询单失败，请飞书联系管理员!\n");
-                        map.put("message",message);
-                    });
-                    //如果成功的队列中不为0，进入询单功能
-                    if (success.size() > 0) {
-                        //map.put("success",success.size()+"个订单开始询单！");
+                            fail.forEach(f -> {
+                                if (!message.isEmpty()) {
+                                    message.remove(message.size() - 1); // Remove the last element (index: size - 1).
+                                }
+                                message.add("单据编号:" + f.getInquiryCode() + "询单失败，请飞书联系管理员!\n");
+                                map.put("message", message);
+                            });
+                            //如果成功的队列中不为0，进入询单功能
+                            if (success.size() > 0) {
+                                //map.put("success",success.size()+"个订单开始询单！");
 
-                        // 询单功能（待添加)   异步或消息队列
+                                // 询单功能（待添加)   异步或消息队列
 
-                        // 设置state+1 （之后可考虑移到异步操作中或使用消息队列）
-                        success.forEach(s -> s.setState(s.getState() + 1));
-                        // 更新数据库  （之后可考虑移到异步操作中或使用消息队列）
-                        inquiryService.updateByInquiry(success);
-                        //return Result.success("已开始询单！",map);
-//                        resStr.add("APS暂未上线，今日内计划手动反馈日期！");
-                        if (!message.isEmpty()) {
-                            message.remove(message.size() - 1); // Remove the last element (index: size - 1).
+                                // 设置state+1 （之后可考虑移到异步操作中或使用消息队列）
+                                success.forEach(s -> s.setState(s.getState() + 1));
+                                // 更新数据库  （之后可考虑移到异步操作中或使用消息队列）
+                                inquiryService.updateByInquiry(success);
+                                //return Result.success("已开始询单！",map);
+                                if (!message.isEmpty()) {
+                                    message.remove(message.size() - 1); // Remove the last element (index: size - 1).
+                                }
+                                message.add("APS暂未上线，今日内计划手动反馈日期！\n");
+                                map.put("message", message);
+
+                            }
+                            //返回如果成功的询单数量大于 0，将处理结果添加到 resStr，包含 "APS暂未上线，今日内计划手动反馈日期！"。
+                            //使用 String.join 方法将 resStr 中的消息字符串使用换行符连接起来。
+
+
                         }
-                        message.add("APS暂未上线，今日内计划手动反馈日期！\n");
-                        map.put("message",message);
 
                     }
-                    //返回如果成功的询单数量大于 0，将处理结果添加到 resStr，包含 "APS暂未上线，今日内计划手动反馈日期！"。
-                    //使用 String.join 方法将 resStr 中的消息字符串使用换行符连接起来。
 
                 }
             } else {
 
+                List<Inquiry> fail = new ArrayList<>();
+                List<Inquiry> success = new ArrayList<>();
 
+                Inquiry inquiry = newInquiries.get(0);
 
+                updateInquired(inquiry);
 
-                    Date currentTime = new Date();
-
-                    Inquiry inquiriesByCode = inquiryService.getInquiriesByCode(inq1.getInquiryCode());
-                    inquiriesByCode.setCustomerId(inq1.getCustomerId());
-                    inquiriesByCode.setExpectedTime(inq1.getExpectedTime());
-                    inquiriesByCode.setInquiryType(inq1.getInquiryType());
-                    inquiriesByCode.setItemId(inq1.getItemId());
-                    inquiriesByCode.setRemark(inq1.getRemark());
-                    inquiriesByCode.setSaleNum(inq1.getSaleNum());
-                    inquiriesByCode.setSalesmanId(inq1.getSalesmanId());
-                    inquiriesByCode.setCreatedTime(currentTime);
-                    //遍历接收到订单信息，获取订单id存入ids
-
-
-                    //将刚刚获取到的单据编码存入到订单编码列表
-                    inquiryCodes.add(inq1.getInquiryCode());
-                    //并将状态码设置为0，保存状态
-                    inq1.setState(0);
-
-                    //将之前生成的单据编码以键值名为inquiryCode，以便后续使用
-                    map.put("inquiryCode", inquiryCodes);
-                    updateInquired(inquiriesByCode);
-
-
-
-                //将ids以键名“ids”存入map
-                    ids.add(inquiriesByCode.getInquiryId());
-                    map.put("ids", ids);
-                    message.add("保存成功!\n");
-
-                    map.put("message",message);
-                if (startInquiry == 1) {
-                    List<Inquiry> fail = new ArrayList<>();
-                    List<Inquiry> success = new ArrayList<>();
-                    //初始化一个整数变量‘ind’,用于跟踪循环的索引
-                    try {
-                        Inquiry inquiry = inquiryService.getInquiriesByCode(inq1.getInquiryCode());
-                        // 检查 allow_inquiry 字段是否为空
-                        if (inquiriesByCode.getAllowinquiry() == null) {
-                            Item item = itemService.findItemById(inquiry.getItemId());
-                            if (item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
-                                    item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
-                                    item.getQuantitative() == 0 || inquiry.getSaleNum() > item.getQuantitative()) {
-                                // 询单失败
-                                // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
-                                fail.add(inquiry);
-                            } else {
-                                success.add(inquiry);
-                                //询单成功飞书发送消息
-                                User saleman = userService.findUserById(inquiry.getSalesmanId());
-                                if (saleman != null) {
-                                    String salemanName = saleman.getUsername();
-                                    feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
-                                }
-                            }
-                        } else {
-                            // allow_inquiry 不为空，直接添加到成功列表并发送消息
-                            success.add(inquiry);
-                            User saleman = userService.findUserById(inquiry.getSalesmanId());
-                            if (saleman != null) {
-                                String salemanName = saleman.getUsername();
-                                feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
-                            }
+                if (inquiry.getAllowinquiry() == null) {
+                    Item item = itemService.findItemById(inquiry.getItemId());
+                    if (item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
+                            item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
+                            item.getQuantitative() == 0 || inquiry.getSaleNum() > item.getQuantitative()) {
+                        // 询单失败
+                        // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
+                        fail.add(inquiry);
+                    } else {
+                        success.add(inquiry);
+                        //询单成功飞书发送消息
+                        User saleman = userService.findUserById(inquiry.getSalesmanId());
+                        if (saleman != null) {
+                            String salemanName = saleman.getUsername();
+                            feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
                         }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        log.error(e.getMessage());
-                        throw new RuntimeException("参数有误！");
                     }
-
-                    fail.forEach(f -> {
-                        if (!message.isEmpty()) {
-                            message.remove(message.size() - 1); // Remove the last element (index: size - 1).
-                        }
-                        message.add("单据编号:" + f.getInquiryCode() + "询单失败，请飞书联系管理员!\n");
-                        map.put("message",message);
-                    });
-                    //如果成功的队列中不为0，进入询单功能
-                    if (success.size() > 0) {
-                        //map.put("success",success.size()+"个订单开始询单！");
-
-                        // 询单功能（待添加)   异步或消息队列
-
-                        // 设置state+1 （之后可考虑移到异步操作中或使用消息队列）
-                        success.forEach(s -> s.setState(s.getState() + 1));
-                        // 更新数据库  （之后可考虑移到异步操作中或使用消息队列）
-                        inquiryService.updateByInquiry(success);
-                        //return Result.success("已开始询单！",map);
-                        if (!message.isEmpty()) {
-                            message.remove(message.size() - 1); // Remove the last element (index: size - 1).
-                        }
-                        message.add("APS暂未上线，今日内计划手动反馈日期！\n");
-                        map.put("message",message);
-
-                    }
-                    //返回如果成功的询单数量大于 0，将处理结果添加到 resStr，包含 "APS暂未上线，今日内计划手动反馈日期！"。
-                    //使用 String.join 方法将 resStr 中的消息字符串使用换行符连接起来。
-
-
-                }
-
-            }
-
-        }
-        }else{
-
-            List<Inquiry> fail = new ArrayList<>();
-            List<Inquiry> success = new ArrayList<>();
-
-            Inquiry inquiry=newInquiries.get(0);
-
-            updateInquired(inquiry);
-
-            if (inquiry.getAllowinquiry() == null) {
-                Item item = itemService.findItemById(inquiry.getItemId());
-                if (item.getItemType() == ITEM_TYPE_MATERIALS_AND_SOFTWARE_BESPOKE ||
-                        item.getItemType() == ITEM_TYPE_RAW_MATERIALS_BESPOKE ||
-                        item.getQuantitative() == 0 || inquiry.getSaleNum() > item.getQuantitative()) {
-                    // 询单失败
-                    // 物料类型为 新增原材料+软件定制 或 新增原材料定制 或 物料标准数量为0 或 当前数量大于物料标准数量
-                    fail.add(inquiry);
                 } else {
+                    // allow_inquiry 不为空，直接添加到成功列表并发送消息
                     success.add(inquiry);
-                    //询单成功飞书发送消息
                     User saleman = userService.findUserById(inquiry.getSalesmanId());
                     if (saleman != null) {
                         String salemanName = saleman.getUsername();
                         feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
                     }
                 }
-            } else {
-                // allow_inquiry 不为空，直接添加到成功列表并发送消息
-                success.add(inquiry);
-                User saleman = userService.findUserById(inquiry.getSalesmanId());
-                if (saleman != null) {
-                    String salemanName = saleman.getUsername();
-                    feiShuMessageService.sendMessage(salemanName, inquiry.getInquiryCode(), inquiry.getItemId(), inquiry.getSaleNum());
-                }
-            }
 
-            fail.forEach(f -> {
-                if (!message.isEmpty()) {
-                    message.remove(message.size() - 1); // Remove the last element (index: size - 1).
-                }
-                message.add("单据编号:" + f.getInquiryCode() + "询单失败，请飞书联系管理员!\n");
-                map.put("message",message);
-            });
-            //如果成功的队列中不为0，进入询单功能
-            if (success.size() > 0) {
-                //map.put("success",success.size()+"个订单开始询单！");
+                fail.forEach(f -> {
+                    if (!message.isEmpty()) {
+                        message.remove(message.size() - 1); // Remove the last element (index: size - 1).
+                    }
+                    message.add("单据编号:" + f.getInquiryCode() + "询单失败，请飞书联系管理员!\n");
+                    map.put("message", message);
+                });
+                //如果成功的队列中不为0，进入询单功能
+                if (success.size() > 0) {
+                    //map.put("success",success.size()+"个订单开始询单！");
 
-                // 询单功能（待添加)   异步或消息队列
+                    // 询单功能（待添加)   异步或消息队列
 
-                // 设置state+1 （之后可考虑移到异步操作中或使用消息队列）
-                success.forEach(s -> s.setState(s.getState() + 1));
-                // 更新数据库  （之后可考虑移到异步操作中或使用消息队列）
-                inquiryService.updateByInquiry(success);
-                //return Result.success("已开始询单！",map);
-                if (!message.isEmpty()) {
-                    message.remove(message.size() - 1); // Remove the last element (index: size - 1).
+                    // 设置state+1 （之后可考虑移到异步操作中或使用消息队列）
+                    success.forEach(s -> s.setState(s.getState() + 1));
+                    // 更新数据库  （之后可考虑移到异步操作中或使用消息队列）
+                    inquiryService.updateByInquiry(success);
+                    //return Result.success("已开始询单！",map);
+                    if (!message.isEmpty()) {
+                        message.remove(message.size() - 1); // Remove the last element (index: size - 1).
+                    }
+                    message.add("APS暂未上线，今日内计划手动反馈日期！\n");
+                    map.put("message", message);
+
                 }
-                message.add("APS暂未上线，今日内计划手动反馈日期！\n");
-                map.put("message",message);
 
             }
-
+            String result = message.toString();
+            result = result.replace("[", "").replace("]", "").replace(",", "");
+            return Result.success(result, map);
         }
-        String result= message.toString();
-        result = result.replace("[", "").replace("]", "").replace(",", "");
-        return Result.success(result, map);
     }
 
     /**
@@ -662,27 +689,31 @@ public class SaleOrderController implements BenewakeConstants {
     @PostMapping("/delete")
     @SalesmanRequired//调用此接口的必须是销售员
     public Result deleteOrder(@RequestBody Map<String,Long> param){
-        //从传入的参数param中获取订单的id
-        Long orderId = param.get("orderId");
-        //根据订单ID通过inquiryService.getInquiryById获得订单对象
-        Inquiry inquiry = inquiryService.getInquiryById(orderId);
-        //获取当前用户信息
         User u = hostHolder.getUser();
-        //如果用户是销售员并且订单的销售员ID与当前用户ID相同，或者订单的创建人ID与当前用户ID相同，
-        //或者用户是管理员或系统用户，那么用户有足够权限进行删除操作。
-        if( u.getUserType().equals(USER_TYPE_SALESMAN)&&
-                (inquiry.getSalesmanId().equals(u.getId())||inquiry.getCreatedUser().equals(u.getId())) ||
-                u.getUserType().equals(USER_TYPE_ADMIN) || u.getUserType().equals(USER_TYPE_SYSTEM)
-        ){
-            //调用inquiryService.deleteOrder方法传入订单id,进行删除操作res接收返回值
-            boolean res = inquiryService.deleteOrder(orderId);
-            if(!res){
-                return Result.fail().message("订单不存在！");
-            }else {
-                return Result.success().message("删除成功！");
+        if (u.getUserType()==3){
+            return Result.fail().message("访客暂无权限");
+        }else {
+            //从传入的参数param中获取订单的id
+            Long orderId = param.get("orderId");
+            //根据订单ID通过inquiryService.getInquiryById获得订单对象
+            Inquiry inquiry = inquiryService.getInquiryById(orderId);
+            //获取当前用户信息
+            //如果用户是销售员并且订单的销售员ID与当前用户ID相同，或者订单的创建人ID与当前用户ID相同，
+            //或者用户是管理员或系统用户，那么用户有足够权限进行删除操作。
+            if (u.getUserType().equals(USER_TYPE_SALESMAN) &&
+                    (inquiry.getSalesmanId().equals(u.getId()) || inquiry.getCreatedUser().equals(u.getId())) ||
+                    u.getUserType().equals(USER_TYPE_ADMIN) || u.getUserType().equals(USER_TYPE_SYSTEM)
+            ) {
+                //调用inquiryService.deleteOrder方法传入订单id,进行删除操作res接收返回值
+                boolean res = inquiryService.deleteOrder(orderId);
+                if (!res) {
+                    return Result.fail().message("订单不存在！");
+                } else {
+                    return Result.success().message("删除成功！");
+                }
+            } else {
+                return Result.fail().message("用户权限不够，只能删除自己的订单！");
             }
-        }else{
-            return Result.fail().message("用户权限不够，只能删除自己的订单！");
         }
     }
 
@@ -690,30 +721,35 @@ public class SaleOrderController implements BenewakeConstants {
     @SalesmanRequired//销售员才能访问该接口
     //接收文件作为参数
     public Result addOrdersByExcel(@RequestParam("file")MultipartFile file){
-        //创建一个map，用于存储excel数据处理的结果
-        Map<String,Object> map = new HashMap<>(16);
-        //对文件进行判空操作
-        if(file.isEmpty()){
-            return Result.fail("文件为空！",null);
-        }
-        //这一行代码的目的是获取上传文件的原始文件名，并使用点号（.）作为分隔符将文件名拆分成多个部分。
-        // 因为点号在正则表达式中有特殊含义，所以双反斜杠（\\.）用来转义点号，确保按点号进行分割。
-        val split = file.getOriginalFilename().split("\\.");
-        //检查split中拆分后的文件名的第二部分，也就是文件格式部分，看是否为excel文件
-        if(!"xlsx".equals(split[1]) && !"xls".equals(split[1])){
-            return Result.fail().message("请提供.xlsx或.xls为后缀的Excel文件");
-        }
-        //进入try块中保存excel的文件，存入map
-        try {
-            map = inquiryService.saveDataByExcel(file);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        //检查map中是否有error键值，如果有说明处理失败
-        if(map.containsKey("error")){
-            return Result.fail().message((String) map.get("error"));
-        }else{
-            return Result.success().message((String) map.get("success"));
+        User u = hostHolder.getUser();
+        if (u.getUserType()==3){
+            return Result.fail().message("访客暂无权限");
+        }else {
+            //创建一个map，用于存储excel数据处理的结果
+            Map<String, Object> map = new HashMap<>(16);
+            //对文件进行判空操作
+            if (file.isEmpty()) {
+                return Result.fail("文件为空！", null);
+            }
+            //这一行代码的目的是获取上传文件的原始文件名，并使用点号（.）作为分隔符将文件名拆分成多个部分。
+            // 因为点号在正则表达式中有特殊含义，所以双反斜杠（\\.）用来转义点号，确保按点号进行分割。
+            val split = file.getOriginalFilename().split("\\.");
+            //检查split中拆分后的文件名的第二部分，也就是文件格式部分，看是否为excel文件
+            if (!"xlsx".equals(split[1]) && !"xls".equals(split[1])) {
+                return Result.fail().message("请提供.xlsx或.xls为后缀的Excel文件");
+            }
+            //进入try块中保存excel的文件，存入map
+            try {
+                map = inquiryService.saveDataByExcel(file);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //检查map中是否有error键值，如果有说明处理失败
+            if (map.containsKey("error")) {
+                return Result.fail().message((String) map.get("error"));
+            } else {
+                return Result.success().message((String) map.get("success"));
+            }
         }
     }
 
@@ -725,6 +761,9 @@ public class SaleOrderController implements BenewakeConstants {
         boolean isSuccess = viewService.deleteView(view.getViewId());
         return isSuccess?Result.success("删除成功!",null) : Result.fail("删除失败或视图不存在！",null);
     }
+
+
+
 
 
     @GetMapping("/downloadFile")

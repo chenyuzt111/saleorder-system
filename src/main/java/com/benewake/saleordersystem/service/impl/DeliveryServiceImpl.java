@@ -101,6 +101,9 @@ public class DeliveryServiceImpl implements DeliveryService {
                             if (r.getRemark().contains("数字有遗漏，请用户及时修改！")) {
                                 c.setDeliveryState(32);
                                 c.setFDeliveryIntegrity("不完整");
+                            } else if (r.getRemark().contains("该订单金蝶中多次写入！")) {
+                                c.setDeliveryState(32);
+                                c.setFDeliveryIntegrity("不完整");
                             } else {
                                 if (r != null) {
                                     if ("80".equals(r.getOpCode())) {
@@ -129,6 +132,10 @@ public class DeliveryServiceImpl implements DeliveryService {
                                         allOpCodeNull = false;
                                         codeintegrity = false;
                                         break;
+                                    } else if (r.getRemark().contains("该订单金蝶中多次写入！")) {
+                                        allOpCode80 = false;
+                                        allOpCodeNull = false;
+                                        codeintegrity = false;
                                     } else {
                                         if (!"80".equals(r.getOpCode())) {
                                             allOpCode80 = false;

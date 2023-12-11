@@ -7,6 +7,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author Lcs
  * @since 2023年07月11 10:43
@@ -50,6 +54,7 @@ public class SaleOut {
     @ExcelProperty("fim单据编号")
     @TableField("fim_code")
     private String F_ora_FIMNumber;
+
 
 
 }

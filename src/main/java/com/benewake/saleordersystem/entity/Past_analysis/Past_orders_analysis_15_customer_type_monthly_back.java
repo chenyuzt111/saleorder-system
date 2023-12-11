@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /**
  * @author zt
  * @since 2023年09月13日 11:17
@@ -13,7 +16,7 @@ import lombok.Data;
 @TableName("past_orders_analysis_15_customer_type_monthly_back")
 public class Past_orders_analysis_15_customer_type_monthly_back {
     @TableField("serial_num")
-    private Long serialNum;
+    private BigInteger serialNum;
 
     @TableField("item_code")
     private String itemCode;
@@ -22,16 +25,16 @@ public class Past_orders_analysis_15_customer_type_monthly_back {
     private String itemName;
 
     @TableField("month_avg")
-    private Float monthAvg;
+    private BigDecimal monthAvg;
 
     @TableField("total_item")
-    private Long totalItem;
+    private BigDecimal totalItem;
 
     @TableField("total_months")
-    private Long totalMonths;
+    private Integer totalMonths;
 
     @TableField("max_")
-    private Long max;
+    private BigDecimal max;
 
     @TableField("april2021")
     private Long April2021;
@@ -119,5 +122,17 @@ public class Past_orders_analysis_15_customer_type_monthly_back {
 
     @TableField("august2023")
     private Long August2023;
+
+    @TableField("september2023")
+    private Long September2023;
+
+    @TableField("october2022")
+    private Long October2023;
+
+    @TableField("november2023")
+    private Long November2023;
+
+    @TableField("december2023")
+    private Long December2023;
 
 }

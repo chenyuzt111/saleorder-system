@@ -14,10 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -280,19 +278,62 @@ public class KingDeeServiceImpl implements KingDeeService, BenewakeConstants {
         List<String> fieldKeys = new ArrayList<>();
         fieldKeys.add("F_ora_FIMNumber,FCarriageNO,F_ora_Text2");
         List<String> queryFields = new ArrayList<>();
-        deliveries.forEach(d->queryFields.add(String.format("F_ora_FIMNumber = '%s'",d.getInquiryCode())));
-        List<SaleOut> lists = searchData(formId,fieldKeys,String.join(" or ",queryFields),Integer.MAX_VALUE, SaleOut.class);
+//        deliveries.forEach(d->queryFields.add(String.format("F_ora_FIMNumber Like '%%s%'",d.getInquiryCode())));
+        deliveries.forEach(d->queryFields.add("F_ora_FIMNumber Like '%"+d.getInquiryCode()+"%'"));
+        List<SaleOut> lists = searchData(formId,fieldKeys,"("+String.join(" or ",queryFields)+") and FStockOrgId = 1",Integer.MAX_VALUE, SaleOut.class);
 
-// 获取所有 SaleOut 对象的 F_ora_FIMNumber 列表
+
+//        拆分fim单据编号有重复的
         List<String> fimNumbers = lists.stream()
                 .map(SaleOut::getF_ora_FIMNumber)
+                .flatMap(fimNumber -> Arrays.stream(fimNumber.split(" ")))
                 .collect(Collectors.toList());
 
-// 使用数据流更新 delivery_table
+        // 使用数据流更新 delivery_table
         fimNumbers.forEach(inquiryCode -> deliveryMapper.updateDeliveryTableMatchField(inquiryCode));
+
+        List<SaleOut> finallists=new ArrayList<>();
+        for (String f : fimNumbers) {
+            SaleOut finallist = new SaleOut();
+            finallist.setF_ora_FIMNumber(f);
+
+            for (SaleOut list : lists) {
+                if (list.getF_ora_FIMNumber().contains(f)) {
+                    finallist = list;
+                    finallist.setF_ora_FIMNumber(f);
+                    break;  // 找到匹配项后，终止内部循环
+                }
+            }
+
+            finallists.add(finallist);  // 将 finallist 添加到 finallists 列表
+        }
+
+
+//        查找重复的
+        List<String> duplicateFimNumbers = findDuplicates(fimNumbers);
+
+        for (String duplicateFimNumber : duplicateFimNumbers) {
+            for(SaleOut finallist: finallists){
+                if (finallist.getF_ora_FIMNumber().contains(duplicateFimNumber)){
+                    finallist.setFCarriageNO("400");
+                }
+            }
+        }
 
 
 //        deliveryMapper.updateDeliveryTableMatchField(lists);
-        return lists;
+        return finallists;
     }
+
+
+    private static <T> List<T> findDuplicates(List<T> list) {
+        return list.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue() > 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
+
 }
