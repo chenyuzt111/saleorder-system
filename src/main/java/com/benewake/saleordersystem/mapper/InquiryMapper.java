@@ -5,7 +5,6 @@ import com.benewake.saleordersystem.entity.Inquiry;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Lcs
@@ -81,4 +80,10 @@ public interface InquiryMapper extends BaseMapper<Inquiry> {
             " from fim_inquiry_table " +
             "where inquiry_id = #{inquiryId}")
     String selectcodeByid(@Param("inquiryId") int inquiryId);
+
+
+    @Update("update fim_inquiry_table " +
+            "set state = 0 " +
+            "where inquiry_code = #{inquiryCode} and state = -2")
+    int restoreOrder(@Param("inquiryCode") String inquiryCode);
 }

@@ -17,7 +17,19 @@ import java.util.Map;
 @Service
 public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> implements NoticeService {
     @Override
+    // 根据用户ID和类型获取所有公告列表
     public List<Map<String, Object>> getAllList(Long id,Integer type) {
-        return baseMapper.findNoticeByUserId(id,type);
+        return baseMapper.adminFindNoticeByUserId(id,type);
+    }
+
+    @Override
+    // 根据用户ID和类型获取所有公告列表
+    public List<Map<String, Object>> getUnhidenList(Long id,Integer type) {
+        return baseMapper.userFindNoticeByUserId(id,type);
+    }
+
+    @Override
+    public int hidenNotice(int id) {
+        return baseMapper.hidenNotice(id);
     }
 }

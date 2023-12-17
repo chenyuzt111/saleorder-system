@@ -85,5 +85,7 @@ public interface KingDeeService {
      * 根据订单单号从销售出库单中取运输单号和收件人电话
      */
     List<SaleOut> selectFCarriageNO(List<Delivery> deliveries) throws Exception;
+
+    List<SaleOut> selectResetFCarriageNO(List<Delivery> deliveries)throws Exception;
 }
 

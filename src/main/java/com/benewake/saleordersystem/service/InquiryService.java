@@ -170,4 +170,12 @@ public interface InquiryService extends IService<Inquiry> {
      * @return
      */
     List<Inquiry> splitInquiry(DevideInquiryVo devideInquiryVo);
+
+
+    /**
+     * 根据单据编号恢复删除订单
+     * @param inquiryCodes
+     * @return
+     */
+    int restoreOrders(List<String> inquiryCodes);
 }

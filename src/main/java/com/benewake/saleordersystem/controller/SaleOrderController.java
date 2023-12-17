@@ -8,8 +8,10 @@ import com.benewake.saleordersystem.entity.VO.DevideInquiryVo;
 import com.benewake.saleordersystem.entity.VO.FilterCriteria;
 import com.benewake.saleordersystem.entity.VO.FilterVo;
 import com.benewake.saleordersystem.entity.VO.StartInquiryVo;
+import com.benewake.saleordersystem.excel.model.InquiryModel;
 import com.benewake.saleordersystem.service.*;
 import com.benewake.saleordersystem.utils.BenewakeConstants;
+import com.benewake.saleordersystem.utils.CommonUtils;
 import com.benewake.saleordersystem.utils.HostHolder;
 import com.benewake.saleordersystem.utils.Result;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +21,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,7 +31,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -63,27 +70,25 @@ public class SaleOrderController implements BenewakeConstants {
     private UserService userService;
 
 
-
-
-
-
     @GetMapping("/stateList")
-    public Result getStateList(){
+    public Result getStateList() {
         List<String> stateList = inquiryService.getStateList();
         return Result.success(stateList);
     }
+
     @PostMapping("/inquiryTypeList")
-    public Result getInquiryTypeList(@RequestBody Map<String,Object> param){
+    public Result getInquiryTypeList(@RequestBody Map<String, Object> param) {
         String key = (String) param.get("inquiryType");
-        if(key==null) {
+        if (key == null) {
             key = "";
         }
         return Result.success(inquiryService.getInquiryTypeList(key));
     }
+
     @PostMapping("/inquiryCodeList")
-    public Result getInquiryLikeList(@RequestBody Map<String,Object> param){
+    public Result getInquiryLikeList(@RequestBody Map<String, Object> param) {
         String key = (String) param.get("inquiryCode");
-        if(key==null) {
+        if (key == null) {
             key = "";
 
         }
@@ -98,27 +103,28 @@ public class SaleOrderController implements BenewakeConstants {
     //一个自定义注解，需要用户登录才能访问这个接口
     @LoginRequired
     //返回的是一个包含列表的结果，列表的元素类型是view对象
-    public Result<List<View>> getViewByTableId(@RequestBody Map<String,Object> param){
+    public Result<List<View>> getViewByTableId(@RequestBody Map<String, Object> param) {
         Long tableId = Long.parseLong((String) param.get("tableId"));
         User u = hostHolder.getUser();
-        List<View> lists = viewService.getUserView(u.getId(),tableId);
+        List<View> lists = viewService.getUserView(u.getId(), tableId);
 
         return Result.success(lists);
     }
 
     /*获取表的全部列信息*/
     @PostMapping("/cols")
-    public Result<Map<String,Object>> getAllCols(@RequestBody Map<String,Object> param){
+    public Result<Map<String, Object>> getAllCols(@RequestBody Map<String, Object> param) {
         Long tableId = Long.parseLong((String) param.get("tableId"));
-        Map<String,Object> map = new HashMap<>(16);
-        List<Map<String,Object>> maps = viewService.getAllCols(tableId);
-        map.put("cols",maps);
+        Map<String, Object> map = new HashMap<>(16);
+        List<Map<String, Object>> maps = viewService.getAllCols(tableId);
+        map.put("cols", maps);
         return Result.success(map);
     }
 
     /**
-     * 1-6订单列表过滤查询
+     * 1-7订单列表过滤查询
      * viewId = -1 表示查看我的  viewId = 0 表示查看全部
+     *
      * @param filterVo
      * @return
      */
@@ -128,60 +134,61 @@ public class SaleOrderController implements BenewakeConstants {
     //用于追踪方法的执行时间
     @TrackingTime
     //接收一个请求体包含 FilterVo参数
-    public Result selectList(@RequestBody FilterVo filterVo){
+    public Result selectList(@RequestBody FilterVo filterVo) throws Exception {
         deliveryService.updateDelivery();
-        Map<String,Object> res = new HashMap<>(16);
+        deliveryService.deleteDelivery();
+        Map<String, Object> res = new HashMap<>(16);
         //检查是否包含过滤条件
-        if(filterVo==null || filterVo.getTableId()==null || filterVo.getViewId()==null){
+        if (filterVo == null || filterVo.getTableId() == null || filterVo.getViewId() == null) {
             return Result.fail().message("未选择表或视图！");
         }
         // 当前登录用户
         User loginUser = hostHolder.getUser();
         // 通过viewColService类中getCols方法获取列信息，根据表格 ID、视图 ID 和用户类型
-        List<Map<String,Object>> cols = viewColService.getCols(filterVo.getTableId(), filterVo.getViewId(), loginUser.getUserType().equals(1L));
+        List<Map<String, Object>> cols = viewColService.getCols(filterVo.getTableId(), filterVo.getViewId(), loginUser.getUserType().equals(1L));
         //如果试图ID小于等于0，表示查看我的视图
-        if(filterVo.getViewId() <= 0){
+        if (filterVo.getViewId() <= 0) {
             // 我的视图
 
-            List<Map<String,Object>> lists;
+            List<Map<String, Object>> lists;
             //需要查看全部视图
-            if( filterVo.getTableId().equals(1L)) {
-                if(filterVo.getViewId().equals(-1L)){
+            if (filterVo.getTableId().equals(1L)) {
+                if (filterVo.getViewId().equals(-1L)) {
                     // 系统全部
                     lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), null);
-                }else{
-                    lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),loginUser.getUsername());
+                } else {
+                    lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), loginUser.getUsername());
                 }
 
-            }else if(filterVo.getTableId().equals(7L)){
-                lists = inquiryService.selectPastOrders(filterVo.getFilterCriterias(),null);
+            } else if (filterVo.getTableId().equals(7L)) {
+                lists = inquiryService.selectPastOrders(filterVo.getFilterCriterias(), null);
 
-            } else if (loginUser.getUserType().equals(1L) ) {
+            } else if (loginUser.getUserType().equals(1L)) {
                 //如果用户是管理员
                 lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), loginUser.getUsername());
 
-            } else if (loginUser.getUserType().equals(3L) ){
+            } else if (loginUser.getUserType().equals(3L)) {
                 lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), null);
-            }else{
+            } else {
                 // 普通用户
-                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(),loginUser.getUsername());
+                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), loginUser.getUsername());
             }
             //获取到的订单以map形式放入res
-            res.put("lists",lists);
-        }else{
+            res.put("lists", lists);
+        } else {
             // 个人设定的视图
             //筛选存储条件，使用三元运算符如果没有的话初始化为空列表或者使用筛选体中的筛选条件
-            List<FilterCriteria> filters = filterVo.getFilterCriterias()==null?new ArrayList<>():filterVo.getFilterCriterias();
+            List<FilterCriteria> filters = filterVo.getFilterCriterias() == null ? new ArrayList<>() : filterVo.getFilterCriterias();
             // 遍历前面获取到的cols对象，添加方案默认筛选信息
-            for(Map<String,Object> col : cols){
+            for (Map<String, Object> col : cols) {
                 //首先获取该列的筛选值
                 String colValue = (String) col.get("col_value");
                 //如果筛选值不为空
-                if(!StringUtils.isEmpty(colValue)){
+                if (!StringUtils.isEmpty(colValue)) {
                     //获取键为col_name_ENG的值表示列名，添加到新建的筛选条件中
                     filters.add(new FilterCriteria((String) col.get("col_name_ENG"),
                             //从当前列获取value_operator键对应的值表示列的操作符
-                            StringUtils.isEmpty(col.get("value_operator"))?EQUAL: (String) col.get("value_operator"),colValue));
+                            StringUtils.isEmpty(col.get("value_operator")) ? EQUAL : (String) col.get("value_operator"), colValue));
                 }
             }
             // 根据个人的筛选条件获取信息
@@ -195,34 +202,35 @@ public class SaleOrderController implements BenewakeConstants {
                 lists = inquiryService.selectSalesOrderVoList(filters, loginUser.getUsername());
             }
 
-            res.put("lists",lists);
+            res.put("lists", lists);
         }
-        res.put("cols",cols);
+        res.put("cols", cols);
         //返回试图
         return Result.success(res);
     }
 
     /**
      * 保存方案
+     *
      * @param filterVo
      * @return
      */
     @PostMapping("/saveView")
     @LoginRequired
     @Transactional(rollbackFor = Exception.class)
-    public Result savePlan(@RequestBody FilterVo filterVo){
+    public Result savePlan(@RequestBody FilterVo filterVo) {
 
         // 参数合法性判断
-        if(filterVo.getTableId() == null){
-            return Result.fail("表id不能为空！",null);
+        if (filterVo.getTableId() == null) {
+            return Result.fail("表id不能为空！", null);
         }
-        if(CollectionUtils.isEmpty(filterVo.getCols())){
-            return Result.fail("新增方案的列信息不能为空！",null);
+        if (CollectionUtils.isEmpty(filterVo.getCols())) {
+            return Result.fail("新增方案的列信息不能为空！", null);
         }
         // 获取当前用户
         User u = hostHolder.getUser();
-        if(StringUtils.isEmpty(filterVo.getViewName()) || viewService.isExist(filterVo.getTableId(),u.getId(),filterVo.getViewName(),filterVo.getViewId())){
-            return Result.fail("该视图名称为空或已存在!",null);
+        if (StringUtils.isEmpty(filterVo.getViewName()) || viewService.isExist(filterVo.getTableId(), u.getId(), filterVo.getViewName(), filterVo.getViewId())) {
+            return Result.fail("该视图名称为空或已存在!", null);
         }
         // 持久化视图
         //创建一个新的视图对象
@@ -232,9 +240,9 @@ public class SaleOrderController implements BenewakeConstants {
         view.setViewName(filterVo.getViewName());
         view.setUserId(u.getId());
         //如果视图为空执行保存操作
-        if(filterVo.getViewId()==null){
+        if (filterVo.getViewId() == null) {
             viewService.saveView(view);
-        }else{
+        } else {
             //否则的话执行更新操作，获取传入得视图ID
             view.setViewId(filterVo.getViewId());
             viewService.updateView(view);
@@ -242,17 +250,17 @@ public class SaleOrderController implements BenewakeConstants {
         //从传入的对象中获取视图列信息列表
         List<ViewCol> cols = filterVo.getCols();
         //遍历视图列，为每个视图列设置视图ID
-        for(ViewCol vc : cols){
+        for (ViewCol vc : cols) {
             vc.setViewId(view.getViewId());
         }
         // 删掉原来的列信息
         viewColService.deleteCols(view.getViewId());
         // 保存新增列信息
         viewColService.saveCols(cols);
-        if(filterVo.getViewId()==null) {
-            return Result.success("方案添加成功！",null);
+        if (filterVo.getViewId() == null) {
+            return Result.success("方案添加成功！", null);
         } else {
-            return Result.success("方案修改成功！",null);
+            return Result.success("方案修改成功！", null);
         }
     }
 
@@ -260,17 +268,18 @@ public class SaleOrderController implements BenewakeConstants {
     /**
      * 修改订单
      * 将原来订单state设置为-1  再新增一条订单信息
+     *
      * @param inquiry
      * @return
      */
     @PostMapping("/update")
     @SalesmanRequired
     @Transactional(rollbackFor = Exception.class)
-    public Result updateInquired(@RequestBody Inquiry inquiry){
+    public Result updateInquired(@RequestBody Inquiry inquiry) {
         User u = hostHolder.getUser();
-        if (u.getUserType()==3){
+        if (u.getUserType() == 3) {
             return Result.fail().message("访客暂无权限");
-        }else {
+        } else {
             if (u.getUserType().equals(USER_TYPE_SALESMAN) &&
                     (inquiry.getSalesmanId().equals(u.getId()) || inquiry.getCreatedUser().equals(u.getId())) ||
                     u.getUserType().equals(USER_TYPE_ADMIN) || u.getUserType().equals(USER_TYPE_SYSTEM)
@@ -305,9 +314,11 @@ public class SaleOrderController implements BenewakeConstants {
     /**
      * 管理员为询单失败的订单赋值使其可以询单
      * allowinquiry !=null 表示可以询单
+     *
      * @return
-     */@ApiOperation("允许询单")
-    @PostMapping ("/allowinquiry")
+     */
+    @ApiOperation("允许询单")
+    @PostMapping("/allowinquiry")
     public List<Result> updateInquiryAllowInquiry(@RequestBody List<Long> inquiryIds) {
         List<Result> results = new ArrayList<>();
 
@@ -322,15 +333,15 @@ public class SaleOrderController implements BenewakeConstants {
     }
 
     @PostMapping("/divideList")
-    public Result divideInquiry(@RequestBody DevideInquiryVo param){
+    public Result divideInquiry(@RequestBody DevideInquiryVo param) {
         List<Inquiry> divideInquiries = new ArrayList<>();
-        divideInquiries=inquiryService.splitInquiry(param);
+        divideInquiries = inquiryService.splitInquiry(param);
         inquiryService.deleteOrder(param.getInquiryList().get(0).getInquiryId());
         return Result.success(divideInquiries);
     }
 
     @PostMapping("/saveDivideList")
-    public Result saveDivideInquiry(@RequestBody List<Inquiry> inquiries){
+    public Result saveDivideInquiry(@RequestBody List<Inquiry> inquiries) {
         StartInquiryVo startInquiryVo = new StartInquiryVo();
         startInquiryVo.setInquiryList(inquiries);
         startInquiryVo.setIsUpdate(0);
@@ -343,16 +354,17 @@ public class SaleOrderController implements BenewakeConstants {
     /**
      * 新增询单信息 及 开始询单 （只能新增或询单）
      * startInquiry = 1 表示询单
+     *
      * @return
      */
     @PostMapping("/save")
     @SalesmanRequired
     @Transactional(rollbackFor = Exception.class)
-    public Result addInquiries(@RequestBody StartInquiryVo param){
+    public Result addInquiries(@RequestBody StartInquiryVo param) {
         User u = hostHolder.getUser();
-        if (u.getUserType()==3){
+        if (u.getUserType() == 3) {
             return Result.fail().message("访客暂无权限");
-        }else {
+        } else {
             //创建一个新的订单列表用于接收传入的订单
             List<Inquiry> newInquiries = param.getInquiryList();
             //新建一个整数类型用于接收传入的是否开始询单数据
@@ -683,16 +695,17 @@ public class SaleOrderController implements BenewakeConstants {
 
     /**
      * 删除接口 销售员只能删除销售员id或创建人id等于自己id的数据
+     *
      * @param param
      * @return
      */
     @PostMapping("/delete")
     @SalesmanRequired//调用此接口的必须是销售员
-    public Result deleteOrder(@RequestBody Map<String,Long> param){
+    public Result deleteOrder(@RequestBody Map<String, Long> param) {
         User u = hostHolder.getUser();
-        if (u.getUserType()==3){
+        if (u.getUserType() == 3) {
             return Result.fail().message("访客暂无权限");
-        }else {
+        } else {
             //从传入的参数param中获取订单的id
             Long orderId = param.get("orderId");
             //根据订单ID通过inquiryService.getInquiryById获得订单对象
@@ -720,11 +733,11 @@ public class SaleOrderController implements BenewakeConstants {
     @PostMapping("/importExcel")
     @SalesmanRequired//销售员才能访问该接口
     //接收文件作为参数
-    public Result addOrdersByExcel(@RequestParam("file")MultipartFile file){
+    public Result addOrdersByExcel(@RequestParam("file") MultipartFile file) {
         User u = hostHolder.getUser();
-        if (u.getUserType()==3){
+        if (u.getUserType() == 3) {
             return Result.fail().message("访客暂无权限");
-        }else {
+        } else {
             //创建一个map，用于存储excel数据处理的结果
             Map<String, Object> map = new HashMap<>(16);
             //对文件进行判空操作
@@ -754,41 +767,49 @@ public class SaleOrderController implements BenewakeConstants {
     }
 
     @PostMapping("/deleteView")
-    public Result deleteView(@RequestBody View view){
-        if(view.getViewId()==null) {
-            return Result.fail("viewId不能为空！",null);
+    public Result deleteView(@RequestBody View view) {
+        if (view.getViewId() == null) {
+            return Result.fail("viewId不能为空！", null);
         }
         boolean isSuccess = viewService.deleteView(view.getViewId());
-        return isSuccess?Result.success("删除成功!",null) : Result.fail("删除失败或视图不存在！",null);
+        return isSuccess ? Result.success("删除成功!", null) : Result.fail("删除失败或视图不存在！", null);
     }
 
 
-
-
-
+//    下载导入模板
     @GetMapping("/downloadFile")
-    public ResponseEntity<FileSystemResource> downloadFile() throws IOException {
-        // 指定文件路径
-        String filePath = "/fim/benewake/importmodel.xlsx";
-
-
-        // 获取文件资源
-        FileSystemResource fileResource = new FileSystemResource(filePath);
+    public void downloadFile(HttpServletResponse response) throws IOException {
+        File excelFile = new File("ImportModel.xlsx");
 
         // 设置响应头
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileResource.getFilename());
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=9796.xlsx");
 
-        // 构建响应实体
-        ResponseEntity<FileSystemResource> responseEntity = ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentLength(fileResource.contentLength())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(fileResource);
+        try (FileInputStream fileInputStream = new FileInputStream(excelFile);
+             OutputStream outputStream = response.getOutputStream()) {
 
-        return responseEntity;
+            // 将文件内容写入响应输出流
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            outputStream.flush();
+        }
+    }
+
+    //    根据单据编号恢复已经删除的订单
+    @PostMapping("/restoreOrder")
+    public Result restoreOrder(@RequestBody List<String> inquiryCodes) {
+        int count = inquiryService.restoreOrders(inquiryCodes);
+        if (count == inquiryCodes.size()) {
+            return Result.success("恢复成功！");
+        } else {
+            return Result.fail("恢复失败！");
+        }
     }
 
 }
+
+

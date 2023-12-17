@@ -1,10 +1,14 @@
 package com.benewake.saleordersystem.service.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.benewake.saleordersystem.entity.LoginTicket;
 import com.benewake.saleordersystem.entity.User;
 import com.benewake.saleordersystem.entity.basedata.*;
+import com.benewake.saleordersystem.excel.SalesmanChangingTableListener;
+import com.benewake.saleordersystem.excel.model.InquiryModel;
+import com.benewake.saleordersystem.excel.model.SalesmanChangingTableModel;
 import com.benewake.saleordersystem.mapper.LoginTicketMapper;
 import com.benewake.saleordersystem.mapper.UserMapper;
 import com.benewake.saleordersystem.service.UserService;
@@ -14,6 +18,7 @@ import com.benewake.saleordersystem.utils.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -340,6 +345,52 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
     @Override
     public List<FimPastSalesmanChangingTable> selectFimPastSalesmanChangingTable() {
         return userMapper.selectFimPastSalesmanChangingTable();
+    }
+
+    public Map<String,Object> checkAddSalesmanChangingTableByExcel(SalesmanChangingTableModel salesmanChangingTableModel, int rowIndex) {
+        Map<String, Object> map = new HashMap<>();
+        FimPastSalesmanChangingTable fimPastSalesmanChangingTable=new FimPastSalesmanChangingTable();
+        List<FimPastSalesmanChangingTable> a = selectFimPastSalesmanChangingTable();
+        for (FimPastSalesmanChangingTable fimPastSalesmanChangingTable1:a) {
+            if (salesmanChangingTableModel.getSalesman_name_old() == fimPastSalesmanChangingTable1.getSalesmanNameOld()) {
+                map.put("error", "第" + rowIndex + "行的销售员名称已存在，请核对");
+                return map;
+            }
+        }
+        fimPastSalesmanChangingTable.setSalesmanNameNew(salesmanChangingTableModel.getSalesman_name_new());
+        fimPastSalesmanChangingTable.setSalesmanNameOld(salesmanChangingTableModel.getSalesman_name_old());
+
+        map.put("fimPastSalesmanChangingTable",fimPastSalesmanChangingTable);
+        return map;
+    };
+
+    public Map<String, Object> saveDataByExcel(MultipartFile file) {
+        List<FimPastSalesmanChangingTable> existList = userMapper.selectFimPastSalesmanChangingTable();
+        SalesmanChangingTableListener listener = new SalesmanChangingTableListener(this,existList);
+        Map<String,Object> map;
+        try{
+            EasyExcel.read(file.getInputStream(), SalesmanChangingTableModel.class,listener).sheet().headRowNumber(1).doRead();
+            map = listener.getMap();
+        }catch (Exception e) {
+            map = listener.getMap();
+            e.printStackTrace();
+        }
+        return map;
+    }
+    public Result addOrdersSalesmanChangingTableByExcel(MultipartFile file){
+
+        Map<String, Object> map = new HashMap<>(16);
+        try {
+            map = saveDataByExcel(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //检查map中是否有error键值，如果有说明处理失败
+        if (map.containsKey("error")) {
+            return Result.fail().message((String) map.get("error"));
+        } else {
+            return Result.success().message((String) map.get("success"));
+        }
     }
 
 

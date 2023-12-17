@@ -18,4 +18,13 @@ public interface NoticeService extends IService<Notice> {
      * @return
      */
     List<Map<String,Object>> getAllList(Long id,Integer type);
+
+    /**
+     * 获取没有隐藏的信息
+     *
+     * @return
+     */
+    List<Map<String, Object>> getUnhidenList(Long id,Integer type);
+
+    int hidenNotice(int id);
 }

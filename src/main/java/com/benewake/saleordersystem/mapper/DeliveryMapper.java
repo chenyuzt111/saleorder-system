@@ -148,4 +148,22 @@ public interface DeliveryMapper extends BaseMapper<Delivery> {
     })
     void updateDeliveryTableMatchField(@Param("inquiryCode") String inquiryCode);
 
+
+    @Select("<script>" +
+            "select inquiry_code,delivery_code " +
+            "from fim_delivery_table " +
+            "where delivery_state is not null " +
+
+            "</script>")
+    List<Delivery> selectFinshedInquiry();
+
+    @Update("<script>" +
+            "UPDATE fim_delivery_table " +
+            "SET delivery_code=null, delivery_state=null, receive_time=null, " +
+            "delivery_latest_state=null, delivery_phone=null, country=null, " +
+            "delivery_code_integrity=null, `match`=null " +
+            "WHERE inquiry_code=#{inquiryCode}" +
+            "</script>")
+    void reset(String inquiryCode);
+
 }

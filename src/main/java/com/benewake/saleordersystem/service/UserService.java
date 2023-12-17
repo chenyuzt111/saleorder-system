@@ -4,7 +4,9 @@ package com.benewake.saleordersystem.service;
 import com.benewake.saleordersystem.entity.LoginTicket;
 import com.benewake.saleordersystem.entity.User;
 import com.benewake.saleordersystem.entity.basedata.*;
+import com.benewake.saleordersystem.excel.model.SalesmanChangingTableModel;
 import com.benewake.saleordersystem.utils.Result;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -156,6 +158,10 @@ public interface UserService  {
     int updateSalesmanChanging(String salesmanNameOld, String salesmanNameNew);
 
     List<FimPastSalesmanChangingTable> selectFimPastSalesmanChangingTable();
+
+    Map<String,Object> checkAddSalesmanChangingTableByExcel(SalesmanChangingTableModel salesmanChangingTableModel, int rowIndex);
+    Map<String, Object> saveDataByExcel(MultipartFile file);
+    Result addOrdersSalesmanChangingTableByExcel(MultipartFile file);
 
     int addCustomizedItemChange(String customerName, String itemCodeOld, String itemCodeNew);
 

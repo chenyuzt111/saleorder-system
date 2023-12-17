@@ -687,4 +687,15 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
 
         return result;
     }
+
+//    回恢复已经删除的订单
+public int restoreOrders(List<String> inquiryCodes) {
+    int totalCount = 0;
+    for (String code : inquiryCodes) {
+        int restoreCount = inquiryMapper.restoreOrder(code);
+        totalCount += restoreCount;
+    }
+    return totalCount;
+}
+
 }

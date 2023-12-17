@@ -271,6 +271,34 @@ public class KingDeeServiceImpl implements KingDeeService, BenewakeConstants {
         return searchWithdrawList(String.join(" and ",queryFilters),limit);
     }
 
+//    @Override
+//    public List<SaleOut> selectResetFCarriageNO(List<Delivery> deliveries) throws Exception {
+//        if (deliveries == null || deliveries.size() == 0) return new ArrayList<>();
+//        List<String> queryFields = new ArrayList<>();
+////        deliveries.forEach(d -> queryFields.add("F_ora_FIMNumber Like '%"+d.getInquiryCode()+"%'"));
+//        QueryParam queryParam = new QueryParam();
+//        queryParam.setFormId("SAL_OUTSTOCK");
+//        queryParam.setFieldKeys("F_ora_FIMNumber,FCarriageNO");
+//        queryFields.add("(F_ora_FIMNumber Like '%XSXD2023090001%' or F_ora_FIMNumber Like '%XSXD2023090002%' or F_ora_FIMNumber Like '%XSXD2023090004%' or F_ora_FIMNumber Like '%XSXD2023090005%' or F_ora_FIMNumber Like '%XSXD2023090006%' or F_ora_FIMNumber Like '%XSXD2023090007%' or F_ora_FIMNumber Like '%XSXD2023090010%' or F_ora_FIMNumber Like '%XSXD2023090018%' or F_ora_FIMNumber Like '%XSXD2023090022%' or F_ora_FIMNumber Like '%XSXD2023090023%' or F_ora_FIMNumber Like '%XSXD2023090024%' or F_ora_FIMNumber Like '%XSXD2023090025%' or F_ora_FIMNumber Like '%XSXD2023090030%' or F_ora_FIMNumber Like '%XSXD2023090032%' or F_ora_FIMNumber Like '%XSXD2023090034%' or F_ora_FIMNumber Like '%XSXD2023100005%' or F_ora_FIMNumber Like '%XSXD2023100006%' or F_ora_FIMNumber Like '%XSXD2023100010%' or F_ora_FIMNumber Like '%XSXD2023100014%' or F_ora_FIMNumber Like '%XSXD2023100017%' or F_ora_FIMNumber Like '%XSXD2023100019%' or F_ora_FIMNumber Like '%XSXD2023100021%' or F_ora_FIMNumber Like '%XSXD2023100022%' or F_ora_FIMNumber Like '%XSYC2023090001%' or F_ora_FIMNumber Like '%XSYC2023090003%' or F_ora_FIMNumber Like '%XSYC2023090007%' or F_ora_FIMNumber Like '%XSYC2023090008%' or F_ora_FIMNumber Like '%XSYC2023090009%' or F_ora_FIMNumber Like '%XSYC2023090013%' or F_ora_FIMNumber Like '%XSYC2023090014%' or F_ora_FIMNumber Like '%XSYC2023090017%' or F_ora_FIMNumber Like '%XSYC2023090019%' or F_ora_FIMNumber Like '%XSYC2023090022%' or F_ora_FIMNumber Like '%XSYC2023090024%' or F_ora_FIMNumber Like '%XSYC2023090025%' or F_ora_FIMNumber Like '%XSYC2023090026%' or F_ora_FIMNumber Like '%XSYC2023090040%' or F_ora_FIMNumber Like '%XSYC2023090041%' or F_ora_FIMNumber Like '%XSYC2023090042%' or F_ora_FIMNumber Like '%XSYC2023090045%' or F_ora_FIMNumber Like '%XSYC2023090046%' or F_ora_FIMNumber Like '%XSYC2023090048%' or F_ora_FIMNumber Like '%XSYC2023090049%' or F_ora_FIMNumber Like '%XSYC2023090051%' or F_ora_FIMNumber Like '%XSYC2023090052%' or F_ora_FIMNumber Like '%XSYC2023090053%' or F_ora_FIMNumber Like '%XSYC2023090057%' or F_ora_FIMNumber Like '%XSYC2023090058%' or F_ora_FIMNumber Like '%XSYC2023090059%' or F_ora_FIMNumber Like '%XSYC2023090060%' or F_ora_FIMNumber Like '%XSYC2023090068%' or F_ora_FIMNumber Like '%XSYC2023090075%' or F_ora_FIMNumber Like '%XSYC2023100002%' or F_ora_FIMNumber Like '%XSYC2023100003%' or F_ora_FIMNumber Like '%XSYC2023100007%' or F_ora_FIMNumber Like '%XSYC2023100008%' or F_ora_FIMNumber Like '%XSYC2023100009%' or F_ora_FIMNumber Like '%XSYC2023100011%' or F_ora_FIMNumber Like '%XSYC2023100014%' or F_ora_FIMNumber Like '%XSYC2023100015%' or F_ora_FIMNumber Like '%XSYC2023100017%' or F_ora_FIMNumber Like '%XSYC2023100019%' or F_ora_FIMNumber Like '%XSYC2023100025%' or F_ora_FIMNumber Like '%XSYC2023110001%' or F_ora_FIMNumber Like '%XSYC2023110002%' or F_ora_FIMNumber Like '%XSXD2023110002%' or F_ora_FIMNumber Like '%XSXD2023110003%' or F_ora_FIMNumber Like '%XSXD2023110004%' or F_ora_FIMNumber Like '%XSYC2023110003%' or F_ora_FIMNumber Like '%XSYC2023110004%' or F_ora_FIMNumber Like '%XSXD2023110005%' or F_ora_FIMNumber Like '%XSYC2023110009%' or F_ora_FIMNumber Like '%XSXD2023110007%' or F_ora_FIMNumber Like '%XSYC2023110010%' or F_ora_FIMNumber Like '%XSXD2023110009%' or F_ora_FIMNumber Like '%XSYC2023110011%' or F_ora_FIMNumber Like '%XSXD2023110014%' or F_ora_FIMNumber Like '%XSYC2023110016%' or F_ora_FIMNumber Like '%XSYC2023120001%' or F_ora_FIMNumber Like '%XSXD2023120001%' or F_ora_FIMNumber Like '%XSYC2023120003%' or F_ora_FIMNumber Like '%XSYC2023120005%' or F_ora_FIMNumber Like '%XSYC2023120006%' or F_ora_FIMNumber Like '%XSYC2023120007%' or F_ora_FIMNumber Like '%XSYC2023120008%' or F_ora_FIMNumber Like '%XSXD2023120004%' or F_ora_FIMNumber Like '%XSYC2023120016%' or F_ora_FIMNumber Like '%XSYC2023120032%') and FStockOrgId = 1");
+//
+//        queryParam.setFilterString(String.join(" or ",queryFields));
+//        List<SaleOut> result = api.executeBillQuery(queryParam, SaleOut.class);
+////        List<SaleOut> lists = searchData(formId, fieldKeys, "(" + String.join(" or ",queryFields)+") and FStockOrgId = 1", Integer.MAX_VALUE, SaleOut.class);
+//        return result;
+//    }
+
+    @Override
+    public List<SaleOut> selectResetFCarriageNO(List<Delivery> deliveries) throws Exception {
+        if(deliveries == null || deliveries.size() == 0) return new ArrayList<>();
+        String formId = "SAL_OUTSTOCK";
+        List<String> fieldKeys = new ArrayList<>();
+        fieldKeys.add("F_ora_FIMNumber,FCarriageNO");
+        List<String> queryFields = new ArrayList<>();
+        deliveries.forEach(d->queryFields.add("F_ora_FIMNumber Like '%"+d.getInquiryCode()+"%'"));
+        List<SaleOut> lists = searchData(formId,fieldKeys,"("+String.join(" or ",queryFields)+") and FStockOrgId = 1",Integer.MAX_VALUE, SaleOut.class);
+        return lists;
+    }
+
     @Override
     public List<SaleOut> selectFCarriageNO(List<Delivery> deliveries) throws Exception {
         if(deliveries == null || deliveries.size() == 0) return new ArrayList<>();
@@ -299,7 +327,8 @@ public class KingDeeServiceImpl implements KingDeeService, BenewakeConstants {
 
             for (SaleOut list : lists) {
                 if (list.getF_ora_FIMNumber().contains(f)) {
-                    finallist = list;
+                    finallist.setFCarriageNO(list.getFCarriageNO());
+                    finallist.setF_ora_Text2(list.getF_ora_Text2());
                     finallist.setF_ora_FIMNumber(f);
                     break;  // 找到匹配项后，终止内部循环
                 }

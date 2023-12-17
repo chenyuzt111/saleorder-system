@@ -32,8 +32,9 @@ public class DeliveryController {
     @ApiOperation("更新用户订单物流信息")
     @GetMapping("/update")
     @LoginRequired
-    public Result<String> updateDelivery(){
+    public Result<String> updateDelivery() throws Exception {
         boolean flag = deliveryService.updateDelivery();
+        deliveryService.deleteDelivery();
         if(flag){
             return Result.success("运输状态更新成功！",null);
         }

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -926,5 +927,17 @@ public class AdminController {
         } else {
             return Result.message("修改失败！");
         }
+    }
+
+    @ApiOperation("根据id修改物料表")
+    @PostMapping("/importBasicDataByExcel")
+    public Result addOrdersByExcel(@RequestParam("file") MultipartFile file, int num){
+        Result result = new Result();
+        switch (num){
+            case 1:
+                result=userService.addOrdersSalesmanChangingTableByExcel(file);
+
+        }
+        return result;
     }
 }

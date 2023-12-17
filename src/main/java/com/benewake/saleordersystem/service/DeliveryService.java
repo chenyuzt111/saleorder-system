@@ -33,9 +33,12 @@ public interface DeliveryService {
     List<String> getDeliveryStateList(String deliveryState);
 
 
+
+
     /**
-     * 将有运输的单号订单状态变为PO
-     * @return
+     * 重置金蝶中不存在的fim号
      */
+    void deleteDelivery() throws Exception;
+
     void updateStatus();
 }

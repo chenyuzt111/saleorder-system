@@ -8,12 +8,11 @@ import com.benewake.saleordersystem.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.benewake.saleordersystem.utils.BenewakeConstants.USER_TYPE_ADMIN;
 
 /**
  * @author Lcs
@@ -33,11 +32,18 @@ public class NoticeController {
     /**
      * 查询通知
      * type 0-普通通知 1-异常通知
+     * 销售员查看未隐藏的订单
+     *
      */
     @ApiOperation("查询通知接口")
     @PostMapping("/find")
     public Result findNotice(@RequestBody Notice notice){
-        return Result.success(noticeService.getAllList(notice.getCreateUserId(),notice.getType()));
+        if (hostHolder.getUser().getUserType() == USER_TYPE_ADMIN) {
+            return Result.success(noticeService.getAllList(notice.getCreateUserId(), notice.getType()));
+        }else{
+            return Result.success(noticeService.getUnhidenList(notice.getCreateUserId(), notice.getType()));
+        }
+
     }
     @ApiOperation("保存通知接口")
     @PostMapping("/save")
@@ -66,6 +72,18 @@ public class NoticeController {
         }
         noticeService.updateById(notice);
         return Result.success();
+    }
+
+
+    @PostMapping("/hiden")
+    public Result hidenNotice(@RequestParam int id){
+        int raw = noticeService.hidenNotice(id);
+        if(raw == 0){
+            return Result.fail().message("操作失败！");
+        }else{
+            return Result.success().message("操作成功！");
+        }
+
     }
 
 }

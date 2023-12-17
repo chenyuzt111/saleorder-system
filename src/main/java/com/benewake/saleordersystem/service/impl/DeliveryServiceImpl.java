@@ -18,10 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.benewake.saleordersystem.utils.BenewakeConstants.USER_TYPE_ADMIN;
 import static com.benewake.saleordersystem.utils.BenewakeConstants.USER_TYPE_SALESMAN;
@@ -206,6 +204,37 @@ public class DeliveryServiceImpl implements DeliveryService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void deleteDelivery() throws Exception {
+        List<Delivery> lists;
+        List<String> latelists = new ArrayList<>();
+        List<String> nowlists = new ArrayList<>();
+
+
+        lists = deliveryMapper.selectFinshedInquiry();
+        for (Delivery delivery : lists) {
+            latelists.add(delivery.getInquiryCode());
+        }
+        List<SaleOut> saleOuts = kingDeeService.selectResetFCarriageNO(lists);
+        for (SaleOut saleOut : saleOuts) {
+            nowlists.add(saleOut.getF_ora_FIMNumber());
+
+        }
+        latelists.stream().distinct();
+        nowlists.stream().distinct();
+        List<String> fimNumbers = nowlists.stream()
+                .flatMap(fimNumber -> Arrays.stream(fimNumber.split(" ")))
+                .collect(Collectors.toList());
+        List<String> finalNumbers = fimNumbers.stream()
+                .flatMap(fimNumber -> Arrays.stream(fimNumber.split("，")))
+                .collect(Collectors.toList());
+        latelists.stream()
+                .filter(late -> !finalNumbers.contains(late))
+                .forEach(late -> deliveryMapper.reset(late));
+
+
     }
 
     @Override
