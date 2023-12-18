@@ -802,6 +802,9 @@ public class SaleOrderController implements BenewakeConstants {
     //    根据单据编号恢复已经删除的订单
     @PostMapping("/restoreOrder")
     public Result restoreOrder(@RequestBody List<String> inquiryCodes) {
+        if (inquiryCodes == null || inquiryCodes.size() == 0) {
+            return Result.fail("inquiryCodes不能为空！");
+        }
         int count = inquiryService.restoreOrders(inquiryCodes);
         if (count == inquiryCodes.size()) {
             return Result.success("恢复成功！");

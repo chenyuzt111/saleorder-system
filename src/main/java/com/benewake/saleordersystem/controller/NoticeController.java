@@ -79,11 +79,10 @@ public class NoticeController {
     public Result hidenNotice(@RequestParam int id){
         int raw = noticeService.hidenNotice(id);
         if(raw == 0){
-            return Result.fail().message("操作失败！");
+            return Result.fail("操作失败！");
         }else{
-            return Result.success().message("操作成功！");
+            return Result.success("操作成功！");
         }
-
     }
 
 }
