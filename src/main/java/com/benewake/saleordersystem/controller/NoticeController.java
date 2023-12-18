@@ -38,7 +38,7 @@ public class NoticeController {
     @ApiOperation("查询通知接口")
     @PostMapping("/find")
     public Result findNotice(@RequestBody Notice notice){
-        if (hostHolder.getUser().getUserType() == USER_TYPE_ADMIN) {
+        if (hostHolder.getUser().getUserType().equals(USER_TYPE_ADMIN)) {
             return Result.success(noticeService.getAllList(notice.getCreateUserId(), notice.getType()));
         }else{
             return Result.success(noticeService.getUnhidenList(notice.getCreateUserId(), notice.getType()));
