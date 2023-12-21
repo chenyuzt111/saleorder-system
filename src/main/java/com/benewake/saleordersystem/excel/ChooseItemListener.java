@@ -5,39 +5,39 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.exception.ExcelAnalysisException;
 import com.alibaba.excel.exception.ExcelAnalysisStopException;
 import com.alibaba.excel.read.metadata.holder.ReadRowHolder;
-import com.benewake.saleordersystem.entity.basedata.FimPastSalesmanChangingTable;
-import com.benewake.saleordersystem.excel.model.SalesmanChangingTableModel;
+import com.benewake.saleordersystem.entity.basedata.FimPastChooseItemTable;
+import com.benewake.saleordersystem.entity.basedata.FimPastCustomizedItemChangingTable;
+import com.benewake.saleordersystem.excel.model.ChooseItemModel;
+import com.benewake.saleordersystem.excel.model.CustomizedItemChangeModel;
 import com.benewake.saleordersystem.service.DeliveryService;
 import com.benewake.saleordersystem.service.InquiryService;
 import com.benewake.saleordersystem.service.UserService;
 import com.benewake.saleordersystem.utils.BenewakeConstants;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Data
-public class SalesmanChangingTableListener extends AnalysisEventListener<SalesmanChangingTableModel> implements BenewakeConstants {
-
-
-    private List<FimPastSalesmanChangingTable> lists = new ArrayList<>();
+public class ChooseItemListener extends AnalysisEventListener<ChooseItemModel> implements BenewakeConstants {
+    private List<FimPastChooseItemTable> lists = new ArrayList<>();
     private Map<String,Object> map = new HashMap<>();
-    private List<FimPastSalesmanChangingTable> existList;
+    private List<ChooseItemModel> existList;
     private InquiryService inquiryService;
     private UserService userService;
     private DeliveryService deliveryService;
 
-    public SalesmanChangingTableListener(UserService userService, List<FimPastSalesmanChangingTable> existList) {
+    public ChooseItemListener(UserService userService, List<FimPastChooseItemTable> existList) {
         this.userService = userService;
-      
+
 
     }
     private static List<String> head = new ArrayList<>();
     static {
-        head.add("销售员名称（替换前）");
-        head.add("销售员名称（替换后）");
+        head.add("物料编码");
+        head.add("物料名称");
+        head.add("开始时间");
+
     }
 
 
@@ -55,22 +55,22 @@ public class SalesmanChangingTableListener extends AnalysisEventListener<Salesma
     }
 
     @Override
-    public void invoke(SalesmanChangingTableModel salesmanChangingTableModel, AnalysisContext analysisContext) {
+    public void invoke(ChooseItemModel chooseItemModel, AnalysisContext analysisContext) {
         //log.info("解析到一条数据："+inquiryModel.toString());
         // 获取行号
         ReadRowHolder readRowHolder = analysisContext.readRowHolder();
         Integer rowIndex = readRowHolder.getRowIndex();
         // 检查数据是否有效
-        map = userService.checkAddSalesmanChangingTableByExcel(salesmanChangingTableModel,rowIndex);
-        if(!map.containsKey("fimPastSalesmanChangingTable")){
+        map = userService.checkChooseItemByExcel(chooseItemModel,rowIndex);
+        if(!map.containsKey("fimPastChooseItemTable")){
             // 无效 抛出异常 结束操作
             throw new ExcelAnalysisStopException();
         }
 
         // 有效 加入集合 等全部解析完后存入数据库
-        FimPastSalesmanChangingTable fimPastSalesmanChangingTable = (FimPastSalesmanChangingTable) map.get("fimPastSalesmanChangingTable");
+        FimPastChooseItemTable fimPastChooseItemTable = (FimPastChooseItemTable) map.get("fimPastChooseItemTable");
 
-        lists.add(fimPastSalesmanChangingTable);
+        lists.add(fimPastChooseItemTable);
         //log.info("第"+rowIndex+"行添加完成: "+inquiry.toString());
     }
 
@@ -78,10 +78,11 @@ public class SalesmanChangingTableListener extends AnalysisEventListener<Salesma
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
 
         try {
-            for (FimPastSalesmanChangingTable fimPastSalesmanChangingTable:lists){
-                String salesmanNameOld = fimPastSalesmanChangingTable.getSalesmanNameOld();
-                String salesmanNameNew = fimPastSalesmanChangingTable.getSalesmanNameNew();
-                userService.addSalesmanChanging(salesmanNameOld,salesmanNameNew);
+            for (FimPastChooseItemTable fimPastChooseItemTable:lists){
+                String itemName = fimPastChooseItemTable.getItemName();
+                String itemCode = fimPastChooseItemTable.getItemCode();
+                Date time = fimPastChooseItemTable.getStartMonth();
+                userService.insertPastChooseItem(itemCode,itemName,time);
             }
 
         }catch (Exception e) {
@@ -91,8 +92,4 @@ public class SalesmanChangingTableListener extends AnalysisEventListener<Salesma
         }
         map.put("success","全部数据导入成功！");
     }
-
-
-
-
 }

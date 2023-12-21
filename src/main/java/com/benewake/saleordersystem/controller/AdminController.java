@@ -1,5 +1,6 @@
 package com.benewake.saleordersystem.controller;
 
+import com.alibaba.excel.util.DateUtils;
 import com.benewake.saleordersystem.annotation.AdminRequired;
 import com.benewake.saleordersystem.annotation.LoginRequired;
 import com.benewake.saleordersystem.entity.Customer;
@@ -13,6 +14,7 @@ import com.benewake.saleordersystem.utils.HostHolder;
 import com.benewake.saleordersystem.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +58,7 @@ public class AdminController {
 
     /**
      * 添加新用户
+     *
      * @return
      */
     @ApiOperation("添加新用户接口")
@@ -74,12 +79,12 @@ public class AdminController {
             return Result.fail().message("只有管理员用户才可以修改用户值！");
         }
 
-        Long id = Long.parseLong((String)param.get("userid"));
-        String ycvalue = ((String)param.get("ycValue"));
-        String xdvalue = ((String)param.get("xdValue"));
-        String prvalue = ((String)param.get("prValue"));
+        Long id = Long.parseLong((String) param.get("userid"));
+        String ycvalue = ((String) param.get("ycValue"));
+        String xdvalue = ((String) param.get("xdValue"));
+        String prvalue = ((String) param.get("prValue"));
 
-        if ( StringUtils.isEmpty(ycvalue) || StringUtils.isEmpty(xdvalue) || StringUtils.isEmpty(prvalue)) {
+        if (StringUtils.isEmpty(ycvalue) || StringUtils.isEmpty(xdvalue) || StringUtils.isEmpty(prvalue)) {
             return Result.fail().message("数据不能为空！");
         }
 
@@ -310,7 +315,6 @@ public class AdminController {
     }
 
 
-
     /**
      * 管理员删除客户名称
      *
@@ -439,7 +443,7 @@ public class AdminController {
 
     @GetMapping("/selectFimCustomerTypeTable")
     public List<FimCustomerTypeTable> selectFimCustomerTypeTable() {
-        List<FimCustomerTypeTable> fimCustomerTypeTables =userService.selectFimCustomerTypeTable();
+        List<FimCustomerTypeTable> fimCustomerTypeTables = userService.selectFimCustomerTypeTable();
 
         return userService.selectFimCustomerTypeTable(); // 调用Service层方法获取客户类型列表
     }
@@ -529,6 +533,7 @@ public class AdminController {
             return Result.message("修改失败！");
         }
     }
+
     @GetMapping("/selectFimPastCustomerRenameTable")
     public List<FimPastCustomerRenameTable> selectFimPastCustomerRenameTable() {
         return userService.selectFimPastCustomerRenameTable(); // 调用Service层方法获取客户类型列表
@@ -790,17 +795,18 @@ public class AdminController {
 
     /**
      * 添加筛选物料表
-     * @param itemCode    物料编码
-     * @param itemName    物料名称
-     * @param startMonth  开始月份
-     * @return            操作结果
+     *
+     * @param itemCode   物料编码
+     * @param itemName   物料名称
+     * @param startMonth 开始月份
+     * @return 操作结果
      */
     @ApiOperation("23添加筛选物料表")
     @PostMapping("/addPastChooseItem")
     public Result addPastChooseItem(
             @RequestParam String itemCode,
             @RequestParam String itemName,
-            @RequestParam("startMonth") String startMonth) {
+            @RequestParam("startMonth") String startMonth) throws ParseException {
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
 
         if (!currentUser.getUserType().equals(USER_TYPE_ADMIN) && !currentUser.getUserType().equals(USER_TYPE_SYSTEM)) {
@@ -811,9 +817,9 @@ public class AdminController {
             return Result.message("请填写完整信息");
         }
 
-        // 将字符串转换为 LocalDateTime 形式
-        LocalDateTime startmonth = LocalDateTime.parse(startMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-
+//        // 将字符串转换为 LocalDateTime 形式
+//        LocalDateTime startmonth = LocalDateTime.parse(startMonth + " 00:00:00", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+        Date startmonth = DateUtils.parseDate(startMonth + " 00:00:00", "yyyy/MM/dd HH:mm:ss");
         int rowsAffected = userService.insertPastChooseItem(itemCode, itemName, startmonth);
         if (rowsAffected > 0) {
             return Result.message("添加成功！");
@@ -824,8 +830,9 @@ public class AdminController {
 
     /**
      * 根据物料编码删除筛选物料表
-     * @param itemCode  物料编码
-     * @return          操作结果
+     *
+     * @param itemCode 物料编码
+     * @return 操作结果
      */
     @ApiOperation("24根据物料编码删除筛选物料表")
     @DeleteMapping("/deletePastChooseItemByItemCode")
@@ -856,7 +863,6 @@ public class AdminController {
     }
 
 
-
     @ApiOperation("添加物料表")
     @PostMapping("/addFimItemTable")
     public Result insertFimItemTable(
@@ -871,12 +877,12 @@ public class AdminController {
             return Result.fail().message("没有管理员权限");
         }
 
-        if (StringUtils.isAnyBlank(itemCode,itemName)) {
+        if (StringUtils.isAnyBlank(itemCode, itemName)) {
             return Result.message("请填写完整信息");
         }
 
 
-        int rowsAffected = userService.insertFimItemTable(itemCode, itemName,itemType,quantitative);
+        int rowsAffected = userService.insertFimItemTable(itemCode, itemName, itemType, quantitative);
         if (rowsAffected > 0) {
             return Result.message("添加成功！");
         } else {
@@ -909,7 +915,7 @@ public class AdminController {
 
     @ApiOperation("根据id修改物料表")
     @PostMapping("/updateFimItemTable")
-    public Result updateFimItemTable(@RequestParam int itemId,String itemCode, String itemName, int itemType,int quantitative) {
+    public Result updateFimItemTable(@RequestParam int itemId, String itemCode, String itemName, int itemType, int quantitative) {
 
         User currentUser = hostHolder.getUser(); // 获取当前登录用户信息
 
@@ -921,7 +927,7 @@ public class AdminController {
             return Result.message("请填写完整信息");
         }
 
-        int rowsAffected = userService.updateFimItemTable(itemId, itemCode,itemName,itemType,quantitative);
+        int rowsAffected = userService.updateFimItemTable(itemId, itemCode, itemName, itemType, quantitative);
         if (rowsAffected > 0) {
             return Result.message("修改成功！");
         } else {
@@ -931,11 +937,44 @@ public class AdminController {
 
     @ApiOperation("根据id修改物料表")
     @PostMapping("/importBasicDataByExcel")
-    public Result addOrdersByExcel(@RequestParam("file") MultipartFile file, int num){
+    public Result addOrdersByExcel(@RequestParam("file") MultipartFile file, int num) {
+        if (file.isEmpty()) {
+            return Result.fail("文件为空！", null);
+        }
+        //这一行代码的目的是获取上传文件的原始文件名，并使用点号（.）作为分隔符将文件名拆分成多个部分。
+        // 因为点号在正则表达式中有特殊含义，所以双反斜杠（\\.）用来转义点号，确保按点号进行分割。
+        val split = file.getOriginalFilename().split("\\.");
+        //检查split中拆分后的文件名的第二部分，也就是文件格式部分，看是否为excel文件
+        if (!"xlsx".equals(split[1]) && !"xls".equals(split[1])) {
+            return Result.fail().message("请提供.xlsx或.xls为后缀的Excel文件");
+        }
         Result result = new Result();
-        switch (num){
+        switch (num) {
+//            导入销售员替换表
             case 1:
-                result=userService.addOrdersSalesmanChangingTableByExcel(file);
+                result = userService.addOrdersSalesmanChangingTableByExcel(file);
+                break;
+//             导入客户定制替换表
+            case 2:
+                result = userService.addCustomizedItemChangeByExcel(file);
+                break;
+//             导入物料替换表
+            case 3:
+                result = userService.addItemChangeByExcel(file);
+                break;
+//                导入筛选物料表
+            case 4:
+                result = userService.addChooseItemByExcel(file);
+                break;
+//                导入客户名称替换表
+            case 5:
+                result = userService.addCustomerRenameByExcel(file);
+                break;
+//                导入客户名称表
+            case 6:
+                result = userService.addCustomerNameByExcel(file);
+                break;
+            default:
 
         }
         return result;

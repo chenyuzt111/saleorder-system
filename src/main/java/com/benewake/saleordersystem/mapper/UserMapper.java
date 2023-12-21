@@ -8,6 +8,7 @@ import com.benewake.saleordersystem.entity.basedata.*;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -174,7 +175,7 @@ public interface UserMapper extends BaseMapper<User> {
             "VALUES (#{itemCode}, #{itemName}, #{startMonth})")
     int insertPastChooseItem(@Param("itemCode") String itemCode,
                              @Param("itemName") String itemName,
-                             @Param("startMonth") LocalDateTime startMonth);
+                             @Param("startMonth") Date startMonth);
 
     @Delete("DELETE FROM fim_past_choose_item_table WHERE item_code = #{itemCode}")
     int deletePastChooseItemByItemCode(@Param("itemCode") String itemCode);

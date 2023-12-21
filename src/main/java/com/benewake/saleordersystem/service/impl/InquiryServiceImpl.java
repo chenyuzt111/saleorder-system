@@ -13,6 +13,7 @@ import com.benewake.saleordersystem.entity.Item;
 import com.benewake.saleordersystem.entity.User;
 import com.benewake.saleordersystem.entity.VO.DevideInquiryVo;
 import com.benewake.saleordersystem.entity.VO.FilterCriteria;
+import com.benewake.saleordersystem.entity.VO.SaveDivideRequest;
 import com.benewake.saleordersystem.excel.InquiryExcelListener;
 import com.benewake.saleordersystem.excel.model.InquiryModel;
 import com.benewake.saleordersystem.mapper.InquiryCodeMapper;
@@ -31,6 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Lcs
@@ -39,7 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Service
 @Slf4j
-public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> implements InquiryService, BenewakeConstants {
+public class InquiryServiceImpl extends ServiceImpl<InquiryMapper, Inquiry> implements InquiryService, BenewakeConstants {
 
     @Autowired
     private InquiryCodeMapper inquiryCodeMapper;
@@ -66,18 +69,18 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         // 获取当前用户所有有效订单
         LambdaQueryWrapper<Inquiry> lqw = new LambdaQueryWrapper<>();
         //设置查询条件，获取当前用户的有效订单。查询条件包括订单状态大于等于 0，
-        lqw.and(a->a.ge(Inquiry::getState,0));
+        lqw.and(a -> a.ge(Inquiry::getState, 0));
         //执行查询操作，并将得到的数据存入existList中
         List<Inquiry> existList = inquiryMapper.selectList(lqw);
         // 读取Excel
         //创建一个监听实例
-        InquiryExcelListener listener = new InquiryExcelListener(this,deliveryService,existList);
-        Map<String,Object> map;
-        try{
+        InquiryExcelListener listener = new InquiryExcelListener(this, deliveryService, existList);
+        Map<String, Object> map;
+        try {
             //使用 EasyExcel 库读取上传文件的数据
-            EasyExcel.read(file.getInputStream(), InquiryModel.class,listener).sheet().headRowNumber(1).doRead();
+            EasyExcel.read(file.getInputStream(), InquiryModel.class, listener).sheet().headRowNumber(1).doRead();
             map = listener.getMap();
-        }catch (Exception e) {
+        } catch (Exception e) {
             //将监听器中收集的结果赋给 map 变量，以便在异常情况下也能获取处理结果。
             map = listener.getMap();
             e.printStackTrace();
@@ -94,16 +97,16 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
 
     //接收到筛选条件和一个用户名称
     @Override
-    public List<Map<String,Object>> selectSalesOrderVoList(List<FilterCriteria> filters, String username) {
+    public List<Map<String, Object>> selectSalesOrderVoList(List<FilterCriteria> filters, String username) {
         //如果条件为空创建一个新列表，否则保持原有值
-        if(filters==null) {
+        if (filters == null) {
             filters = new ArrayList<>();
         }
         // 添加筛选条件，创建一个映射表
-        Map<String,Integer> map = new HashMap<>(16);
-        for(int i=0;i<filters.size();++i){
+        Map<String, Integer> map = new HashMap<>(16);
+        for (int i = 0; i < filters.size(); ++i) {
             //遍历筛选条件，依次加入到map当中
-            map.put(filters.get(i).getColName(),i);
+            map.put(filters.get(i).getColName(), i);
         }
         //设置一个查询对象
         QueryWrapper<Inquiry> queryWrapper1 = new QueryWrapper<>();
@@ -112,109 +115,109 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         //初始化一个f1列表，存储特定列的筛选条件
         List<FilterCriteria> f1 = new ArrayList<>();
         // inquiry_init_type 需要int表示，定义一个字符串数组str1，其中包含了与f1列表中筛选条件有关的列名。
-        String[] str1 = {"inquiry_code","sale_num","expected_time","arranged_time",
-                "remark","inquiry_init_type","allow_inquiry"};
+        String[] str1 = {"inquiry_code", "sale_num", "expected_time", "arranged_time",
+                "remark", "inquiry_init_type", "allow_inquiry"};
         //如果map中包含state键，（map中存的接受的筛选条件），存入f1（专门创建为了存储特定列的筛选条件）
-        if(map.containsKey("state")){
+        if (map.containsKey("state")) {
             f1.add(filters.get(map.get("state")));
-        }else{
+        } else {
             //不包含的话创建新的筛选条件对象，并添加到f1得列表当中
-            f1.add(new FilterCriteria("state","ge","0"));
+            f1.add(new FilterCriteria("state", "ge", "0"));
         }
 
-        for(String s : str1){
+        for (String s : str1) {
             //遍历str1中的字段名，如果map中存在对应的键就加入到f1筛选条件中
-            if(map.containsKey(s)){
+            if (map.containsKey(s)) {
                 f1.add(filters.get(map.get(s)));
             }
         }
 
         //通过调用 CommonUtils.addFilters 方法，将所有筛选条件应用到查询条件包装器中。
-        CommonUtils.addFilters(f1,queryWrapper1);
+        CommonUtils.addFilters(f1, queryWrapper1);
 
         QueryWrapper<Inquiry> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.isNotNull("item_code");
         f1 = new ArrayList<>();
-        String[] str2 = {"item_code","item_name"};
-        for(String s : str2){
-            if(map.containsKey(s)){
+        String[] str2 = {"item_code", "item_name"};
+        for (String s : str2) {
+            if (map.containsKey(s)) {
                 f1.add(filters.get(map.get(s)));
             }
         }
-        CommonUtils.addFilters(f1,queryWrapper2);
+        CommonUtils.addFilters(f1, queryWrapper2);
 
         QueryWrapper<Inquiry> queryWrapper3 = new QueryWrapper<>();
         //queryWrapper3.ge("state",0);
         queryWrapper3.isNotNull("item_code");
         f1 = new ArrayList<>();
-        String[] str3 = {"inquiry_code","delivery_code","receive_time","delivery_state"};
-        for(String s : str3){
-            if(map.containsKey(s)){
+        String[] str3 = {"inquiry_code", "delivery_code", "receive_time", "delivery_state"};
+        for (String s : str3) {
+            if (map.containsKey(s)) {
                 FilterCriteria fc = filters.get(map.get(s));
-                if("inquiry_code".equals(s)){
+                if ("inquiry_code".equals(s)) {
                     fc.setColName("a.inquiry_code");
                 }
                 f1.add(fc);
             }
         }
-        CommonUtils.addFilters(f1,queryWrapper3);
+        CommonUtils.addFilters(f1, queryWrapper3);
 
         QueryWrapper<Inquiry> queryWrapper4 = new QueryWrapper<>();
         queryWrapper4.isNotNull("FIM_user_name");
         f1 = new ArrayList<>();
         String[] str4 = {"salesman_name"};
-        for(String s : str4){
-            if(map.containsKey(s)){
+        for (String s : str4) {
+            if (map.containsKey(s)) {
                 FilterCriteria f = filters.get(map.get(s));
                 f.setColName("FIM_user_name");
                 f1.add(f);
             }
         }
-        CommonUtils.addFilters(f1,queryWrapper4);
+        CommonUtils.addFilters(f1, queryWrapper4);
 
         QueryWrapper<Inquiry> queryWrapper5 = new QueryWrapper<>();
         queryWrapper5.isNotNull("FIM_user_name");
         f1 = new ArrayList<>();
         String[] str5 = {"created_user_name"};
-        for(String s : str5){
-            if(map.containsKey(s)){
+        for (String s : str5) {
+            if (map.containsKey(s)) {
                 FilterCriteria f = filters.get(map.get(s));
                 f.setColName("FIM_user_name");
                 f1.add(f);
             }
         }
-        CommonUtils.addFilters(f1,queryWrapper5);
+        CommonUtils.addFilters(f1, queryWrapper5);
 
         QueryWrapper<Inquiry> queryWrapper6 = new QueryWrapper<>();
         queryWrapper6.isNotNull("customer_name");
         f1 = new ArrayList<>();
         String[] str6 = {"customer_name"};
-        for(String s : str6){
-            if(map.containsKey(s)){
+        for (String s : str6) {
+            if (map.containsKey(s)) {
                 f1.add(filters.get(map.get(s)));
             }
         }
-        CommonUtils.addFilters(f1,queryWrapper6);
+        CommonUtils.addFilters(f1, queryWrapper6);
 
         QueryWrapper<Inquiry> queryWrapper7 = new QueryWrapper<>();
         f1 = new ArrayList<>();
-        String[] str7 = {"customer_type","item_type","inquiry_type","delay","order_delivery_progress","customize"};
-        for(String s : str7){
-            if(map.containsKey(s)){
+        String[] str7 = {"customer_type", "item_type", "inquiry_type", "delay", "order_delivery_progress", "customize"};
+        for (String s : str7) {
+            if (map.containsKey(s)) {
                 f1.add(filters.get(map.get(s)));
             }
         }
-        CommonUtils.addFilters(f1,queryWrapper7);
+        CommonUtils.addFilters(f1, queryWrapper7);
         queryWrapper7.isNotNull("customer_name")
                 .isNotNull("created_user_name")
                 .isNotNull("salesman_name")
-                .and(username!=null,o->o.eq(username!=null,"created_user_name",username)
-                        .or().eq(username!=null,"salesman_name",username));
+                .and(username != null, o -> o.eq(username != null, "created_user_name", username)
+                        .or().eq(username != null, "salesman_name", username));
 
 
         QueryWrapper<Inquiry> queryWrapper8 = new QueryWrapper<>();
         f1 = new ArrayList<>();
-        String[] str8 = {"past_order_code","past_item_code","past_customer_name","past_salesman_name","past_sale_num","past_sale_time"};
+        String[] str8 = {"past_order_code", "past_item_code", "past_customer_name", "past_salesman_name", "past_sale_num", "past_sale_time"};
         for (String s : str8) {
             if (map.containsKey(s)) {
                 f1.add(filters.get(map.get(s)));
@@ -233,28 +236,28 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         queryWrapper5.setParamAlias("qw5");
         queryWrapper6.setParamAlias("qw6");
         //queryWrapper7.setParamAlias("qw7");
-        return salesOrderVoMapper.selectListByFilter(queryWrapper1,queryWrapper2,
-                queryWrapper3,queryWrapper4,queryWrapper5,queryWrapper6,queryWrapper7);
+        return salesOrderVoMapper.selectListByFilter(queryWrapper1, queryWrapper2,
+                queryWrapper3, queryWrapper4, queryWrapper5, queryWrapper6, queryWrapper7);
     }
 
     @Override
-    public List<Map<String,Object>> selectPastOrders(List<FilterCriteria> filters, String username){
+    public List<Map<String, Object>> selectPastOrders(List<FilterCriteria> filters, String username) {
         //如果条件为空创建一个新列表，否则保持原有值
-        if(filters==null) {
+        if (filters == null) {
             filters = new ArrayList<>();
         }
         // 添加筛选条件，创建一个映射表
-        Map<String,Integer> map = new HashMap<>(16);
-        for(int i=0;i<filters.size();++i){
+        Map<String, Integer> map = new HashMap<>(16);
+        for (int i = 0; i < filters.size(); ++i) {
             //遍历筛选条件，依次加入到map当中
-            map.put(filters.get(i).getColName(),i);
+            map.put(filters.get(i).getColName(), i);
         }
         //初始化一个f1列表，存储特定列的筛选条件
         List<FilterCriteria> f1 = new ArrayList<>();
 
         QueryWrapper<Inquiry> queryWrapper8 = new QueryWrapper<>();
         f1 = new ArrayList<>();
-        String[] str8 = {"past_inquiry_code","past_item_code","past_customer_name","past_salesmam_name","past_sale_num","past_sale_time"};
+        String[] str8 = {"past_inquiry_code", "past_item_code", "past_customer_name", "past_salesmam_name", "past_sale_num", "past_sale_time"};
         for (String s : str8) {
             if (map.containsKey(s)) {
                 f1.add(filters.get(map.get(s)));
@@ -269,16 +272,16 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
 
 
     @Override
-    public List<String> getDocumentNumberFormat(long type,int length) {
+    public List<String> getDocumentNumberFormat(long type, int length) {
         List<String> res = new ArrayList<>();
         String s = "";
-        if(ORDER_TYPE_XD == type){
+        if (ORDER_TYPE_XD == type) {
             s += "XSXD";
-        }else if(ORDER_TYPE_YC == type){
+        } else if (ORDER_TYPE_YC == type) {
             s += "XSYC";
-        }else if(ORDER_TYPE_YG == type){
+        } else if (ORDER_TYPE_YG == type) {
             s += "XSYG";
-        }else {
+        } else {
             return res;
         }
         // 拼接月份
@@ -289,54 +292,55 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         ReentrantLock lock = new ReentrantLock();
         Long code = 0L;
         lock.lock();
-        try{
-            code = inquiryCodeMapper.getMonth(type,date);
-            code = code==null?0:code;
-            inquiryCodeMapper.updateMaxMonthString(date,code+length,type);
-        }catch (Exception e) {
+        try {
+            code = inquiryCodeMapper.getMonth(type, date);
+            code = code == null ? 0 : code;
+            inquiryCodeMapper.updateMaxMonthString(date, code + length, type);
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             lock.unlock();
         }
-        for(int i=1;i<=length;++i){
-            long now = code+i;
+        for (int i = 1; i <= length; ++i) {
+            long now = code + i;
             StringBuilder temp = new StringBuilder();
             for (int j = 0; j < 4; j++) {
                 temp.append(now % 10);
-                now/= 10;
+                now /= 10;
             }
-            res.add(s+temp.reverse());
+            res.add(s + temp.reverse());
         }
         return res;
     }
 
     @Override
-    public boolean isValidType(int inquiryType){
+    public boolean isValidType(int inquiryType) {
         return inquiryType == ORDER_TYPE_YC || inquiryType == ORDER_TYPE_XD ||
                 inquiryType == ORDER_TYPE_PO || inquiryType == ORDER_TYPE_PR || inquiryType == ORDER_TYPE_YG;
     }
+
     @Override
     //主要就是判断新增订单是否有效
-    public Map<String,Object> addValid(Inquiry inquiry) {
-        Map<String,Object> map = new HashMap<>();
-        if(inquiry.getItemId() == null || null == itemService.findItemById(inquiry.getItemId())) {
-            map.put("error","物料不存在！");
+    public Map<String, Object> addValid(Inquiry inquiry) {
+        Map<String, Object> map = new HashMap<>();
+        if (inquiry.getItemId() == null || null == itemService.findItemById(inquiry.getItemId())) {
+            map.put("error", "物料不存在！");
             return map;
         }
-        if(inquiry.getSaleNum() == null || inquiry.getSaleNum() < 1){
-            map.put("error","销售数量为空或不合法！");
+        if (inquiry.getSaleNum() == null || inquiry.getSaleNum() < 1) {
+            map.put("error", "销售数量为空或不合法！");
             return map;
         }
-        if(inquiry.getCustomerId() == null || null == customerService.findCustomerById(inquiry.getCustomerId())){
-            map.put("error","客户为空或不存在！");
+        if (inquiry.getCustomerId() == null || null == customerService.findCustomerById(inquiry.getCustomerId())) {
+            map.put("error", "客户为空或不存在！");
             return map;
         }
-        if(inquiry.getInquiryType() == null || !isValidType(inquiry.getInquiryType())){
-            map.put("error","订单状态为空或不合法！");
+        if (inquiry.getInquiryType() == null || !isValidType(inquiry.getInquiryType())) {
+            map.put("error", "订单状态为空或不合法！");
             return map;
         }
-        if(inquiry.getSalesmanId() == null || userService.findUserById(inquiry.getSalesmanId())==null){
-            map.put("error","销售员为空或不存在！");
+        if (inquiry.getSalesmanId() == null || userService.findUserById(inquiry.getSalesmanId()) == null) {
+            map.put("error", "销售员为空或不存在！");
             return map;
         }
 
@@ -344,15 +348,15 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
             inquiry.setRemark("");
         }
 
-        if (inquiry.getExpectedTime() == null ) {
-            if(inquiry.getInquiryType()== ORDER_TYPE_XD) {
+        if (inquiry.getExpectedTime() == null) {
+            if (inquiry.getInquiryType() == ORDER_TYPE_XD) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(9999, Calendar.DECEMBER, 31); // 设置为9999年12月31日
                 inquiry.setExpectedTime(calendar.getTime());
 
-            }else if(inquiry.getInquiryType()==INQUIRY_INIT_TYPE_YC){
+            } else if (inquiry.getInquiryType() == INQUIRY_INIT_TYPE_YC) {
 
-                map.put("error","期待发货日期不存在");
+                map.put("error", "期待发货日期不存在");
                 return map;
 
             }
@@ -367,14 +371,14 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
                 // 设置时间为当天的23:59分
                 currentCalendar.set(Calendar.HOUR_OF_DAY, 23);
                 currentCalendar.set(Calendar.MINUTE, 59);
-                currentCalendar.set(Calendar.SECOND,59);
+                currentCalendar.set(Calendar.SECOND, 59);
 
                 // 更新 inquiry 的期待发货日期
                 inquiry.setExpectedTime(currentCalendar.getTime());
             }
 
-            if(inquiry.getExpectedTime().before(new Date())){
-                map.put("error","期待发货日期早于当前时间");
+            if (inquiry.getExpectedTime().before(new Date())) {
+                map.put("error", "期待发货日期早于当前时间");
                 return map;
             }
 
@@ -384,26 +388,26 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
 
     @Override
     //主要就是修改订单是否有效
-    public Map<String,Object> updateValid(Inquiry inquiry) {
-        Map<String,Object> map = new HashMap<>();
-        if(inquiry.getItemId() == null || null == itemService.findItemById(inquiry.getItemId())) {
-            map.put("error","物料不存在！");
+    public Map<String, Object> updateValid(Inquiry inquiry) {
+        Map<String, Object> map = new HashMap<>();
+        if (inquiry.getItemId() == null || null == itemService.findItemById(inquiry.getItemId())) {
+            map.put("error", "物料不存在！");
             return map;
         }
-        if(inquiry.getSaleNum() == null || inquiry.getSaleNum() < 1){
-            map.put("error","销售数量为空或不合法！");
+        if (inquiry.getSaleNum() == null || inquiry.getSaleNum() < 1) {
+            map.put("error", "销售数量为空或不合法！");
             return map;
         }
-        if(inquiry.getCustomerId() == null || null == customerService.findCustomerById(inquiry.getCustomerId())){
-            map.put("error","客户为空或不存在！");
+        if (inquiry.getCustomerId() == null || null == customerService.findCustomerById(inquiry.getCustomerId())) {
+            map.put("error", "客户为空或不存在！");
             return map;
         }
-        if(inquiry.getInquiryType() == null || !isValidType(inquiry.getInquiryType())){
-            map.put("error","订单状态为空或不合法！");
+        if (inquiry.getInquiryType() == null || !isValidType(inquiry.getInquiryType())) {
+            map.put("error", "订单状态为空或不合法！");
             return map;
         }
-        if(inquiry.getSalesmanId() == null || userService.findUserById(inquiry.getSalesmanId())==null){
-            map.put("error","销售员为空或不存在！");
+        if (inquiry.getSalesmanId() == null || userService.findUserById(inquiry.getSalesmanId()) == null) {
+            map.put("error", "销售员为空或不存在！");
             return map;
         }
 
@@ -411,15 +415,15 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
             inquiry.setRemark("");
         }
 
-        if (inquiry.getExpectedTime() == null ) {
-            if(inquiry.getInquiryType()== ORDER_TYPE_XD) {
+        if (inquiry.getExpectedTime() == null) {
+            if (inquiry.getInquiryType() == ORDER_TYPE_XD) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(9999, Calendar.DECEMBER, 31); // 设置为9999年12月31日
                 inquiry.setExpectedTime(calendar.getTime());
 
-            }else if(inquiry.getInquiryType()==INQUIRY_INIT_TYPE_YC){
+            } else if (inquiry.getInquiryType() == INQUIRY_INIT_TYPE_YC) {
 
-                map.put("error","期待发货日期不存在");
+                map.put("error", "期待发货日期不存在");
                 return map;
 
             }
@@ -433,7 +437,7 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
                 // 设置时间为当天的23:59分
                 currentCalendar.set(Calendar.HOUR_OF_DAY, 23);
                 currentCalendar.set(Calendar.MINUTE, 59);
-                currentCalendar.set(Calendar.SECOND,59);
+                currentCalendar.set(Calendar.SECOND, 59);
 
                 // 更新 inquiry 的期待发货日期
                 inquiry.setExpectedTime(currentCalendar.getTime());
@@ -446,8 +450,8 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
     @Override
     public Inquiry getInquiryById(Long orderId) {
         LambdaQueryWrapper<Inquiry> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.ne(Inquiry::getState,-1)
-                .eq(Inquiry::getInquiryId,orderId);
+        queryWrapper.ne(Inquiry::getState, -1)
+                .eq(Inquiry::getInquiryId, orderId);
         return inquiryMapper.selectOne(queryWrapper);
     }
 
@@ -459,21 +463,21 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         //     1. 确保订单ID与传入的订单ID相匹配。
         //     2. 确保订单状态不等于 -1（-1 可能表示已删除的状态）。
         //     3. 设置订单状态为 -1，以表示订单已删除。
-        updateWrapper.eq(Inquiry::getInquiryId,orderId)
-                .ne(Inquiry::getState,-1)
-                .set(Inquiry::getState,-2);
+        updateWrapper.eq(Inquiry::getInquiryId, orderId)
+                .ne(Inquiry::getState, -1)
+                .set(Inquiry::getState, -2);
         //调用update方法，传入设置的查询条件，执行更新
         //返回更新影响的行数是否等于 1，如果等于 1，表示更新成功，返回 true，否则返回 false。
-        return inquiryMapper.update(null,updateWrapper)==1;
+        return inquiryMapper.update(null, updateWrapper) == 1;
     }
 
     @Override
     public Integer transferType(String inquiryType) {
         int type = -1;
-        if(StringUtils.isNotBlank(inquiryType)){
-            if(inquiryType.contains("YC")){
+        if (StringUtils.isNotBlank(inquiryType)) {
+            if (inquiryType.contains("YC")) {
                 type = ORDER_TYPE_YC;
-            }else if(inquiryType.contains("XD")){
+            } else if (inquiryType.contains("XD")) {
                 type = ORDER_TYPE_XD;
             }
         }
@@ -481,40 +485,40 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
     }
 
     @Override
-    public Map<String,Object> checkAddByExcel(InquiryModel inquiryModel, int rowIndex) {
+    public Map<String, Object> checkAddByExcel(InquiryModel inquiryModel, int rowIndex) {
         Map<String, Object> map = new HashMap<>();
         Inquiry inquiry = new Inquiry();
         // 添加物料id
         Item item = itemService.findItemByCode(inquiryModel.getItemCode());
-        if(item == null){
-            map.put("error","第"+rowIndex+"行的物料编码在数据库中不存在，请核对");
+        if (item == null) {
+            map.put("error", "第" + rowIndex + "行的物料编码在数据库中不存在，请核对");
             return map;
         }
-        if(!item.getItemName().equals(inquiryModel.getItemName())){
-            map.put("error","第"+rowIndex+"行的物料编码和物料名称在数据库中不是对应的，请核对");
+        if (!item.getItemName().equals(inquiryModel.getItemName())) {
+            map.put("error", "第" + rowIndex + "行的物料编码和物料名称在数据库中不是对应的，请核对");
             return map;
         }
-        if(inquiryModel.getItemType() == null || item.getItemType()!=itemService.transferItemType(inquiryModel.getItemType())){
-            map.put("error","第"+rowIndex+"行的物料编码和产品类型在数据库中不是对应的，请核对");
+        if (inquiryModel.getItemType() == null || item.getItemType() != itemService.transferItemType(inquiryModel.getItemType())) {
+            map.put("error", "第" + rowIndex + "行的物料编码和产品类型在数据库中不是对应的，请核对");
             return map;
         }
         inquiry.setItemId(item.getId());
         // 添加客户id
         Customer c = customerService.findCustomerByName(inquiryModel.getCustomerName());
-        if(c==null){
-            map.put("error","第"+rowIndex+"行的客户名称在数据库中不存在，请核对");
+        if (c == null) {
+            map.put("error", "第" + rowIndex + "行的客户名称在数据库中不存在，请核对");
             return map;
         }
-        String ct = customerTypeService.getCustomerTypeByRule(c.getFCustId(),item.getId());
-        if(ct==null || inquiryModel.getCustomerType() == null || !ct.equals(inquiryModel.getCustomerType())){
-            map.put("error","第"+rowIndex+"行的客户类型与数据库对应关系不匹配或不存在，请核对");
+        String ct = customerTypeService.getCustomerTypeByRule(c.getFCustId(), item.getId());
+        if (ct == null || inquiryModel.getCustomerType() == null || !ct.equals(inquiryModel.getCustomerType())) {
+            map.put("error", "第" + rowIndex + "行的客户类型与数据库对应关系不匹配或不存在，请核对");
             return map;
         }
         inquiry.setCustomerId(c.getFCustId());
         // 添加销售员id
         User salesman = userService.findSalesmanByName(inquiryModel.getSalesmanName());
-        if(salesman == null){
-            map.put("error","第"+rowIndex+"行的销售员名称在数据库中不存在，请核对");
+        if (salesman == null) {
+            map.put("error", "第" + rowIndex + "行的销售员名称在数据库中不存在，请核对");
             return map;
         }
         inquiry.setSalesmanId(salesman.getId());
@@ -524,19 +528,19 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         inquiry.setState(0);
         // 设置订单类型
         int type;
-        if((type = transferType(inquiryModel.getInquiryType()))==-1){
-            map.put("error","第"+rowIndex+"行的订单类型有误，请修改并重试！");
+        if ((type = transferType(inquiryModel.getInquiryType())) == -1) {
+            map.put("error", "第" + rowIndex + "行的订单类型有误，请修改并重试！");
             return map;
         }
         inquiry.setInquiryType(type);
         // 设置订单编号
-        inquiry.setInquiryCode(getDocumentNumberFormat(type,1).get(0));
+        inquiry.setInquiryCode(getDocumentNumberFormat(type, 1).get(0));
         // 设置创建时间
         inquiry.setCreatedTime(new Date());
 
         // 设置备注
         String remark = inquiryModel.getRemark();
-        if (remark == null ) {
+        if (remark == null) {
             remark = ""; // 赋一个“”代替null
         }
         inquiry.setRemark(remark);
@@ -546,7 +550,7 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
             sdf.setLenient(false);
-            if(inquiryModel.getArrangedTime()!=null){
+            if (inquiryModel.getArrangedTime() != null) {
                 inquiry.setArrangedTime(sdf.parse(inquiryModel.getArrangedTime()));
             }
 
@@ -572,8 +576,8 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
                 }
             }
 
-        }catch (Exception e){
-            map.put("error","第"+rowIndex+"行的时间数据有误，请检查！");
+        } catch (Exception e) {
+            map.put("error", "第" + rowIndex + "行的时间数据有误，请检查！");
             return map;
         }
         /*// 设置备注
@@ -581,23 +585,23 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         // 设置数量
         try {
             inquiry.setSaleNum(Long.parseLong(inquiryModel.getNum()));
-        }catch (Exception e) {
-            map.put("error","第"+rowIndex+"行的数量可能不是数字或长度有误，请检查！");
+        } catch (Exception e) {
+            map.put("error", "第" + rowIndex + "行的数量可能不是数字或长度有误，请检查！");
             return map;
         }
-        map.put("inquiry",inquiry);
+        map.put("inquiry", inquiry);
         return map;
     }
 
     @Override
     public boolean containsCode(String inquiryCode) {
-        if(StringUtils.isBlank(inquiryCode)) {
+        if (StringUtils.isBlank(inquiryCode)) {
             return false;
         }
         LambdaQueryWrapper<Inquiry> lqw = new LambdaQueryWrapper<>();
-        lqw.select(Inquiry::getInquiryCode).eq(Inquiry::getInquiryCode,inquiryCode)
-                .ne(Inquiry::getState,-1);
-        return inquiryMapper.selectList(lqw).size()>0;
+        lqw.select(Inquiry::getInquiryCode).eq(Inquiry::getInquiryCode, inquiryCode)
+                .ne(Inquiry::getState, -1);
+        return inquiryMapper.selectList(lqw).size() > 0;
     }
 
     @Override
@@ -608,13 +612,13 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
     @Override
     public List<Inquiry> getInquiryCodeLikeList(String key) {
         LambdaQueryWrapper<Inquiry> lqw = new LambdaQueryWrapper<>();
-        lqw.select(Inquiry::getInquiryCode).like(Inquiry::getInquiryCode,key);
+        lqw.select(Inquiry::getInquiryCode).like(Inquiry::getInquiryCode, key);
         return inquiryMapper.selectList(lqw);
     }
 
     @Override
     public List<String> getInquiryTypeList(String key) {
-        return inquiryMapper.getInquiryTypeList("%"+key+"%");
+        return inquiryMapper.getInquiryTypeList("%" + key + "%");
     }
 
     @Override
@@ -625,8 +629,8 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
     @Override
     public int updateState(String inquiryCode, int i) {
         LambdaUpdateWrapper<Inquiry> luw = new LambdaUpdateWrapper<>();
-        luw.set(Inquiry::getState,i).eq(Inquiry::getInquiryCode,inquiryCode);
-        return inquiryMapper.update(null,luw);
+        luw.set(Inquiry::getState, i).eq(Inquiry::getInquiryCode, inquiryCode);
+        return inquiryMapper.update(null, luw);
     }
 
     public Result update_InquiryAllowInquiry(Long inquiryId) {
@@ -635,11 +639,11 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
 
         // 检查当前用户是否是管理员
         if (currentUser.getUserType() == USER_TYPE_ADMIN) {
-            if (inquiryId!=null) {
+            if (inquiryId != null) {
                 // 如果是管理员，则更新订单的 allow_inquiry 字段为 1
                 inquiryMapper.updateInquiryAllowInquiry(inquiryId);
                 return Result.message("允许该订单询单");
-            }else {
+            } else {
                 return Result.message("没有接收到订单id");
             }
         } else {
@@ -650,8 +654,6 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
     public Inquiry getInquiriesByCode(String inquiryCode) {
         return inquiryMapper.getInquiriesByCode(inquiryCode);
     }
-
-
 
 
     @Override
@@ -670,7 +672,12 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
                     // 复制字段值
                     for (Inquiry originalInquiry : originalList) {
                         newInquiry.setCustomerId(originalInquiry.getCustomerId());
-                        newInquiry.setInquiryType(originalInquiry.getInquiryType());
+                        if (originalInquiry.getInquiryCode().contains("XD")) {
+                            newInquiry.setInquiryType(5);
+                        } else if (originalInquiry.getInquiryCode().contains("YC")) {
+                            newInquiry.setInquiryType(4);
+                        }
+
                         newInquiry.setExpectedTime(originalInquiry.getExpectedTime());
                         newInquiry.setSalesmanId(originalInquiry.getSalesmanId());
                         newInquiry.setItemId(originalInquiry.getItemId());
@@ -678,7 +685,6 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
 
                         // 可以添加其他字段的复制逻辑
                     }
-
                     // 将新创建的Inquiry对象添加到结果列表中
                     result.add(newInquiry);
                 }
@@ -688,14 +694,35 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper,Inquiry> imple
         return result;
     }
 
-//    回恢复已经删除的订单
-public int restoreOrders(List<String> inquiryCodes) {
-    int totalCount = 0;
-    for (String code : inquiryCodes) {
-        int restoreCount = inquiryMapper.restoreOrder(code);
-        totalCount += restoreCount;
+    //    回恢复已经删除的订单
+    public int restoreOrders(List<String> inquiryCodes) {
+        int totalCount = 0;
+        for (String code : inquiryCodes) {
+            int restoreCount = inquiryMapper.restoreOrder(code);
+            totalCount += restoreCount;
+        }
+        return totalCount;
     }
-    return totalCount;
-}
+
+
+
+
+    public List<String> extractInquiryCode(String input) {
+        List<String> inquiryCodeList = new ArrayList<>();
+
+        // 使用正则表达式提取 inquiryCode 中的内容
+        Pattern pattern = Pattern.compile("inquiryCode=\\[([^\\]]+)]");
+        Matcher matcher = pattern.matcher(input);
+
+        while (matcher.find()) {
+            String inquiryCodePart = matcher.group(1);
+            String[] codes = inquiryCodePart.split(", ");
+            for (String code : codes) {
+                inquiryCodeList.add(code);
+            }
+        }
+
+        return inquiryCodeList;
+    }
 
 }

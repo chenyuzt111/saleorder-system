@@ -4,43 +4,48 @@ package com.benewake.saleordersystem.service;
 import com.benewake.saleordersystem.entity.LoginTicket;
 import com.benewake.saleordersystem.entity.User;
 import com.benewake.saleordersystem.entity.basedata.*;
-import com.benewake.saleordersystem.excel.model.SalesmanChangingTableModel;
+import com.benewake.saleordersystem.excel.model.*;
 import com.benewake.saleordersystem.utils.Result;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author Lcs
  */
-public interface UserService  {
+public interface UserService {
 
     /**
      * 添加新的用户
+     *
      * @param user
      * @return
      */
-    Result<Map<String,Object>> addUser(User user);
+    Result<Map<String, Object>> addUser(User user);
 
     /**
      * 用户登录
+     *
      * @param username
      * @param password
      * @return
      */
-    Map<String,Object> login(String username,String password);
+    Map<String, Object> login(String username, String password);
 
     /**
      * 退出登录状态
+     *
      * @param ticket
      * @return
      */
-    Map<String,Object> logout(String ticket);
+    Map<String, Object> logout(String ticket);
 
     /**
      * 获取登录凭证
+     *
      * @param ticket
      * @return
      */
@@ -48,6 +53,7 @@ public interface UserService  {
 
     /**
      * 根据用户Id查找用户
+     *
      * @param id
      * @return
      */
@@ -55,37 +61,42 @@ public interface UserService  {
 
     /**
      * 修改用户类型
+     *
      * @param id
      * @param type
      * @return
      */
-    int updateUserType(Long id,Long type);
+    int updateUserType(Long id, Long type);
 
     /**
      * 更新用户名
+     *
      * @param id
      * @param username
      * @return
      */
-    int updateUsername(Long id,String username);
+    int updateUsername(Long id, String username);
 
     /**
      * 更新用户密码
+     *
      * @param id
      * @param password
      * @return
      */
-    int updatePassword(Long id,String password);
+    int updatePassword(Long id, String password);
 
     /**
      * 根据姓名模糊匹配用户
+     *
      * @param username
      * @return
      */
-    List<User> getUsernameLikeList(String username,Long userType);
+    List<User> getUsernameLikeList(String username, Long userType);
 
     /**
      * 根据姓名查找对应的销售员用户对象
+     *
      * @param salesmanName
      * @return
      */
@@ -94,6 +105,7 @@ public interface UserService  {
 
     /**
      * 更新用户YC,XD,PR值
+     *
      * @param id
      * @param ycvalue
      * @param xdvalue
@@ -101,7 +113,6 @@ public interface UserService  {
      * @return
      */
     int updateUserValues(Long id, String ycvalue, String xdvalue, String prvalue);
-
 
 
     void addCustomerType(String customerType);
@@ -122,13 +133,18 @@ public interface UserService  {
 
     List<ItemTypeDic> selectItemTypeDic();
 
-    int addCustomerName(String  customerName);
+    int addCustomerName(String customerName);
 
     int deleteCustomerName(String customerName);
 
     int updateCustomerName(String oldCustomerName, String newCustomerName);
 
+    Result addCustomerNameByExcel(MultipartFile file);
+    Map<String,Object> checkCustomerNameByExcel(CustomerModel customerModel, int rowIndex);
+
+
     List<FimCustomerTable> selectFimCustomerTable();
+
     int insertCustomerItem(int customerId, int itemId, String customerType);
 
     int deleteCustomerItem(int customerId, int itemId, String customerType);
@@ -141,6 +157,10 @@ public interface UserService  {
 
     int updateCustomerRename(String customerNameOld, String customerNameNew);
 
+    Map<String, Object> checkCustomerRenameByExcel(CustomerRenameModel customerRenameModel, int rowIndex);
+
+    Result addCustomerRenameByExcel(MultipartFile file);
+
     List<FimPastCustomerRenameTable> selectFimPastCustomerRenameTable();
 
     int addItemChange(String itemCodeOld, String itemCodeNew);
@@ -148,6 +168,10 @@ public interface UserService  {
     int deleteItemChangeByOldCode(String itemCodeOld);
 
     int updateItemChange(String itemCodeOld, String itemCodeNew);
+
+    Map<String, Object> checkItemChangeByExcel(ItemChangeModel itemChangeModel, int rowIndex);
+
+    Result addItemChangeByExcel(MultipartFile file);
 
     List<FimPastItemChangeTable> selectFimPastItemChangeTable();
 
@@ -159,27 +183,35 @@ public interface UserService  {
 
     List<FimPastSalesmanChangingTable> selectFimPastSalesmanChangingTable();
 
-    Map<String,Object> checkAddSalesmanChangingTableByExcel(SalesmanChangingTableModel salesmanChangingTableModel, int rowIndex);
-    Map<String, Object> saveDataByExcel(MultipartFile file);
+    Map<String, Object> checkAddSalesmanChangingTableByExcel(SalesmanChangingTableModel salesmanChangingTableModel, int rowIndex);
+
     Result addOrdersSalesmanChangingTableByExcel(MultipartFile file);
 
     int addCustomizedItemChange(String customerName, String itemCodeOld, String itemCodeNew);
 
     int deleteCustomizedItemChange(String customerName, String itemCodeOld, String itemCodeNew);
 
+    Map<String, Object> checkCustomizedItemChangeByExcel(CustomizedItemChangeModel customizedItemChangeModel, int rowIndex);
+
+    Result addCustomizedItemChangeByExcel(MultipartFile file);
+
     List<FimPastCustomizedItemChangingTable> selectFimPastCustomizedItemChangingTable();
 
-    int insertPastChooseItem(String itemCode, String itemName, LocalDateTime startMonth);
+    int insertPastChooseItem(String itemCode, String itemName, Date startMonth);
 
     int deletePastChooseItemByItemCode(String itemCode);
 
+    Map<String, Object> checkChooseItemByExcel(ChooseItemModel chooseItemModel, int rowIndex);
+
+    Result addChooseItemByExcel(MultipartFile file);
+
     List<FimPastChooseItemTable> selectFimPastChooseItemTable();
 
-    int insertFimItemTable(String itemCode, String itemName, int itemType,int quantitative);
+    int insertFimItemTable(String itemCode, String itemName, int itemType, int quantitative);
 
     int deleteFimItemTable(int itemId);
 
     List<FimItemTable> selectFimItemTable();
 
-    int updateFimItemTable(int itemId,String itemCode, String itemName, int itemType,int quantitative);
+    int updateFimItemTable(int itemId, String itemCode, String itemName, int itemType, int quantitative);
 }

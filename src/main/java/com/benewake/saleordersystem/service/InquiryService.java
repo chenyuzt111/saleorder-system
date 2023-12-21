@@ -178,4 +178,11 @@ public interface InquiryService extends IService<Inquiry> {
      * @return
      */
     int restoreOrders(List<String> inquiryCodes);
+
+    /**
+     * 根据输入的字符串抽取出inquirycode列表
+     * @param input
+     * @return
+     */
+    List<String> extractInquiryCode(String input);
 }
