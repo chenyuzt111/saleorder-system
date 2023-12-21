@@ -12,6 +12,7 @@ import com.benewake.saleordersystem.utils.BenewakeConstants;
 import com.benewake.saleordersystem.utils.CommonUtils;
 import com.benewake.saleordersystem.utils.HostHolder;
 import com.benewake.saleordersystem.utils.Result;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
@@ -343,50 +344,58 @@ public class SaleOrderController implements BenewakeConstants {
     }
 
     @PostMapping("/saveDivideList")
-    public Result saveDivideInquiry(@RequestBody SaveDivideRequest request) {
-        // 遍历传入的订单列表，检查销售数量是否为空，如果为空则返回提示信息
-        List<Inquiry> inquiries = request.getInquiries();
-        for (Inquiry inquiry : inquiries) {
-            if (inquiry.getSaleNum() == null) {
-                return Result.fail("请输入销售数量", null);
+    public Result saveDivideInquiry(@RequestBody SaveDivideRequest request) throws JsonProcessingException {
+        // 根据传入的订单列表，获取初始订单信息
+        Inquiry inquiry1 = inquiryService.getInquiriesByCode(request.getInquiryCode());
+        // 只有该订单的销售员或创建人才能保存拆分订单
+        if (Objects.equals(hostHolder.getUser().getUserType(), USER_TYPE_ADMIN) ||Objects.equals(inquiry1.getSalesmanId(), hostHolder.getUser().getId()) || Objects.equals(inquiry1.getCreatedUser(), hostHolder.getUser().getId())) {
+            // 遍历传入的订单列表，检查销售数量是否为空，如果为空则返回提示信息
+            List<Inquiry> inquiries = request.getInquiries();
+            for (Inquiry inquiry : inquiries) {
+                if (inquiry.getSaleNum() == null) {
+                    return Result.fail("请输入销售数量", null);
+                }
+
+                // 根据传入的单据编号修改初始订单状态
+                if (request.getInquiryCode().contains("XD")) {
+                    inquiry.setInquiryType(5);
+                } else {
+                    inquiry.setInquiryType(4);
+                }
             }
 
-            // 根据传入的单据编号修改初始订单状态
-            if (request.getInquiryCode().contains("XD")) {
-                inquiry.setInquiryType(5);
-            } else {
-                inquiry.setInquiryType(4);
+            // 拆分后的订单进行保存
+            StartInquiryVo startInquiryVo = new StartInquiryVo();
+            startInquiryVo.setInquiryList(request.getInquiries());
+            startInquiryVo.setIsUpdate(0);
+            startInquiryVo.setStartInquiry(0);
+            Result result = addInquiries(startInquiryVo);
+
+            // 获取保存后新的订单的单据编号
+            String jsonString = result.toString();
+
+            // 提取新订单的单据编号并获取相应的 Inquiry 对象列表
+            List<Inquiry> inquiries1 = new ArrayList<>();
+            List<String> inquiryCodeList = inquiryService.extractInquiryCode(jsonString);
+            for (String inquiryCode : inquiryCodeList) {
+                inquiries1.add(inquiryService.getInquiriesByCode(inquiryCode));
             }
+
+
+            // 获取初始订单类型，遍历拆分后的订单，将拆分后的订单的单据类型修改为初始订单类型
+            int inquiryType = inquiry1.getInquiryType();
+            for (Inquiry inq : inquiries1) {
+                inq.setInquiryType(inquiryType);
+                updateInquired(inq);
+            }
+
+            //删除初始订单
+            inquiryService.deleteOrder(inquiry1.getInquiryId());
+
+            return Result.message("保存成功！");
+        } else {
+            return Result.fail().message("用户权限不足！");
         }
-
-        // 拆分后的订单进行保存
-        StartInquiryVo startInquiryVo = new StartInquiryVo();
-        startInquiryVo.setInquiryList(request.getInquiries());
-        startInquiryVo.setIsUpdate(0);
-        startInquiryVo.setStartInquiry(0);
-        Result result = addInquiries(startInquiryVo);
-
-        // 获取保存后新的订单的单据编号
-        String jsonString = result.toString();
-
-        // 提取新订单的单据编号并获取相应的 Inquiry 对象列表
-        List<Inquiry> inquiries1 = new ArrayList<>();
-        List<String> inquiryCodeList = inquiryService.extractInquiryCode(jsonString);
-        for (String inquiryCode : inquiryCodeList) {
-            inquiries1.add(inquiryService.getInquiriesByCode(inquiryCode));
-        }
-
-        // 根据传入的原订单的单据编号找到初始订单类型
-        Inquiry inquiry = inquiryService.getInquiriesByCode(request.getInquiryCode());
-        int inquiryType = inquiry.getInquiryType();
-
-        // 遍历拆分后的订单，将拆分后的订单的单据类型修改为初始订单类型
-        for (Inquiry inq : inquiries1) {
-            inq.setInquiryType(inquiryType);
-            updateInquired(inq);
-        }
-
-        return Result.message("保存成功！");
     }
 
 
