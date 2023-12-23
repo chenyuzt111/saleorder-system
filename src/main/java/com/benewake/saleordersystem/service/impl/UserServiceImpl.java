@@ -2,6 +2,7 @@ package com.benewake.saleordersystem.service.impl;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.ReadListener;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.benewake.saleordersystem.entity.LoginTicket;
@@ -15,13 +16,33 @@ import com.benewake.saleordersystem.service.UserService;
 import com.benewake.saleordersystem.utils.BenewakeConstants;
 import com.benewake.saleordersystem.utils.CommonUtils;
 import com.benewake.saleordersystem.utils.Result;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import net.sourceforge.pinyin4j.PinyinHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Lcs
@@ -93,6 +114,15 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("FIM_user_name",username);
         User u = userMapper.selectOne(queryWrapper);
+
+        String userid =getUserid(u.getUsername());
+
+        String uselist = UserList();
+        if(!uselist.contains(userid)){
+            map.put("error", "您不在应用允许访问范围内，如需访问请联系管理员!");
+            return map;
+        }
+
         // 用户不存在
         if (null == u) {
             map.put("error", "未注册无法登录，注册请飞书联系管理员!");
@@ -108,6 +138,8 @@ public class UserServiceImpl  implements UserService, BenewakeConstants {
             map.put("error", "密码错误！");
             return map;
         }
+
+
 
         // 生成登录凭证
         LoginTicket loginTicket = new LoginTicket();
@@ -628,5 +660,410 @@ public Result addOrdersSalesmanChangingTableByExcel(MultipartFile file) {
     @Override
     public List<FimItemTable> selectFimItemTable() {
         return userMapper.selectFimItemTable();
+    }
+
+
+
+    public String getAppAccessToken() {
+
+        String appId = "cli_a5e56060a07ad00c";
+        String appSecret = "hRLkCUdZX7rWvynsDCkANeYnZLJCjDMn";
+
+        String FEISHU_ACCESS_TOKEN_URL = "https://open.feishu.cn/open-apis/auth/v3/app_access_token/internal";
+        // 构造请求体
+        String requestBody = "{\"app_id\": \"" + appId + "\", \"app_secret\": \"" + appSecret + "\"}";
+
+        // 构造请求头
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 构造 HTTP 请求实体
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        // 发送 POST 请求
+        ResponseEntity<String> responseEntity = new RestTemplate().postForEntity(FEISHU_ACCESS_TOKEN_URL, requestEntity, String.class);
+
+        // 处理响应
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            // 解析 JSON 响应，获取 app_access_token
+            // 使用 Gson 解析 JSON
+            JsonObject jsonObject = JsonParser.parseString(responseEntity.getBody()).getAsJsonObject();
+            if (jsonObject.has("app_access_token")) {
+                return jsonObject.get("app_access_token").getAsString();
+            }
+        } else {
+            // 处理请求失败的情况
+            System.err.println("Failed to retrieve Feishu app access token. Status code: " + responseEntity.getStatusCode());
+        }
+        return null;
+    }
+
+    public String getUserAccessToken(String authorizationCode, String appAccessToken) {
+        try {
+            // 请求地址
+            String url = "https://open.feishu.cn/open-apis/authen/v1/oidc/access_token";
+
+            // 请求体
+            String requestBody = "{\"grant_type\":\"authorization_code\",\"code\":\"" + authorizationCode + "\"}";
+
+            // 请求头
+            String authorizationHeader = "Bearer " + appAccessToken;
+
+            // 创建URL对象
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // 设置请求方法为POST
+            con.setRequestMethod("POST");
+
+            // 设置请求头
+            con.setRequestProperty("Authorization", authorizationHeader);
+            con.setRequestProperty("Content-Type", "application/json");
+
+            // 启用输入输出
+            con.setDoOutput(true);
+
+            // 发送请求体
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = requestBody.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            // 获取响应
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+
+                String responseBody = response.toString();
+
+                // 使用正则表达式提取 usertoken 中的内容
+                Pattern pattern = Pattern.compile("access_token\":\"([^\\\"]+)\"");
+                Matcher matcher = pattern.matcher(responseBody);
+
+                if (matcher.find()) {
+                    String usertoken = matcher.group(1);
+
+                    // 打印响应内容
+                    System.out.println("HTTP Status Code: " + con.getResponseCode());
+                    System.out.println("Response Body: " + responseBody);
+                    System.out.println("User Token: " + usertoken);
+
+                    // 返回 usertoken 的值
+                    return usertoken;
+                } else {
+                    // 如果没有匹配到，可以抛出异常或者返回特殊值
+                    System.out.println("No match found for usertoken in the response.");
+                    return null; // or throw a custom exception
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                // 如果发生异常，可以返回一个特殊的值或者抛出自定义异常
+                return null; // or throw a custom exception
+            }} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String userInfo(String usertoken) throws IOException {
+        // 请求地址
+        String url = "https://open.feishu.cn/open-apis/authen/v1/user_info";
+
+
+
+        // 请求头
+        String authorizationHeader = "Bearer " + usertoken;
+
+        // 创建URL对象
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        // 设置请求方法为POST
+        con.setRequestMethod("GET");
+
+        // 设置请求头
+        con.setRequestProperty("Authorization", authorizationHeader);
+        con.setRequestProperty("Content-Type", "application/json");
+
+        // 启用输入输出
+        con.setDoOutput(true);
+
+        // 获取响应
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            String responseBody = response.toString();
+
+            // 使用正则表达式提取 name 中的内容
+            Pattern pattern = Pattern.compile("name\":\"([^\\\"]+)\"");
+            Matcher matcher = pattern.matcher(responseBody);
+
+            // 检查是否找到匹配项
+            if (matcher.find()) {
+                String name = matcher.group(1);
+
+                // 打印响应内容
+                System.out.println("HTTP Status Code: " + con.getResponseCode());
+                System.out.println("Response Body: " + responseBody);
+                System.out.println("Name: " + name);
+
+                // 返回 name 的值
+                return name;
+            } else {
+                // 如果没有匹配到，可以抛出异常或者返回特殊值
+                System.out.println("No match found for name in the response.");
+                return null; // or throw a custom exception
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 如果发生异常，可以返回一个特殊的值或者抛出自定义异常
+            return null; // or throw a custom exception
+        }
+
+    }
+
+    public void askForPermission() {
+        String url = "https://open.feishu.cn/open-apis/authen/v1/authorize?app_id=cli_a5e56060a07ad00c&redirect_uri=http://localhost:8080//benewake/callback";
+        try {
+            // Create URL object
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // Set the request method to GET
+            con.setRequestMethod("GET");
+
+            // Perform the GET request
+            con.connect();
+
+            // Check the HTTP response code (optional)
+            int responseCode = con.getResponseCode();
+            System.out.println("HTTP Status Code: " + responseCode);
+
+            // Close the connection
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the exception as needed (e.g., logging)
+        }
+    }
+
+
+    @Override
+    public Map<String, Object> feishulogin(String username) {
+
+        Map<String,Object> map = new HashMap<>();
+
+
+        // 根据用户名查询用户信息
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("FIM_user_name",username);
+        User u = userMapper.selectOne(queryWrapper);
+
+        // 生成登录凭证
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(u.getId());
+        loginTicket.setTicket(CommonUtils.generateUUID());
+        loginTicket.setStatus(0);
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + DEFAULT_EXPIRED_SECONDS* 1000L));
+        // 持久化
+        loginTicketMapper.insert(loginTicket);
+
+        map.put("ticket",loginTicket.getTicket());
+        map.put("userId",u.getId());
+        map.put("username",u.getUsername());
+        map.put("userType",u.getUserType());
+        map.put("collection",u.getUserConllection());
+        return map;
+    }
+
+//获取应用token
+    private static String getAuthorizationHeader() {
+        String apiUrl = "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal";
+        String appId = "cli_a5e56060a07ad00c";
+        String appSecret = "hRLkCUdZX7rWvynsDCkANeYnZLJCjDMn";
+
+        // 创建 HttpClient
+        HttpClient httpClient = HttpClients.createDefault();
+
+        try {
+            // 创建带有 API URL 和头部的 HttpPost 请求
+            HttpPost request = new HttpPost(apiUrl);
+
+            // 设置请求头部
+            request.setHeader("Content-Type", "application/json");
+
+            // 设置请求体
+            String requestBody = "{\"app_id\":\"" + appId + "\",\"app_secret\":\"" + appSecret + "\"}";
+            request.setEntity(new StringEntity(requestBody));
+
+            // 发送 POST 请求
+            HttpResponse response = httpClient.execute(request);
+
+            // 提取响应实体
+            org.apache.http.HttpEntity entity = response.getEntity();
+
+            // 解析响应并提取 tenant_access_token
+            String responseString = EntityUtils.toString(entity);
+            System.out.println("Response: " + responseString);
+
+            // 解析 JSON 并提取 tenant_access_token
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseString);
+
+            if (jsonNode.has("tenant_access_token")) {
+                return jsonNode.get("tenant_access_token").asText();
+            } else {
+                System.out.println("Response does not contain tenant_access_token.");
+                return null; // 根据需求抛出异常或返回 null
+            }
+
+        } catch (Exception e) {
+            // 处理异常
+            e.printStackTrace();
+            return null; // 根据需求抛出异常或返回 null
+        }
+    }
+//获取用户id
+    public String getUserid(String username){
+        try {
+            // 请求地址
+            String url = "https://open.feishu.cn/open-apis/contact/v3/users/batch_get_id?user_id_type=user_id";
+
+            // 请求体
+            String requestBody = "{\"emails\":[\""+removeSpacesAndDigits(convertToPinyin(username))+"@benewake.com\"],\"include_resigned\":true}";
+
+
+            // 请求头
+            String authorizationHeader = "Bearer " + getAuthorizationHeader();
+
+            // 创建URL对象
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // 设置请求方法为POST
+            con.setRequestMethod("POST");
+
+            // 设置请求头
+            con.setRequestProperty("Authorization", authorizationHeader);
+            con.setRequestProperty("Content-Type", "application/json");
+
+            // 启用输入输出
+            con.setDoOutput(true);
+
+            // 发送请求体
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = requestBody.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            // 获取响应
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+
+                String responseBody = response.toString();
+
+                // 使用正则表达式提取 usertoken 中的内容
+                Pattern pattern = Pattern.compile("user_id\":\"([^\\\"]+)\"");
+                Matcher matcher = pattern.matcher(responseBody);
+
+                if (matcher.find()) {
+                    String user_id = matcher.group(1);
+
+                    System.out.println("User Token: " + user_id);
+
+                    // 返回 usertoken 的值
+                    return user_id;
+                } else {
+                    // 如果没有匹配到，可以抛出异常或者返回特殊值
+                    System.out.println("No match found for usertoken in the response.");
+                    return null; // or throw a custom exception
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                // 如果发生异常，可以返回一个特殊的值或者抛出自定义异常
+                return null; // or throw a custom exception
+            }} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String UserList(){
+        try {
+            // 请求地址
+            String url = "https://open.feishu.cn/open-apis/application/v2/app/visibility";
+
+            // 请求体
+            String requestBody = "{\n" +
+                    "    \"app_id\":\"cli_a5e56060a07ad00c\"\n" +
+                    "}";
+
+
+            // 请求头
+            String authorizationHeader = "Bearer " + getAuthorizationHeader();
+
+            // 创建URL对象
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // 设置请求方法为POST
+            con.setRequestMethod("POST");
+
+            // 设置请求头
+            con.setRequestProperty("Authorization", authorizationHeader);
+            con.setRequestProperty("Content-Type", "application/json");
+
+            // 启用输入输出
+            con.setDoOutput(true);
+
+            // 发送请求体
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = requestBody.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            // 获取响应
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+
+                return response.toString();
+                }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String convertToPinyin(String input) {
+        StringBuilder pinyinBuilder = new StringBuilder();
+        char[] chars = input.toCharArray();
+
+        for (char c : chars) {
+            // 将中文字符转换为拼音，非中文字符保持不变
+            String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c);
+            if (pinyinArray != null && pinyinArray.length > 0) {
+                pinyinBuilder.append(pinyinArray[0]);
+            } else {
+                pinyinBuilder.append(c);
+            }
+        }
+
+        return pinyinBuilder.toString();
+    }
+
+    private static String removeSpacesAndDigits(String input) {
+        // 去除空格和数字
+        return input.replaceAll("[\\s\\d]", "");
     }
 }

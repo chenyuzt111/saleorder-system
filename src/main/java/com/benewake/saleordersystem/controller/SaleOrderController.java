@@ -335,20 +335,24 @@ public class SaleOrderController implements BenewakeConstants {
         return results;
     }
 
-    @PostMapping("/divideList")
-    public Result divideInquiry(@RequestBody DevideInquiryVo param) {
-        List<Inquiry> divideInquiries = new ArrayList<>();
-        divideInquiries = inquiryService.splitInquiry(param);
-        inquiryService.deleteOrder(param.getInquiryList().get(0).getInquiryId());
-        return Result.success(divideInquiries);
-    }
 
+    /**
+     * 保存拆分订单
+     * request拆分请求体
+     * @return
+     */
     @PostMapping("/saveDivideList")
     public Result saveDivideInquiry(@RequestBody SaveDivideRequest request) throws JsonProcessingException {
+        if (request.getInquiries().size() == 1){
+            return Result.fail("请先拆分订单", null);
+        }
         // 根据传入的订单列表，获取初始订单信息
         Inquiry inquiry1 = inquiryService.getInquiriesByCode(request.getInquiryCode());
+        if (inquiry1 == null) {
+            return Result.fail("原订单不存在", null);
+        }
         // 只有该订单的销售员或创建人才能保存拆分订单
-        if (Objects.equals(hostHolder.getUser().getUserType(), USER_TYPE_ADMIN) ||Objects.equals(inquiry1.getSalesmanId(), hostHolder.getUser().getId()) || Objects.equals(inquiry1.getCreatedUser(), hostHolder.getUser().getId())) {
+        if (Objects.equals(hostHolder.getUser().getUserType(), USER_TYPE_ADMIN) || Objects.equals(inquiry1.getSalesmanId(), hostHolder.getUser().getId()) || Objects.equals(inquiry1.getCreatedUser(), hostHolder.getUser().getId())) {
             // 遍历传入的订单列表，检查销售数量是否为空，如果为空则返回提示信息
             List<Inquiry> inquiries = request.getInquiries();
             for (Inquiry inquiry : inquiries) {

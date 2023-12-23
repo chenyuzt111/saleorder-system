@@ -143,9 +143,6 @@ public interface InquiryService extends IService<Inquiry> {
 
     /**
      * 更新单个订单的state
-     * @param inquiryId
-     * @param i
-     * @return
      */
     int updateState(String inquiryCode, int i);
 
@@ -164,12 +161,7 @@ public interface InquiryService extends IService<Inquiry> {
      */
     Inquiry getInquiriesByCode(String inquiryCode);
 
-    /**
-     * 根据单据编号找到订单
-     * @param devideInquiryVo
-     * @return
-     */
-    List<Inquiry> splitInquiry(DevideInquiryVo devideInquiryVo);
+
 
 
     /**

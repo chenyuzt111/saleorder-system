@@ -656,43 +656,7 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper, Inquiry> impl
     }
 
 
-    @Override
-    public List<Inquiry> splitInquiry(DevideInquiryVo devideInquiryVo) {
-        List<Inquiry> result = new ArrayList<>();
 
-        if (devideInquiryVo != null && devideInquiryVo.getInquiryList() != null) {
-            List<Inquiry> originalList = devideInquiryVo.getInquiryList();
-            Integer devideNum = devideInquiryVo.getDevideNum();
-
-            if (devideNum != null && devideNum > 0) {
-                for (int i = 0; i < devideNum; i++) {
-                    // 创建新的Inquiry对象
-                    Inquiry newInquiry = new Inquiry();
-
-                    // 复制字段值
-                    for (Inquiry originalInquiry : originalList) {
-                        newInquiry.setCustomerId(originalInquiry.getCustomerId());
-                        if (originalInquiry.getInquiryCode().contains("XD")) {
-                            newInquiry.setInquiryType(5);
-                        } else if (originalInquiry.getInquiryCode().contains("YC")) {
-                            newInquiry.setInquiryType(4);
-                        }
-
-                        newInquiry.setExpectedTime(originalInquiry.getExpectedTime());
-                        newInquiry.setSalesmanId(originalInquiry.getSalesmanId());
-                        newInquiry.setItemId(originalInquiry.getItemId());
-                        newInquiry.setRemark(originalInquiry.getRemark());
-
-                        // 可以添加其他字段的复制逻辑
-                    }
-                    // 将新创建的Inquiry对象添加到结果列表中
-                    result.add(newInquiry);
-                }
-            }
-        }
-
-        return result;
-    }
 
     //    回恢复已经删除的订单
     public int restoreOrders(List<String> inquiryCodes) {

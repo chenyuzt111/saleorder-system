@@ -8,6 +8,9 @@ import com.benewake.saleordersystem.excel.model.*;
 import com.benewake.saleordersystem.utils.Result;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -214,4 +217,18 @@ public interface UserService {
     List<FimItemTable> selectFimItemTable();
 
     int updateFimItemTable(int itemId, String itemCode, String itemName, int itemType, int quantitative);
+
+    String getAppAccessToken();
+
+    String getUserAccessToken(String authorizationCode, String appAccessToken);
+
+    void askForPermission();
+
+    String userInfo(String usertoken) throws IOException;
+
+    Map<String, Object> feishulogin(String username);
+
+    String getUserid(String username);
+
+
 }
