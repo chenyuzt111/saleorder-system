@@ -41,17 +41,12 @@ public class InquiryExcelListener extends AnalysisEventListener<InquiryModel> im
 
     private static List<String> head = new ArrayList<>();
     static {
-        head.add("单据类型");
-        head.add("物料编码");
-        head.add("物料名称");
-        head.add("数量");
-        head.add("客户名称");
-        head.add("销售员");
-        head.add("产品类型");
-        head.add("客户类型");
-        head.add("期望发货日期");
-        head.add("计划反馈日期");
-        head.add("是否延期");
+        head.add("单据类型*");
+        head.add("物料编码*");
+        head.add("数量*");
+        head.add("客户名称*");
+        head.add("销售员*");
+        head.add("期望发货日期（XD订单可为空）");
         head.add("备注");
     }
 

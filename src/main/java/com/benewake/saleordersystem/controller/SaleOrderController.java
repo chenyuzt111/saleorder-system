@@ -339,11 +339,12 @@ public class SaleOrderController implements BenewakeConstants {
     /**
      * 保存拆分订单
      * request拆分请求体
+     *
      * @return
      */
     @PostMapping("/saveDivideList")
     public Result saveDivideInquiry(@RequestBody SaveDivideRequest request) throws JsonProcessingException {
-        if (request.getInquiries().size() == 1){
+        if (request.getInquiries().size() == 1) {
             return Result.fail("请先拆分订单", null);
         }
         // 根据传入的订单列表，获取初始订单信息
@@ -751,6 +752,7 @@ public class SaleOrderController implements BenewakeConstants {
      * @param param
      * @return
      */
+
     @PostMapping("/delete")
     @SalesmanRequired//调用此接口的必须是销售员
     public Result deleteOrder(@RequestBody Map<String, Long> param) {
@@ -782,6 +784,7 @@ public class SaleOrderController implements BenewakeConstants {
         }
     }
 
+    @ApiOperation("导入询单")
     @PostMapping("/importExcel")
     @SalesmanRequired//销售员才能访问该接口
     //接收文件作为参数
@@ -818,6 +821,7 @@ public class SaleOrderController implements BenewakeConstants {
         }
     }
 
+    @ApiOperation("删除方案")
     @PostMapping("/deleteView")
     public Result deleteView(@RequestBody View view) {
         if (view.getViewId() == null) {
@@ -829,6 +833,7 @@ public class SaleOrderController implements BenewakeConstants {
 
 
     //    下载导入模板
+    @ApiOperation("下载导入模板")
     @GetMapping("/downloadFile")
     public void downloadFile(HttpServletResponse response) throws IOException {
         File excelFile = new File("ImportModel.xlsx");
@@ -852,6 +857,7 @@ public class SaleOrderController implements BenewakeConstants {
     }
 
     //    根据单据编号恢复已经删除的订单
+    @ApiOperation("根据单据编号恢复已经删除的订单")
     @PostMapping("/restoreOrder")
     public Result restoreOrder(@RequestBody List<String> inquiryCodes) {
         if (inquiryCodes == null || inquiryCodes.size() == 0) {

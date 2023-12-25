@@ -494,14 +494,7 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper, Inquiry> impl
             map.put("error", "第" + rowIndex + "行的物料编码在数据库中不存在，请核对");
             return map;
         }
-        if (!item.getItemName().equals(inquiryModel.getItemName())) {
-            map.put("error", "第" + rowIndex + "行的物料编码和物料名称在数据库中不是对应的，请核对");
-            return map;
-        }
-        if (inquiryModel.getItemType() == null || item.getItemType() != itemService.transferItemType(inquiryModel.getItemType())) {
-            map.put("error", "第" + rowIndex + "行的物料编码和产品类型在数据库中不是对应的，请核对");
-            return map;
-        }
+
         inquiry.setItemId(item.getId());
         // 添加客户id
         Customer c = customerService.findCustomerByName(inquiryModel.getCustomerName());
@@ -509,11 +502,7 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper, Inquiry> impl
             map.put("error", "第" + rowIndex + "行的客户名称在数据库中不存在，请核对");
             return map;
         }
-        String ct = customerTypeService.getCustomerTypeByRule(c.getFCustId(), item.getId());
-        if (ct == null || inquiryModel.getCustomerType() == null || !ct.equals(inquiryModel.getCustomerType())) {
-            map.put("error", "第" + rowIndex + "行的客户类型与数据库对应关系不匹配或不存在，请核对");
-            return map;
-        }
+
         inquiry.setCustomerId(c.getFCustId());
         // 添加销售员id
         User salesman = userService.findSalesmanByName(inquiryModel.getSalesmanName());
@@ -550,9 +539,6 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper, Inquiry> impl
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
             sdf.setLenient(false);
-            if (inquiryModel.getArrangedTime() != null) {
-                inquiry.setArrangedTime(sdf.parse(inquiryModel.getArrangedTime()));
-            }
 
             if (inquiryModel.getExceptedTime() == null) {
                 // 对订单类型进行判断
