@@ -12,64 +12,6 @@ server:
 
 # spring
 spring:
-
-
-
-
-
-#  profiles:
-#    active: default
-#  mail:
-#    default:
-#      host: smtp.feishu.cn
-#      username: your-username
-#      password: your-password
-#      port: 465
-#      protocol: smtps
-#      properties:
-#        mail:
-#          smtp:
-#            ssl:
-#              enable: true
-#              required: false
-#            debug: true
-#    user1:
-#      host: smtp.feishu.cn
-#      username: zhaotong@benewake.com
-#      password: 3efKhLdhl93LGjCb
-#      port: 465
-#      protocol: smtps
-#      properties:
-#        mail:
-#          smtp:
-#            ssl:
-#              enable: true
-#              required: false
-#            debug: true
-#    user2:
-#      host: smtp.feishu.cn
-#      username: wangxiaoxi@benewake.com
-#      password: oqEPOBnLJhHA1qXO
-#      port: 465
-#      protocol: smtps
-#      properties:
-#        mail:
-#          smtp:
-#            ssl:
-#              enable: true
-#              required: false
-#            debug: true
-
-
-
-
-
-
-
-
-
-
-
   mail:
     host: smtp.feishu.cn
     # 邮箱账号
@@ -88,21 +30,9 @@ spring:
 
   application:
     name: SaleOrderSystem
-#  rabbitmq:
-#    host: 47.93.30.99
-#    port: 5672
-#    username: guest
-#    password: guest
-#    virtual-host: /
-#    publisher-confirm-type: correlated
-#    publisher-returns: true
-#    listener:
-#      simple:
-#        acknowledge-mode: manual
-#      template:
-#        mandatory: true
+
   datasource:
-    url: jdbc:mysql://localhost:3306/fim_aps_system?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B0&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/fim_aps_system?characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong&allowMultiQueries=true&rewriteBatchedStatements=true
 
     username: root
     password: 123456

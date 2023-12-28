@@ -168,7 +168,7 @@ public class SaleOrderController implements BenewakeConstants {
 
             } else if (loginUser.getUserType().equals(1L)) {
                 //如果用户是管理员
-                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), loginUser.getUsername());
+                lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), null);
 
             } else if (loginUser.getUserType().equals(3L)) {
                 lists = inquiryService.selectSalesOrderVoList(filterVo.getFilterCriterias(), null);
@@ -571,8 +571,6 @@ public class SaleOrderController implements BenewakeConstants {
 
                         }
                     } else {
-
-
                         Date currentTime = new Date();
 
                         Inquiry inquiriesByCode = inquiryService.getInquiriesByCode(inq1.getInquiryCode());
@@ -584,8 +582,6 @@ public class SaleOrderController implements BenewakeConstants {
                         inquiriesByCode.setSaleNum(inq1.getSaleNum());
                         inquiriesByCode.setSalesmanId(inq1.getSalesmanId());
                         inquiriesByCode.setCreatedTime(currentTime);
-                        //遍历接收到订单信息，获取订单id存入ids
-
 
                         //将刚刚获取到的单据编码存入到订单编码列表
                         inquiryCodes.add(inq1.getInquiryCode());

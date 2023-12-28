@@ -41,7 +41,7 @@ public interface SalesOrderVoMapper extends BaseMapper<Map<String,Object>> {
             "item_code,item_name,customer_name,salesman_name,sale_num,expected_time,arranged_time,delay," +
             "customer_type,order_delivery_progress,delivery_code,receive_time,delivery_state,customize,remark,create_time,update_time " +
             "from " +
-            "(select inquiry_id as inquiry_id,(case when state=-1 then '无效' when state=0 then '保存' else concat('询单',state,'次') end) as state," +
+            "(select inquiry_id as inquiry_id,(case when state=-2 then '无效' when state=0 then '保存' else concat('询单',state,'次') end) as state," +
             "a.inquiry_code as inquiry_code,sale_num as sale_num,expected_time as expected_time," +
             "arranged_time as arranged_time,allow_inquiry as allow_inquiry,create_time as create_time,update_time as update_time,created_user as created_user,salesman_id as salesman_id,a.item_id as item_id," +
             "a.customer_id as customer_id,remark as remark,(case " +
