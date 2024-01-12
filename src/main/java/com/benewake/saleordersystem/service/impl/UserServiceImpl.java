@@ -1053,11 +1053,17 @@ public Result addOrdersSalesmanChangingTableByExcel(MultipartFile file) {
             // 将中文字符转换为拼音，非中文字符保持不变
             String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c);
             if (pinyinArray != null && pinyinArray.length > 0) {
-                pinyinBuilder.append(pinyinArray[0]);
+                // 判断拼音是否为"lu:3"，如果是则替换为"lv"
+                if ("lu:3".equals(pinyinArray[0])) {
+                    pinyinBuilder.append("lv");
+                } else {
+                    pinyinBuilder.append(pinyinArray[0]);
+                }
             } else {
                 pinyinBuilder.append(c);
             }
         }
+
 
         return pinyinBuilder.toString();
     }

@@ -11,5 +11,10 @@ public class test {
     @ExcelProperty("归还日期")
     private String F_ora_BackDate;
 
+    @ExcelProperty("物料ID")
+    private String FStatus;
+    @ExcelProperty("物料编码")
+    private String FPlanFinishDate;
+
 
 }

@@ -14,4 +14,8 @@ public class MaterialIdToName {
     private String FMaterialId;
     @ExcelProperty("物料编码")
     private String FNumber;
+    @ExcelProperty("物料ID")
+    private String FStatus;
+    @ExcelProperty("物料编码")
+    private String FPlanFinishDate;
 }

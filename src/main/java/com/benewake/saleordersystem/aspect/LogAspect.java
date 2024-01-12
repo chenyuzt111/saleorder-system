@@ -52,13 +52,13 @@ public class LogAspect {
     private FimOperLogService fimOperLogService;
 
 
-
     /**
      * ..表示包及子包 该方法代表controller层所有方法
      */
     //这是一个切入点表达式，切入点表达式拦截“com.benewake.saleordersystem.controller”包下的所有方法
     @Pointcut("execution(public * com.benewake.saleordersystem.controller.*.*(..))")
-    public void controllerMethod(){}
+    public void controllerMethod() {
+    }
 
 
     //这是一个环绕通知，表达当满足切入点条件时，在方法前后都会执行切面逻辑
@@ -70,7 +70,7 @@ public class LogAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         //如果为空返回空值
 
-    if(attributes == null) {
+        if (attributes == null) {
             return null;
         }
         //从请求属性对象中获取http请求对象
@@ -92,9 +92,9 @@ public class LogAspect {
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        if(ip != null && ip.length() > 15){
-            if(ip.indexOf(",")>0){
-                ip = ip.substring(0,ip.indexOf(","));
+        if (ip != null && ip.length() > 15) {
+            if (ip.indexOf(",") > 0) {
+                ip = ip.substring(0, ip.indexOf(","));
             }
         }
         //获取当前时间，并格式化为字符串
@@ -102,8 +102,8 @@ public class LogAspect {
         //获取被拦截方法所属的类名
         String target = joinPoint.getSignature().getDeclaringTypeName();
         //使用日志记录器log记录一条日志信息，用户ip，访问时间，类名，方法名，转化为列表记录在日志中
-        log.info(String.format("用户[%s],ip地址[%s],在[%s],访问了[%s]的[%s]方法，参数为[%s].",hostHolder.getUser(),
-                ip,now,target,joinPoint.getSignature().getName(),Arrays.asList(joinPoint.getArgs())));
+        log.info(String.format("用户[%s],ip地址[%s],在[%s],访问了[%s]的[%s]方法，参数为[%s].", hostHolder.getUser(),
+                ip, now, target, joinPoint.getSignature().getName(), Arrays.asList(joinPoint.getArgs())));
 
         Object[] args = joinPoint.getArgs();
 
@@ -111,8 +111,8 @@ public class LogAspect {
         Object result = joinPoint.proceed();
 
         String methodName = joinPoint.getSignature().getName();
-        log.info("返回结果："+ JSON.toJSONString(result));
-        if(!"login".equals(methodName)) {
+        log.info("返回结果：" + JSON.toJSONString(result));
+        if (!"login".equals(methodName)) {
             FimOperLog fimOperLog = new FimOperLog();
             fimOperLog.setOperIp(ip);
             fimOperLog.setOperName(hostHolder.getUser().getUsername());
@@ -134,7 +134,7 @@ public class LogAspect {
                             // 如果inquiryList不为空，可以从第一个Inquiry对象获取inquiryCode
                             Inquiry firstInquiry = startInquiryVo.getInquiryList().get(0);
                             inquiryCode = firstInquiry.getInquiryCode();
-                            if(firstInquiry.getInquiryId()!=null) {
+                            if (firstInquiry.getInquiryId() != null) {
                                 inquiryId = Math.toIntExact(firstInquiry.getInquiryId());
                             }
                         }
@@ -221,14 +221,13 @@ public class LogAspect {
     }
 
 
-    public void save(@RequestBody FimOperLog fimOperLog, HttpServletRequest request){
+    public void save(@RequestBody FimOperLog fimOperLog, HttpServletRequest request) {
         String ip = IpUtil.getIpAddress(request);
         fimOperLog.setOperIp(ip);
         fimOperLog.setOperName(hostHolder.getUser().getUsername());
         fimOperLogService.save(fimOperLog);
 
     }
-
 
 
 }
