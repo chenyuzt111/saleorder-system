@@ -14,6 +14,6 @@ import java.util.List;
 public class StartInquiryVo {
     private List<Inquiry> inquiryList;
     private Integer startInquiry;
-
+//  用于识别是否是保存拆分订单
     private Integer isUpdate;
 }

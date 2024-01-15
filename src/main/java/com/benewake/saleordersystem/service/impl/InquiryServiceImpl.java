@@ -59,6 +59,8 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper, Inquiry> impl
     @Autowired
     private CustomerTypeService customerTypeService;
     @Autowired
+    private FeiShuMessageService feiShuMessageService;
+    @Autowired
     private DeliveryService deliveryService;
     @Autowired
     private HostHolder hostHolder;
@@ -674,5 +676,9 @@ public class InquiryServiceImpl extends ServiceImpl<InquiryMapper, Inquiry> impl
 
         return inquiryCodeList;
     }
+
+
+
+
 
 }

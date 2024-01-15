@@ -435,22 +435,19 @@ public class SaleOrderController implements BenewakeConstants {
             if (newInquiries == null) {
                 return Result.fail("请添加至少一条询单信息", null);
             }
-
+            //如果 IsUpdate的值为1，说明是保存拆分订单saveDivideList调用的save接口
             if (param.getIsUpdate() == null || param.getIsUpdate() != 1) {
                 for (Inquiry inq1 : newInquiries) {
+                    //单据编号是空时，进行首次保存或询单
                     if (inq1.getInquiryCode() == null) {
-                        // 保存 或 单据id不存在（开始询单数据为保存状态，或者传入的单据id为0）
+                        // startInquiry为0时,或者传入的订单没有id时进行保存
                         if (startInquiry == 0 || inq1.getInquiryId() == null) {
                             //获取当前用户信息
                             User user = hostHolder.getUser();
-                            Date nowTime = new Date();
                             //接收到的订单类型为空
                             if (inq1.getInquiryType() == null) {
                                 return Result.fail("请选择订单类型", null);
                             }
-
-                            // 逐条分析询单是否合法，遍历传入的单据列表
-
                             //使用inquiryservice中addvalid方法判断询单是否合法
                             Map<String, Object> res = inquiryService.addValid(inq1);
                             //res被创建就是为了存储询单不合法的信息，如果里面有内容说明错误
@@ -463,30 +460,22 @@ public class SaleOrderController implements BenewakeConstants {
                             if (inq1.getInquiryCode() == null) {
                                 inq1.setInquiryCode(inquiryService.getDocumentNumberFormat(inq1.getInquiryType(), 1).get(0));
                             }
-
                             //将刚刚获取到的单据编码存入到订单编码列表
                             inquiryCodes.add(inq1.getInquiryCode());
                             //并将状态码设置为0，保存状态
                             inq1.setState(0);
-
                             //将之前生成的单据编码以键值名为inquiryCode，以便后续使用
                             map.put("inquiryCode", inquiryCodes);
-
-
+                            //存入到订单列表中以便插入
                             List<Inquiry> singleInquiryList = new ArrayList<>();
                             singleInquiryList.add(inq1);
-
                             // 添加运输信息
                             deliveryService.insertLists(singleInquiryList);
                             // 全部通过加入数据库
                             inquiryService.insertLists(singleInquiryList);
 
-                            //创建一个ids列表
-
                             //遍历接收到订单信息，获取订单id存入ids
-
                             ids.add(inq1.getInquiryId());
-
 
                             //将ids以键名“ids”存入map
                             map.put("ids", ids);
@@ -564,13 +553,12 @@ public class SaleOrderController implements BenewakeConstants {
                                 }
                                 message.add("APS暂未上线，今日内计划手动反馈日期！\n");
                                 map.put("message", message);
-
                             }
                             //返回如果成功的询单数量大于 0，将处理结果添加到 resStr，包含 "APS暂未上线，今日内计划手动反馈日期！"。
                             //使用 String.join 方法将 resStr 中的消息字符串使用换行符连接起来。
-
                         }
                     } else {
+//                        第一次保存后发错有数据填错，修改后再保存，此时有传递的有inquirycode
                         Date currentTime = new Date();
 
                         Inquiry inquiriesByCode = inquiryService.getInquiriesByCode(inq1.getInquiryCode());
@@ -666,15 +654,11 @@ public class SaleOrderController implements BenewakeConstants {
                             }
                             //返回如果成功的询单数量大于 0，将处理结果添加到 resStr，包含 "APS暂未上线，今日内计划手动反馈日期！"。
                             //使用 String.join 方法将 resStr 中的消息字符串使用换行符连接起来。
-
-
                         }
-
                     }
-
                 }
             } else {
-
+                //拆分订单后保存时，会进入这里
                 List<Inquiry> fail = new ArrayList<>();
                 List<Inquiry> success = new ArrayList<>();
 
